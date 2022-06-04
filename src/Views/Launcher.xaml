@@ -1,0 +1,65 @@
+<controls:Window 
+    x:Class="SrcGit.Views.Launcher"
+    x:Name="me"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="clr-namespace:SrcGit.Views.Controls"
+    xmlns:widgets="clr-namespace:SrcGit.Views.Widgets"
+    xmlns:models="clr-namespace:SrcGit.Models"
+    mc:Ignorable="d"
+    WindowStartupLocation="CenterScreen"
+    MinWidth="1280" MinHeight="720"
+    Title="{DynamicResource Text.About.Title}"
+    Width="{Binding Source={x:Static models:Preference.Instance}, Path=Window.Width, Mode=TwoWay}"
+    Height="{Binding Source={x:Static models:Preference.Instance}, Path=Window.Height, Mode=TwoWay}"
+    WindowState="{Binding Source={x:Static models:Preference.Instance}, Path=Window.State, Mode=TwoWay}"
+    Closing="OnClosing">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="28"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Titlebar -->
+        <Grid Grid.Row="0" Background="{DynamicResource Brush.TitleBar}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="300"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Bottom border -->
+            <Rectangle Grid.Column="0" Grid.ColumnSpan="2" Fill="{DynamicResource Brush.Border0}" Height="1" VerticalAlignment="Bottom"/>
+
+            <!-- Tabs -->
+            <widgets:PageTabBar 
+                Grid.Column="0" 
+                x:Name="tabs"
+                TabAdd="OnTabAdding"
+                TabSelected="OnTabSelected"
+                TabClosed="OnTabClosed"/>
+
+            <!-- Right controls -->
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Height="27" WindowChrome.IsHitTestVisibleInChrome="True">
+                <controls:IconButton Click="OpenPreference" Width="28" Padding="6" Icon="{StaticResource Icon.Preference}" ToolTip="{DynamicResource Text.Launcher.Preference}"/>
+                <controls:IconButton Click="OpenAbout" Width="28" Padding="6" Icon="{StaticResource Icon.Help}" ToolTip="{DynamicResource Text.Launcher.About}"/>
+
+                <Rectangle Margin="4,0" Width="1" Height="16" VerticalAlignment="Center" Fill="{DynamicResource Brush.Border2}"/>
+
+                <controls:IconButton Click="Minimize" Width="28" Padding="9" Icon="{StaticResource Icon.Minimize}" HoverBackground="#40000000" Opacity="1"/>
+                <ToggleButton Style="{StaticResource Style.ToggleButton.MaxOrRestore}" Width="28" IsChecked="{Binding ElementName=me, Path=IsMaximized}"/>
+                <controls:IconButton Click="Quit" Width="28" Padding="9" Icon="{StaticResource Icon.Close}" HoverBackground="Red" Opacity="1"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Contents -->
+        <controls:PageContainer x:Name="container" Grid.Row="1"/>
+
+        <!-- Alerts -->
+        <widgets:Exceptions
+            Grid.Row="1" 
+            HorizontalAlignment="Right" VerticalAlignment="Top"
+            Width="330" Height="Auto"/>
+    </Grid>
+</controls:Window>
