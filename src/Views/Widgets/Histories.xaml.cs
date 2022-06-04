@@ -22,10 +22,8 @@ namespace SrcGit.Views.Widgets
         public Histories(Models.Repository repo)
         {
             this.repo = repo;
-
             InitializeComponent();
             ChangeOrientation();
-
             Unloaded += (o, e) =>
             {
                 cachedCommits.Clear();
@@ -37,11 +35,15 @@ namespace SrcGit.Views.Widgets
         #region DATA
         public void NavigateTo(string commit)
         {
-            if (string.IsNullOrEmpty(commit) || commitList == null || commitList.ItemsSource == null) return;
+            if (string.IsNullOrEmpty(commit) || commitList == null || commitList.ItemsSource == null)
+            {
+                return;
+            }
 
             foreach (var item in commitList.ItemsSource)
             {
                 var c = item as Models.Commit;
+
                 if (c != null && c.SHA.StartsWith(commit, StringComparison.Ordinal))
                 {
                     commitList.SelectedItem = c;
@@ -58,10 +60,10 @@ namespace SrcGit.Views.Widgets
                 loading.Visibility = Visibility.Visible;
                 loading.IsAnimating = true;
             });
-
             Task.Run(() =>
             {
                 var limits = "-20000 ";
+
                 if (repo.Filters.Count > 0)
                 {
                     limits += string.Join(" ", repo.Filters);
@@ -88,13 +90,14 @@ namespace SrcGit.Views.Widgets
             else
             {
                 searching = true;
+
                 foreach (var c in cachedCommits)
                 {
                     if (c.SHA.Contains(filter, StringComparison.Ordinal)
-                        || c.Subject.Contains(filter, StringComparison.Ordinal)
-                        || c.Message.Contains(filter, StringComparison.Ordinal)
-                        || c.Author.Name.Contains(filter, StringComparison.Ordinal)
-                        || c.Committer.Name.Contains(filter, StringComparison.Ordinal))
+                            || c.Subject.Contains(filter, StringComparison.Ordinal)
+                            || c.Message.Contains(filter, StringComparison.Ordinal)
+                            || c.Author.Name.Contains(filter, StringComparison.Ordinal)
+                            || c.Committer.Name.Contains(filter, StringComparison.Ordinal))
                     {
                         visible.Add(c);
                     }
@@ -102,7 +105,6 @@ namespace SrcGit.Views.Widgets
             }
 
             graph.SetData(visible, searching);
-
             Dispatcher.Invoke(() =>
             {
                 loading.IsAnimating = false;
@@ -115,22 +117,32 @@ namespace SrcGit.Views.Widgets
         #region LAYOUT
         public void ChangeOrientation()
         {
-            if (layout == null || commitListPanel == null || inspector == null || splitter == null) return;
+            if (layout == null || commitListPanel == null || inspector == null || splitter == null)
+            {
+                return;
+            }
 
             layout.RowDefinitions.Clear();
             layout.ColumnDefinitions.Clear();
 
             if (Models.Preference.Instance.Window.MoveCommitInfoRight)
             {
-                layout.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star), MinWidth = 200 });
-                layout.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1) });
-                layout.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star), MinWidth = 200 });
-
+                layout.ColumnDefinitions.Add(new ColumnDefinition()
+                {
+                    Width = new GridLength(1, GridUnitType.Star), MinWidth = 200
+                });
+                layout.ColumnDefinitions.Add(new ColumnDefinition()
+                {
+                    Width = new GridLength(1)
+                });
+                layout.ColumnDefinitions.Add(new ColumnDefinition()
+                {
+                    Width = new GridLength(1, GridUnitType.Star), MinWidth = 200
+                });
                 splitter.HorizontalAlignment = HorizontalAlignment.Center;
                 splitter.VerticalAlignment = VerticalAlignment.Stretch;
                 splitter.Width = 1;
                 splitter.Height = double.NaN;
-
                 Grid.SetRow(commitListPanel, 0);
                 Grid.SetRow(splitter, 0);
                 Grid.SetRow(inspector, 0);
@@ -140,15 +152,22 @@ namespace SrcGit.Views.Widgets
             }
             else
             {
-                layout.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Star), MinHeight = 100 });
-                layout.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1) });
-                layout.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Star), MinHeight = 100 });
-
+                layout.RowDefinitions.Add(new RowDefinition()
+                {
+                    Height = new GridLength(1, GridUnitType.Star), MinHeight = 100
+                });
+                layout.RowDefinitions.Add(new RowDefinition()
+                {
+                    Height = new GridLength(1)
+                });
+                layout.RowDefinitions.Add(new RowDefinition()
+                {
+                    Height = new GridLength(1, GridUnitType.Star), MinHeight = 100
+                });
                 splitter.HorizontalAlignment = HorizontalAlignment.Stretch;
                 splitter.VerticalAlignment = VerticalAlignment.Center;
                 splitter.Width = double.NaN;
                 splitter.Height = 1;
-
                 Grid.SetRow(commitListPanel, 0);
                 Grid.SetRow(splitter, 1);
                 Grid.SetRow(inspector, 2);
@@ -166,7 +185,10 @@ namespace SrcGit.Views.Widgets
         {
             if (searchBar.Margin.Top == 0)
             {
-                if (searchBar.Margin.Top != 0) return;
+                if (searchBar.Margin.Top != 0)
+                {
+                    return;
+                }
 
                 if (searching)
                 {
@@ -189,7 +211,6 @@ namespace SrcGit.Views.Widgets
                 anim.To = new Thickness(0);
                 anim.Duration = TimeSpan.FromSeconds(.1);
                 searchBar.BeginAnimation(MarginProperty, anim);
-
                 txtSearch.Focus();
             }
         }
@@ -222,7 +243,6 @@ namespace SrcGit.Views.Widgets
             {
                 loading.Visibility = Visibility.Visible;
                 loading.IsAnimating = true;
-
                 var filter = txtSearch.Text;
                 Task.Run(() => UpdateVisibleCommits(filter));
             }
@@ -250,13 +270,16 @@ namespace SrcGit.Views.Widgets
 
         private void OnCommitSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (Keyboard.IsKeyDown(Key.Up) || Keyboard.IsKeyDown(Key.Down)) return;
+            if (Keyboard.IsKeyDown(Key.Up) || Keyboard.IsKeyDown(Key.Down))
+            {
+                return;
+            }
 
             mask.Visibility = Visibility.Collapsed;
             commitDetail.Visibility = Visibility.Collapsed;
             revisionCompare.Visibility = Visibility.Collapsed;
-
             var selected = commitList.SelectedItems;
+
             if (selected.Count == 1)
             {
                 commitDetail.SetData(repo.Path, selected[0] as Models.Commit);
@@ -283,15 +306,26 @@ namespace SrcGit.Views.Widgets
         private void OnCommitContextMenuOpening(object sender, ContextMenuEventArgs ev)
         {
             var row = sender as DataGridRow;
-            if (row == null) return;
+
+            if (row == null)
+            {
+                return;
+            }
 
             var commit = row.DataContext as Models.Commit;
-            if (commit == null) return;
+
+            if (commit == null)
+            {
+                return;
+            }
 
             commitList.SelectedItem = commit;
-
             var current = repo.Branches.Find(x => x.IsCurrent);
-            if (current == null) return;
+
+            if (current == null)
+            {
+                return;
+            }
 
             var merged = commit.IsMerged;
             var menu = new ContextMenu();
@@ -320,13 +354,20 @@ namespace SrcGit.Views.Widgets
                     }
                 }
 
-                if (menu.Items.Count > 0) menu.Items.Add(new Separator());
+                if (menu.Items.Count > 0)
+                {
+                    menu.Items.Add(new Separator());
+                }
             }
 
             // Tags
             if (tags.Count > 0)
             {
-                foreach (var tag in tags) FillTagMenu(menu, tag);
+                foreach (var tag in tags)
+                {
+                    FillTagMenu(menu, tag);
+                }
+
                 menu.Items.Add(new Separator());
             }
 
@@ -351,7 +392,6 @@ namespace SrcGit.Views.Widgets
                     e.Handled = true;
                 };
                 menu.Items.Add(reword);
-
                 var squash = new MenuItem();
                 squash.Header = App.Text("CommitCM.Squash");
                 squash.IsEnabled = commit.Parents.Count == 1;
@@ -383,7 +423,6 @@ namespace SrcGit.Views.Widgets
                     e.Handled = true;
                 };
                 menu.Items.Add(rebase);
-
                 var cherryPick = new MenuItem();
                 cherryPick.Header = App.Text("CommitCM.CherryPick");
                 cherryPick.Click += (o, e) =>
@@ -406,7 +445,6 @@ namespace SrcGit.Views.Widgets
             }
 
             menu.Items.Add(new Separator());
-
             var createBranchIcon = new Path();
             createBranchIcon.Data = FindResource("Icon.Branch.Add") as Geometry;
             createBranchIcon.Width = 10;
@@ -419,7 +457,6 @@ namespace SrcGit.Views.Widgets
                 e.Handled = true;
             };
             menu.Items.Add(createBranch);
-
             var createTagIcon = new Path();
             createTagIcon.Data = FindResource("Icon.Tag.Add") as Geometry;
             createTagIcon.Width = 10;
@@ -433,7 +470,6 @@ namespace SrcGit.Views.Widgets
             };
             menu.Items.Add(createTag);
             menu.Items.Add(new Separator());
-
             var saveToPatchIcon = new Path();
             saveToPatchIcon.Data = FindResource("Icon.Diff") as Geometry;
             saveToPatchIcon.Width = 10;
@@ -443,13 +479,13 @@ namespace SrcGit.Views.Widgets
             saveToPatch.Click += (o, e) =>
             {
                 var dialog = new Controls.FolderDialog();
+
                 if (dialog.ShowDialog() == true)
                 {
                     new Commands.FormatPatch(repo.Path, commit.SHA, dialog.SelectedPath).Exec();
                 }
             };
             menu.Items.Add(saveToPatch);
-
             var archiveIcon = new Path();
             archiveIcon.Data = FindResource("Icon.Archive") as Geometry;
             archiveIcon.Width = 10;
@@ -463,7 +499,6 @@ namespace SrcGit.Views.Widgets
             };
             menu.Items.Add(archive);
             menu.Items.Add(new Separator());
-
             var copySHA = new MenuItem();
             copySHA.Header = App.Text("CommitCM.CopySHA");
             copySHA.Click += (o, e) =>
@@ -472,17 +507,15 @@ namespace SrcGit.Views.Widgets
                 e.Handled = true;
             };
             menu.Items.Add(copySHA);
-
             var copyInfo = new MenuItem();
             copyInfo.Header = App.Text("CommitCM.CopyInfo");
             copyInfo.Click += (o, e) =>
             {
                 Clipboard.SetDataObject(string.Format(
-                    "SHA: {0}\nTITLE: {1}\nAUTHOR: {2} <{3}>\nTIME: {4}",
-                    commit.SHA, commit.Subject, commit.Committer.Name, commit.Committer.Email, commit.Committer.Time), true);
+                                            "SHA: {0}\nTITLE: {1}\nAUTHOR: {2} <{3}>\nTIME: {4}",
+                                            commit.SHA, commit.Subject, commit.Committer.Name, commit.Committer.Email, commit.Committer.Time), true);
             };
             menu.Items.Add(copyInfo);
-
             menu.IsOpen = true;
             ev.Handled = true;
         }
@@ -494,7 +527,6 @@ namespace SrcGit.Views.Widgets
             icon.VerticalAlignment = VerticalAlignment.Bottom;
             icon.Width = 10;
             icon.Height = 10;
-
             var dirty = !string.IsNullOrEmpty(current.UpstreamTrackStatus);
             var submenu = new MenuItem();
             submenu.Header = current.Name;
@@ -503,7 +535,6 @@ namespace SrcGit.Views.Widgets
             if (!string.IsNullOrEmpty(current.Upstream))
             {
                 var upstream = current.Upstream.Substring(13);
-
                 var fastForward = new MenuItem();
                 fastForward.Header = App.Text("BranchCM.FastForward", upstream);
                 fastForward.IsEnabled = dirty;
@@ -513,7 +544,6 @@ namespace SrcGit.Views.Widgets
                     e.Handled = true;
                 };
                 submenu.Items.Add(fastForward);
-
                 var pull = new MenuItem();
                 pull.Header = App.Text("BranchCM.Pull", upstream);
                 pull.IsEnabled = dirty;
@@ -535,15 +565,14 @@ namespace SrcGit.Views.Widgets
             };
             submenu.Items.Add(push);
             submenu.Items.Add(new Separator());
-
             var type = repo.GitFlow.GetBranchType(current.Name);
+
             if (type != Models.GitFlowBranchType.None)
             {
                 var flowIcon = new Path();
                 flowIcon.Data = FindResource("Icon.Flow") as Geometry;
                 flowIcon.Width = 10;
                 flowIcon.Height = 10;
-
                 var finish = new MenuItem();
                 finish.Header = App.Text("BranchCM.Finish", current.Name);
                 finish.Icon = flowIcon;
@@ -564,7 +593,6 @@ namespace SrcGit.Views.Widgets
                 e.Handled = true;
             };
             submenu.Items.Add(rename);
-
             menu.Items.Add(submenu);
         }
 
@@ -575,11 +603,9 @@ namespace SrcGit.Views.Widgets
             icon.VerticalAlignment = VerticalAlignment.Bottom;
             icon.Width = 10;
             icon.Height = 10;
-
             var submenu = new MenuItem();
             submenu.Header = branch.Name;
             submenu.Icon = icon;
-
             var checkout = new MenuItem();
             checkout.Header = App.Text("BranchCM.Checkout", branch.Name);
             checkout.Click += (o, e) =>
@@ -588,7 +614,6 @@ namespace SrcGit.Views.Widgets
                 e.Handled = true;
             };
             submenu.Items.Add(checkout);
-
             var merge = new MenuItem();
             merge.Header = App.Text("BranchCM.Merge", branch.Name, current.Name);
             merge.IsEnabled = !merged;
@@ -597,18 +622,16 @@ namespace SrcGit.Views.Widgets
                 new Popups.Merge(repo.Path, branch.Name, current.Name).Show();
                 e.Handled = true;
             };
-
             submenu.Items.Add(merge);
             submenu.Items.Add(new Separator());
-
             var type = repo.GitFlow.GetBranchType(branch.Name);
+
             if (type != Models.GitFlowBranchType.None)
             {
                 var flowIcon = new Path();
                 flowIcon.Data = FindResource("Icon.Flow") as Geometry;
                 flowIcon.Width = 10;
                 flowIcon.Height = 10;
-
                 var finish = new MenuItem();
                 finish.Header = App.Text("BranchCM.Finish", branch.Name);
                 finish.Icon = flowIcon;
@@ -629,7 +652,6 @@ namespace SrcGit.Views.Widgets
                 e.Handled = true;
             };
             submenu.Items.Add(rename);
-
             var delete = new MenuItem();
             delete.Header = App.Text("BranchCM.Delete", branch.Name);
             delete.Click += (o, e) =>
@@ -638,24 +660,20 @@ namespace SrcGit.Views.Widgets
                 e.Handled = true;
             };
             submenu.Items.Add(delete);
-
             menu.Items.Add(submenu);
         }
 
         private void FillRemoteBranchMenu(ContextMenu menu, Models.Branch branch, Models.Branch current, bool merged)
         {
             var name = $"{branch.Remote}/{branch.Name}";
-
             var icon = new Path();
             icon.Data = FindResource("Icon.Branch") as Geometry;
             icon.VerticalAlignment = VerticalAlignment.Bottom;
             icon.Width = 10;
             icon.Height = 10;
-
             var submenu = new MenuItem();
             submenu.Header = name;
             submenu.Icon = icon;
-
             var checkout = new MenuItem();
             checkout.Header = App.Text("BranchCM.Checkout", name);
             checkout.Click += (o, e) =>
@@ -664,7 +682,11 @@ namespace SrcGit.Views.Widgets
                 {
                     if (b.IsLocal && b.Upstream == branch.FullName)
                     {
-                        if (b.IsCurrent) return;
+                        if (b.IsCurrent)
+                        {
+                            return;
+                        }
+
                         new Popups.Checkout(repo.Path, b.Name).ShowAndStart();
                         return;
                     }
@@ -674,7 +696,6 @@ namespace SrcGit.Views.Widgets
                 e.Handled = true;
             };
             submenu.Items.Add(checkout);
-
             var merge = new MenuItem();
             merge.Header = App.Text("BranchCM.Merge", name, current.Name);
             merge.IsEnabled = !merged;
@@ -683,10 +704,8 @@ namespace SrcGit.Views.Widgets
                 new Popups.Merge(repo.Path, name, current.Name).Show();
                 e.Handled = true;
             };
-
             submenu.Items.Add(merge);
             submenu.Items.Add(new Separator());
-
             var delete = new MenuItem();
             delete.Header = App.Text("BranchCM.Delete", name);
             delete.Click += (o, e) =>
@@ -695,7 +714,6 @@ namespace SrcGit.Views.Widgets
                 e.Handled = true;
             };
             submenu.Items.Add(delete);
-
             menu.Items.Add(submenu);
         }
 
@@ -705,12 +723,10 @@ namespace SrcGit.Views.Widgets
             icon.Data = FindResource("Icon.Tag") as Geometry;
             icon.Width = 10;
             icon.Height = 10;
-
             var submenu = new MenuItem();
             submenu.Header = tag;
             submenu.Icon = icon;
             submenu.MinWidth = 200;
-
             var push = new MenuItem();
             push.Header = App.Text("TagCM.Push", tag);
             push.IsEnabled = repo.Remotes.Count > 0;
@@ -720,7 +736,6 @@ namespace SrcGit.Views.Widgets
                 e.Handled = true;
             };
             submenu.Items.Add(push);
-
             var delete = new MenuItem();
             delete.Header = App.Text("TagCM.Delete", tag);
             delete.Click += (o, e) =>

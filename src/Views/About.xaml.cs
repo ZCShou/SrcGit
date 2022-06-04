@@ -14,27 +14,38 @@ namespace SrcGit.Views
 
         public class Keymap
         {
-            public string Key { get; set; }
-            public string Desc { get; set; }
-            public Keymap(string k, string d) { Key = k; Desc = App.Text($"Hotkeys.{d}"); }
+            public string Key
+            {
+                get;
+                set;
+            }
+            public string Desc
+            {
+                get;
+                set;
+            }
+            public Keymap(string k, string d)
+            {
+                Key = k;
+                Desc = App.Text($"Hotkeys.{d}");
+            }
         }
 
         public About()
         {
             InitializeComponent();
-
             var asm = Assembly.GetExecutingAssembly().GetName();
             version.Text = $"VERSION : v{asm.Version.Major}.{asm.Version.Minor}";
-
-            hotkeys.ItemsSource = new List<Keymap>() {
+            hotkeys.ItemsSource = new List<Keymap>()
+            {
                 new Keymap("CTRL + T", "NewTab"),
-                new Keymap("CTRL + W", "CloseTab"),
-                new Keymap("CTRL + TAB", "NextTab"),
-                new Keymap("CTRL + [1-9]", "SwitchTo"),
-                new Keymap("CTRL + F", "Search"),
-                new Keymap("F5", "Refresh"),
-                new Keymap("SPACE", "ToggleStage"),
-                new Keymap("ESC", "CancelPopup"),
+                    new Keymap("CTRL + W", "CloseTab"),
+                    new Keymap("CTRL + TAB", "NextTab"),
+                    new Keymap("CTRL + [1-9]", "SwitchTo"),
+                    new Keymap("CTRL + F", "Search"),
+                    new Keymap("F5", "Refresh"),
+                    new Keymap("SPACE", "ToggleStage"),
+                    new Keymap("ESC", "CancelPopup"),
             };
         }
 

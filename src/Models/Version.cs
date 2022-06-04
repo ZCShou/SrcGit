@@ -15,36 +15,74 @@ namespace SrcGit.Models
     public class Version
     {
         [JsonPropertyName("id")]
-        public ulong Id { get; set; }
+        public ulong Id
+        {
+            get;
+            set;
+        }
         [JsonPropertyName("tag_name")]
-        public string TagName { get; set; }
+        public string TagName
+        {
+            get;
+            set;
+        }
         [JsonPropertyName("target_commitish")]
-        public string CommitSHA { get; set; }
+        public string CommitSHA
+        {
+            get;
+            set;
+        }
         [JsonPropertyName("prerelease")]
-        public bool PreRelease { get; set; }
+        public bool PreRelease
+        {
+            get;
+            set;
+        }
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public string Name
+        {
+            get;
+            set;
+        }
         [JsonPropertyName("body")]
-        public string Body { get; set; }
+        public string Body
+        {
+            get;
+            set;
+        }
         [JsonPropertyName("created_at")]
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt
+        {
+            get;
+            set;
+        }
 
         public string PublishTime
         {
-            get { return CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss"); }
+            get
+            {
+                return CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss");
+            }
         }
 
         public string IsPrerelease
         {
-            get { return PreRelease ? "YES" : "NO"; }
+            get
+            {
+                return PreRelease ? "YES" : "NO";
+            }
         }
 
         public static void Check(Action<Version> onUpgradable)
         {
-            if (!Preference.Instance.General.CheckForUpdate) return;
+            if (!Preference.Instance.General.CheckForUpdate)
+            {
+                return;
+            }
 
             var curDayOfYear = DateTime.Now.DayOfYear;
             var lastDayOfYear = Preference.Instance.General.LastCheckDay;
+
             if (lastDayOfYear != curDayOfYear)
             {
                 Preference.Instance.General.LastCheckDay = curDayOfYear;
@@ -55,16 +93,19 @@ namespace SrcGit.Models
                         var req = new HttpClient();
                         var rsp = await req.GetAsync("https://api.github.com/repos/SrcGit-scm/SrcGit/releases/latest");
                         rsp.EnsureSuccessStatusCode();
-
                         var raw = await rsp.Content.ReadAsStringAsync();
                         var ver = JsonSerializer.Deserialize<Version>(raw);
                         var cur = Assembly.GetExecutingAssembly().GetName().Version;
-
                         var matches = Regex.Match(ver.TagName, @"^v(\d+)\.(\d+).*");
-                        if (!matches.Success) return;
+
+                        if (!matches.Success)
+                        {
+                            return;
+                        }
 
                         var major = int.Parse(matches.Groups[1].Value);
                         var minor = int.Parse(matches.Groups[2].Value);
+
                         if (major > cur.Major || (major == cur.Major && minor > cur.Minor))
                         {
                             onUpgradable?.Invoke(ver);

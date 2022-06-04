@@ -18,8 +18,16 @@ namespace SrcGit.Views.Widgets
         /// </summary>
         public class Tab : Controls.BindableBase
         {
-            public string Id { get; set; }
-            public bool IsWelcomePage { get; set; }
+            public string Id
+            {
+                get;
+                set;
+            }
+            public bool IsWelcomePage
+            {
+                get;
+                set;
+            }
 
             private string title;
             public string Title
@@ -28,7 +36,11 @@ namespace SrcGit.Views.Widgets
                 set => SetProperty(ref title, value);
             }
 
-            public string Tooltip { get; set; }
+            public string Tooltip
+            {
+                get;
+                set;
+            }
 
             private int bookmark = 0;
             public int Bookmark
@@ -48,44 +60,69 @@ namespace SrcGit.Views.Widgets
         /// </summary>
         public class TabEventArgs : RoutedEventArgs
         {
-            public string TabId { get; set; }
-            public TabEventArgs(RoutedEvent e, object o, string id) : base(e, o) { TabId = id; }
+            public string TabId
+            {
+                get;
+                set;
+            }
+            public TabEventArgs(RoutedEvent e, object o, string id) : base(e, o)
+            {
+                TabId = id;
+            }
         }
 
         public static readonly RoutedEvent TabAddEvent = EventManager.RegisterRoutedEvent(
-            "TabAdd",
-            RoutingStrategy.Bubble,
-            typeof(EventHandler<TabEventArgs>),
-            typeof(PageTabBar));
+                    "TabAdd",
+                    RoutingStrategy.Bubble,
+                    typeof(EventHandler<TabEventArgs>),
+                    typeof(PageTabBar));
 
         public event RoutedEventHandler TabAdd
         {
-            add { AddHandler(TabAddEvent, value); }
-            remove { RemoveHandler(TabAddEvent, value); }
+            add
+            {
+                AddHandler(TabAddEvent, value);
+            }
+            remove
+            {
+                RemoveHandler(TabAddEvent, value);
+            }
         }
 
         public static readonly RoutedEvent TabSelectedEvent = EventManager.RegisterRoutedEvent(
-            "TabSelected",
-            RoutingStrategy.Bubble,
-            typeof(EventHandler<TabEventArgs>),
-            typeof(PageTabBar));
+                    "TabSelected",
+                    RoutingStrategy.Bubble,
+                    typeof(EventHandler<TabEventArgs>),
+                    typeof(PageTabBar));
 
         public event RoutedEventHandler TabSelected
         {
-            add { AddHandler(TabSelectedEvent, value); }
-            remove { RemoveHandler(TabSelectedEvent, value); }
+            add
+            {
+                AddHandler(TabSelectedEvent, value);
+            }
+            remove
+            {
+                RemoveHandler(TabSelectedEvent, value);
+            }
         }
 
         public static readonly RoutedEvent TabClosedEvent = EventManager.RegisterRoutedEvent(
-            "TabClosed",
-            RoutingStrategy.Bubble,
-            typeof(EventHandler<TabEventArgs>),
-            typeof(PageTabBar));
+                    "TabClosed",
+                    RoutingStrategy.Bubble,
+                    typeof(EventHandler<TabEventArgs>),
+                    typeof(PageTabBar));
 
         public event RoutedEventHandler TabClosed
         {
-            add { AddHandler(TabClosedEvent, value); }
-            remove { RemoveHandler(TabClosedEvent, value); }
+            add
+            {
+                AddHandler(TabClosedEvent, value);
+            }
+            remove
+            {
+                RemoveHandler(TabClosedEvent, value);
+            }
         }
 
         public ObservableCollection<Tab> Tabs
@@ -96,7 +133,10 @@ namespace SrcGit.Views.Widgets
 
         public string Current
         {
-            get { return (container.SelectedItem as Tab).Id; }
+            get
+            {
+                return (container.SelectedItem as Tab).Id;
+            }
         }
 
         public PageTabBar()
@@ -120,7 +160,6 @@ namespace SrcGit.Views.Widgets
                 Tooltip = repo,
                 Bookmark = bookmark,
             };
-
             Tabs.Add(tab);
             container.SelectedItem = tab;
         }
@@ -139,12 +178,14 @@ namespace SrcGit.Views.Widgets
                 }
             }
 
-            if (tab == null) return;
+            if (tab == null)
+            {
+                return;
+            }
 
             var idx = Tabs.IndexOf(tab);
             Tabs.RemoveAt(idx);
             RaiseEvent(new TabEventArgs(TabClosedEvent, this, tab.Id));
-
             var replaced = new Tab()
             {
                 Id = repo,
@@ -153,9 +194,12 @@ namespace SrcGit.Views.Widgets
                 Tooltip = repo,
                 Bookmark = bookmark,
             };
-
             Tabs.Insert(idx, replaced);
-            if (curTab.Id == id) container.SelectedItem = replaced;
+
+            if (curTab.Id == id)
+            {
+                container.SelectedItem = replaced;
+            }
         }
 
         public void Update(string id, int bookmark, string title)
@@ -195,6 +239,7 @@ namespace SrcGit.Views.Widgets
             var curTab = container.SelectedItem as Tab;
             var idx = container.SelectedIndex;
             Tabs.Remove(curTab);
+
             if (Tabs.Count == 0)
             {
                 Application.Current.Shutdown();
@@ -234,7 +279,6 @@ namespace SrcGit.Views.Widgets
                 Tooltip = App.Text("PageTabBar.Welcome.Tip"),
                 Bookmark = 0,
             };
-
             Tabs.Add(tab);
             RaiseEvent(new TabEventArgs(TabAddEvent, this, id));
             container.SelectedItem = tab;
@@ -253,20 +297,31 @@ namespace SrcGit.Views.Widgets
         private void SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var tab = container.SelectedItem as Tab;
-            if (tab == null) return;
+
+            if (tab == null)
+            {
+                return;
+            }
+
             RaiseEvent(new TabEventArgs(TabSelectedEvent, this, tab.Id));
         }
 
         private void CloseTab(object sender, RoutedEventArgs e)
         {
             var tab = (sender as Button).DataContext as Tab;
-            if (tab == null) return;
+
+            if (tab == null)
+            {
+                return;
+            }
+
             CloseTab(tab);
         }
 
         private void CloseTab(Tab tab)
         {
             var curTab = container.SelectedItem as Tab;
+
             if (curTab != null && tab.Id == curTab.Id)
             {
                 var idx = Tabs.IndexOf(tab);
@@ -287,16 +342,25 @@ namespace SrcGit.Views.Widgets
             {
                 Tabs.Remove(tab);
             }
+
             RaiseEvent(new TabEventArgs(TabClosedEvent, this, tab.Id));
         }
 
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
             var item = sender as ListBoxItem;
-            if (item == null) return;
+
+            if (item == null)
+            {
+                return;
+            }
 
             var tab = item.DataContext as Tab;
-            if (tab == null || tab != container.SelectedItem) return;
+
+            if (tab == null || tab != container.SelectedItem)
+            {
+                return;
+            }
 
             if (e.LeftButton == MouseButtonState.Pressed)
             {
@@ -309,13 +373,25 @@ namespace SrcGit.Views.Widgets
         private void OnDrop(object sender, DragEventArgs e)
         {
             var tabSrc = e.Data.GetData(typeof(Tab)) as Tab;
-            if (tabSrc == null) return;
+
+            if (tabSrc == null)
+            {
+                return;
+            }
 
             var dst = e.Source as FrameworkElement;
-            if (dst == null) return;
+
+            if (dst == null)
+            {
+                return;
+            }
 
             var tabDst = dst.DataContext as Tab;
-            if (tabSrc.Id == tabDst.Id) return;
+
+            if (tabSrc.Id == tabDst.Id)
+            {
+                return;
+            }
 
             int dstIdx = Tabs.IndexOf(tabDst);
             Tabs.Remove(tabSrc);
@@ -327,24 +403,31 @@ namespace SrcGit.Views.Widgets
         private void OnTabContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
             var tab = (sender as ListBoxItem).DataContext as Tab;
-            if (tab == null) return;
+
+            if (tab == null)
+            {
+                return;
+            }
 
             var menu = new ContextMenu();
-
             var close = new MenuItem();
             close.Header = App.Text("PageTabBar.Tab.Close");
             close.Click += (_, __) =>
             {
                 CloseTab(tab);
             };
-
             var closeOther = new MenuItem();
             closeOther.Header = App.Text("PageTabBar.Tab.CloseOther");
             closeOther.Click += (_, __) =>
             {
-                Tabs.ToList().ForEach(t => { if (tab != t) CloseTab(t); });
+                Tabs.ToList().ForEach(t =>
+                {
+                    if (tab != t)
+                    {
+                        CloseTab(t);
+                    }
+                });
             };
-
             var closeRight = new MenuItem();
             closeRight.Header = App.Text("PageTabBar.Tab.CloseRight");
             closeRight.Click += (_, __) =>
@@ -353,7 +436,6 @@ namespace SrcGit.Views.Widgets
                 tabs.RemoveRange(0, tabs.IndexOf(tab) + 1);
                 tabs.ForEach(t => CloseTab(t));
             };
-
             menu.Items.Add(close);
             menu.Items.Add(closeOther);
             menu.Items.Add(closeRight);
@@ -363,34 +445,35 @@ namespace SrcGit.Views.Widgets
                 var iconBookmark = FindResource("Icon.Git") as Geometry;
                 var bookmark = new MenuItem();
                 bookmark.Header = App.Text("PageTabBar.Tab.Bookmark");
+
                 for (int i = 0; i < Controls.Bookmark.COLORS.Length; i++)
                 {
                     var icon = new System.Windows.Shapes.Path();
                     icon.Data = iconBookmark;
                     icon.Fill = i == 0 ? (FindResource("Brush.FG1") as Brush) : Controls.Bookmark.COLORS[i];
                     icon.Width = 12;
-
                     var mark = new MenuItem();
                     mark.Icon = icon;
                     mark.Header = $"{i}";
-
                     var refIdx = i;
                     mark.Click += (o, ev) =>
                     {
                         var repo = Models.Preference.Instance.FindRepository(tab.Id);
+
                         if (repo != null)
                         {
                             repo.Bookmark = refIdx;
                             tab.Bookmark = refIdx;
                             OnTabEdited?.Invoke(tab);
                         }
+
                         ev.Handled = true;
                     };
                     bookmark.Items.Add(mark);
                 }
+
                 menu.Items.Add(new Separator());
                 menu.Items.Add(bookmark);
-
                 var copyPath = new MenuItem();
                 copyPath.Header = App.Text("PageTabBar.Tab.CopyPath");
                 copyPath.Click += (_, __) =>

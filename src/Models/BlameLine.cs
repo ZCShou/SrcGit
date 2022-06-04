@@ -5,10 +5,30 @@ namespace SrcGit.Models
     /// </summary>
     public class BlameLine
     {
-        public string LineNumber { get; set; }
-        public string CommitSHA { get; set; }
-        public string Author { get; set; }
-        public string Time { get; set; }
-        public string Content { get; set; }
+        public string LineNumber
+        {
+            get;
+            set;
+        }
+        public string CommitSHA
+        {
+            get;
+            set;
+        }
+        public string Author
+        {
+            get;
+            set;
+        }
+        public string Time
+        {
+            get;
+            set;
+        }
+        public string Content
+        {
+            get;
+            set;
+        }
     }
 }

@@ -22,7 +22,8 @@ namespace SrcGit.Views.Controls
         /// <summary>
         ///     显示FallbackLabel时的背景色
         /// </summary>
-        private static readonly Brush[] BACKGROUND_BRUSHES = new Brush[] {
+        private static readonly Brush[] BACKGROUND_BRUSHES = new Brush[]
+        {
             new LinearGradientBrush(Colors.Orange, Color.FromRgb(255, 213, 134), 90),
             new LinearGradientBrush(Colors.DodgerBlue, Colors.LightSkyBlue, 90),
             new LinearGradientBrush(Colors.LimeGreen, Color.FromRgb(124, 241, 124), 90),
@@ -34,44 +35,56 @@ namespace SrcGit.Views.Controls
         ///     头像资源本地缓存路径
         /// </summary>
         public static readonly string CACHE_PATH = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "SrcGit",
-            "avatars");
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    "SrcGit",
+                    "avatars");
 
         /// <summary>
         ///     邮件属性定义
         /// </summary>
         public static readonly DependencyProperty EmailProperty = DependencyProperty.Register(
-            "Email",
-            typeof(string),
-            typeof(Avatar),
-            new PropertyMetadata(null, OnEmailChanged));
+                    "Email",
+                    typeof(string),
+                    typeof(Avatar),
+                    new PropertyMetadata(null, OnEmailChanged));
 
         /// <summary>
         ///     邮件属性
         /// </summary>
         public string Email
         {
-            get { return (string)GetValue(EmailProperty); }
-            set { SetValue(EmailProperty, value); }
+            get
+            {
+                return (string)GetValue(EmailProperty);
+            }
+            set
+            {
+                SetValue(EmailProperty, value);
+            }
         }
 
         /// <summary>
         ///     下载头像失败时显示的Label属性定义
         /// </summary>
         public static readonly DependencyProperty FallbackLabelProperty = DependencyProperty.Register(
-            "FallbackLabel",
-            typeof(string),
-            typeof(Avatar),
-            new PropertyMetadata("?", OnFallbackLabelChanged));
+                    "FallbackLabel",
+                    typeof(string),
+                    typeof(Avatar),
+                    new PropertyMetadata("?", OnFallbackLabelChanged));
 
         /// <summary>
         ///     下载头像失败时显示的Label属性
         /// </summary>
         public string FallbackLabel
         {
-            get { return (string)GetValue(FallbackLabelProperty); }
-            set { SetValue(FallbackLabelProperty, value); }
+            get
+            {
+                return (string)GetValue(FallbackLabelProperty);
+            }
+            set
+            {
+                SetValue(FallbackLabelProperty, value);
+            }
         }
 
         private static Dictionary<string, List<Avatar>> requesting = new Dictionary<string, List<Avatar>>();
@@ -119,6 +132,7 @@ namespace SrcGit.Views.Controls
             {
                 var corner = Math.Max(2, Width / 16);
                 var offsetX = (double)0;
+
                 if (HorizontalAlignment == HorizontalAlignment.Right)
                 {
                     offsetX = -Width * 0.5;
@@ -142,10 +156,13 @@ namespace SrcGit.Views.Controls
         private static void OnFallbackLabelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Avatar a = d as Avatar;
-            if (a == null) return;
+
+            if (a == null)
+            {
+                return;
+            }
 
             var placeholder = a.FallbackLabel.Length > 0 ? a.FallbackLabel.Substring(0, 1) : "?";
-
             a.colorIdx = 0;
             a.label = new FormattedText(
                 placeholder,
@@ -155,9 +172,13 @@ namespace SrcGit.Views.Controls
                 a.Width * 0.65,
                 Brushes.White,
                 VisualTreeHelper.GetDpi(a).PixelsPerDip);
-
             var chars = placeholder.ToCharArray();
-            foreach (var ch in chars) a.colorIdx += Math.Abs(ch);
+
+            foreach (var ch in chars)
+            {
+                a.colorIdx += Math.Abs(ch);
+            }
+
             a.colorIdx = a.colorIdx % BACKGROUND_BRUSHES.Length;
         }
 
@@ -169,14 +190,21 @@ namespace SrcGit.Views.Controls
         private static void OnEmailChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Avatar a = d as Avatar;
-            if (a == null) return;
+
+            if (a == null)
+            {
+                return;
+            }
 
             a.Cancel(e.OldValue as string);
             a.Source = null;
             a.InvalidateVisual();
-
             var email = e.NewValue as string;
-            if (string.IsNullOrEmpty(email)) return;
+
+            if (string.IsNullOrEmpty(email))
+            {
+                return;
+            }
 
             if (loaded.ContainsKey(email))
             {
@@ -192,10 +220,15 @@ namespace SrcGit.Views.Controls
 
             byte[] hash = MD5.Create().ComputeHash(Encoding.Default.GetBytes(email.ToLower().Trim()));
             string md5 = "";
-            for (int i = 0; i < hash.Length; i++) md5 += hash[i].ToString("x2");
-            md5 = md5.ToLower();
 
+            for (int i = 0; i < hash.Length; i++)
+            {
+                md5 += hash[i].ToString("x2");
+            }
+
+            md5 = md5.ToLower();
             string filePath = Path.Combine(CACHE_PATH, md5);
+
             if (File.Exists(filePath))
             {
                 var img = new BitmapImage(new Uri(filePath));
@@ -206,23 +239,24 @@ namespace SrcGit.Views.Controls
 
             requesting.Add(email, new List<Avatar>());
             requesting[email].Add(a);
-
             Action job = () =>
             {
-                if (!requesting.ContainsKey(email)) return;
+                if (!requesting.ContainsKey(email))
+                {
+                    return;
+                }
 
                 try
                 {
                     var req = new HttpClient().GetAsync(Models.Preference.Instance.General.AvatarServer + md5 + "?d=404");
                     req.Wait();
-
                     var rsp = req.Result;
+
                     if (rsp != null && rsp.StatusCode == HttpStatusCode.OK)
                     {
                         var writer = File.OpenWrite(filePath);
                         rsp.Content.CopyToAsync(writer).Wait();
                         writer.Close();
-
                         a.Dispatcher.Invoke(() =>
                         {
                             var img = new BitmapImage(new Uri(filePath));
@@ -230,18 +264,27 @@ namespace SrcGit.Views.Controls
 
                             if (requesting.ContainsKey(email))
                             {
-                                foreach (var one in requesting[email]) one.Source = img;
+                                foreach (var one in requesting[email])
+                                {
+                                    one.Source = img;
+                                }
                             }
                         });
                     }
                     else
                     {
-                        if (!loaded.ContainsKey(email)) loaded.Add(email, null);
+                        if (!loaded.ContainsKey(email))
+                        {
+                            loaded.Add(email, null);
+                        }
                     }
                 }
                 catch
                 {
-                    if (!loaded.ContainsKey(email)) loaded.Add(email, null);
+                    if (!loaded.ContainsKey(email))
+                    {
+                        loaded.Add(email, null);
+                    }
                 }
 
                 requesting.Remove(email);
@@ -249,7 +292,10 @@ namespace SrcGit.Views.Controls
 
             if (loader != null && !loader.IsCompleted)
             {
-                loader = loader.ContinueWith(t => { job(); });
+                loader = loader.ContinueWith(t =>
+                {
+                    job();
+                });
             }
             else
             {

@@ -15,7 +15,6 @@ namespace SrcGit.Views.Popups
         {
             this.repo = repo;
             this.changes = changes;
-
             InitializeComponent();
             chkIncludeUntracked.IsEnabled = changes == null || changes.Count == 0;
         }
@@ -29,7 +28,6 @@ namespace SrcGit.Views.Popups
         {
             var includeUntracked = chkIncludeUntracked.IsChecked == true;
             var message = txtMessage.Text;
-
             return Task.Run(() =>
             {
                 Models.Watcher.SetEnabled(repo, false);
@@ -40,11 +38,15 @@ namespace SrcGit.Views.Popups
                 }
 
                 var jobs = new List<Models.Change>();
+
                 foreach (var c in changes)
                 {
                     if (c.WorkTree == Models.Change.Status.Added || c.WorkTree == Models.Change.Status.Untracked)
                     {
-                        if (includeUntracked) jobs.Add(c);
+                        if (includeUntracked)
+                        {
+                            jobs.Add(c);
+                        }
                     }
                     else
                     {
@@ -52,7 +54,11 @@ namespace SrcGit.Views.Popups
                     }
                 }
 
-                if (jobs.Count > 0) new Commands.Stash(repo).Push(changes, message);
+                if (jobs.Count > 0)
+                {
+                    new Commands.Stash(repo).Push(changes, message);
+                }
+
                 Models.Watcher.SetEnabled(repo, true);
                 return true;
             });

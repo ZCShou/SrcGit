@@ -10,9 +10,21 @@ namespace SrcGit.Views.Popups
     {
         private Models.Repository repo = null;
 
-        public string Source { get; set; }
-        public string Ref { get; set; }
-        public string Prefix { get; set; }
+        public string Source
+        {
+            get;
+            set;
+        }
+        public string Ref
+        {
+            get;
+            set;
+        }
+        public string Prefix
+        {
+            get;
+            set;
+        }
 
         public AddSubTree(Models.Repository repo)
         {
@@ -28,15 +40,28 @@ namespace SrcGit.Views.Popups
         public override Task<bool> Start()
         {
             txtSource.GetBindingExpression(TextBox.TextProperty).UpdateSource();
-            if (Validation.GetHasError(txtSource)) return null;
+
+            if (Validation.GetHasError(txtSource))
+            {
+                return null;
+            }
 
             txtPrefix.GetBindingExpression(TextBox.TextProperty).UpdateSource();
-            if (Validation.GetHasError(txtPrefix)) return null;
+
+            if (Validation.GetHasError(txtPrefix))
+            {
+                return null;
+            }
 
             txtRef.GetBindingExpression(TextBox.TextProperty).UpdateSource();
-            if (Validation.GetHasError(txtRef)) return null;
+
+            if (Validation.GetHasError(txtRef))
+            {
+                return null;
+            }
 
             var squash = chkSquash.IsChecked == true;
+
             if (repo.SubTrees.FindIndex(x => x.Prefix == Prefix) >= 0)
             {
                 Models.Exception.Raise($"Subtree add failed. Prefix({Prefix}) already exists!");
@@ -47,6 +72,7 @@ namespace SrcGit.Views.Popups
             {
                 Models.Watcher.SetEnabled(repo.Path, false);
                 var succ = new Commands.SubTree(repo.Path).Add(Prefix, Source, Ref, squash, UpdateProgress);
+
                 if (succ)
                 {
                     repo.SubTrees.Add(new Models.SubTree()
@@ -57,6 +83,7 @@ namespace SrcGit.Views.Popups
                     Models.Preference.Save();
                     Models.Watcher.Get(repo.Path)?.RefreshSubTrees();
                 }
+
                 Models.Watcher.SetEnabled(repo.Path, true);
                 return succ;
             });

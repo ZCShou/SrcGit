@@ -10,8 +10,16 @@ namespace SrcGit.Views.Popups
     {
         private string repo = null;
 
-        public string URL { get; set; }
-        public string Path { get; set; }
+        public string URL
+        {
+            get;
+            set;
+        }
+        public string Path
+        {
+            get;
+            set;
+        }
 
         public AddSubmodule(string repo)
         {
@@ -27,13 +35,20 @@ namespace SrcGit.Views.Popups
         public override Task<bool> Start()
         {
             txtURL.GetBindingExpression(TextBox.TextProperty).UpdateSource();
-            if (Validation.GetHasError(txtURL)) return null;
+
+            if (Validation.GetHasError(txtURL))
+            {
+                return null;
+            }
 
             txtPath.GetBindingExpression(TextBox.TextProperty).UpdateSource();
-            if (Validation.GetHasError(txtPath)) return null;
+
+            if (Validation.GetHasError(txtPath))
+            {
+                return null;
+            }
 
             var recursive = chkNested.IsChecked == true;
-
             return Task.Run(() =>
             {
                 Models.Watcher.SetEnabled(repo, false);

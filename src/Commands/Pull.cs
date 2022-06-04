@@ -16,8 +16,8 @@ namespace SrcGit.Commands
             Cwd = repo;
             TraitErrorAsOutput = true;
             handler = onProgress;
-
             var sshKey = new Config(repo).Get($"remote.{remote}.sshkey");
+
             if (!string.IsNullOrEmpty(sshKey))
             {
                 Envs.Add("GIT_SSH_COMMAND", $"ssh -i '{sshKey}'");
@@ -30,11 +30,21 @@ namespace SrcGit.Commands
 
             Args += "pull --verbose --progress --tags ";
 
-            if (useRebase) Args += "--rebase ";
+            if (useRebase)
+            {
+                Args += "--rebase ";
+            }
+
             if (autoStash)
             {
-                if (useRebase) Args += "--autostash ";
-                else needStash = true;
+                if (useRebase)
+                {
+                    Args += "--autostash ";
+                }
+                else
+                {
+                    needStash = true;
+                }
             }
 
             Args += $"{remote} {branch}";
@@ -45,6 +55,7 @@ namespace SrcGit.Commands
             if (needStash)
             {
                 var changes = new LocalChanges(Cwd).Result();
+
                 if (changes.Count > 0)
                 {
                     if (!new Stash(Cwd).Push(changes, "PULL_AUTO_STASH"))
@@ -59,7 +70,12 @@ namespace SrcGit.Commands
             }
 
             var succ = Exec();
-            if (needStash) new Stash(Cwd).Pop("stash@{0}");
+
+            if (needStash)
+            {
+                new Stash(Cwd).Pop("stash@{0}");
+            }
+
             return succ;
         }
 

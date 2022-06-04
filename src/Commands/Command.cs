@@ -11,7 +11,11 @@ namespace SrcGit.Commands
     /// </summary>
     public class Context
     {
-        public bool IsCancelRequested { get; set; } = false;
+        public bool IsCancelRequested
+        {
+            get;
+            set;
+        } = false;
     }
 
     /// <summary>
@@ -25,40 +29,76 @@ namespace SrcGit.Commands
         /// </summary>
         public class ReadToEndResult
         {
-            public bool IsSuccess { get; set; }
-            public string Output { get; set; }
-            public string Error { get; set; }
+            public bool IsSuccess
+            {
+                get;
+                set;
+            }
+            public string Output
+            {
+                get;
+                set;
+            }
+            public string Error
+            {
+                get;
+                set;
+            }
         }
 
         /// <summary>
         ///     上下文
         /// </summary>
-        public Context Ctx { get; set; } = null;
+        public Context Ctx
+        {
+            get;
+            set;
+        } = null;
 
         /// <summary>
         ///     运行路径
         /// </summary>
-        public string Cwd { get; set; } = "";
+        public string Cwd
+        {
+            get;
+            set;
+        } = "";
 
         /// <summary>
         ///     参数
         /// </summary>
-        public string Args { get; set; } = "";
+        public string Args
+        {
+            get;
+            set;
+        } = "";
 
         /// <summary>
         ///     是否忽略错误
         /// </summary>
-        public bool DontRaiseError { get; set; } = false;
+        public bool DontRaiseError
+        {
+            get;
+            set;
+        } = false;
 
         /// <summary>
         ///     使用标准错误输出
         /// </summary>
-        public bool TraitErrorAsOutput { get; set; } = false;
+        public bool TraitErrorAsOutput
+        {
+            get;
+            set;
+        } = false;
 
         /// <summary>
         ///     用于设置该进程独有的环境变量
         /// </summary>
-        public Dictionary<string, string> Envs { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> Envs
+        {
+            get;
+            set;
+        } = new Dictionary<string, string>();
 
         /// <summary>
         ///     运行
@@ -75,15 +115,23 @@ namespace SrcGit.Commands
             start.StandardOutputEncoding = Encoding.UTF8;
             start.StandardErrorEncoding = Encoding.UTF8;
 
-            if (!string.IsNullOrEmpty(Cwd)) start.WorkingDirectory = Cwd;
+            if (!string.IsNullOrEmpty(Cwd))
+            {
+                start.WorkingDirectory = Cwd;
+            }
 
-            foreach (var kv in Envs) start.EnvironmentVariables[kv.Key] = kv.Value;
+            foreach (var kv in Envs)
+            {
+                start.EnvironmentVariables[kv.Key] = kv.Value;
+            }
 
             var progressFilter = new Regex(@"\s\d+%\s");
             var errs = new List<string>();
-            var proc = new Process() { StartInfo = start };
+            var proc = new Process()
+            {
+                StartInfo = start
+            };
             var isCancelled = false;
-
             proc.OutputDataReceived += (o, e) =>
             {
                 if (Ctx != null && Ctx.IsCancelRequested)
@@ -91,11 +139,20 @@ namespace SrcGit.Commands
                     isCancelled = true;
                     proc.CancelErrorRead();
                     proc.CancelOutputRead();
-                    if (!proc.HasExited) proc.Kill(true);
+
+                    if (!proc.HasExited)
+                    {
+                        proc.Kill(true);
+                    }
+
                     return;
                 }
 
-                if (e.Data == null) return;
+                if (e.Data == null)
+                {
+                    return;
+                }
+
                 OnReadline(e.Data);
             };
             proc.ErrorDataReceived += (o, e) =>
@@ -105,15 +162,35 @@ namespace SrcGit.Commands
                     isCancelled = true;
                     proc.CancelErrorRead();
                     proc.CancelOutputRead();
-                    if (!proc.HasExited) proc.Kill(true);
+
+                    if (!proc.HasExited)
+                    {
+                        proc.Kill(true);
+                    }
+
                     return;
                 }
 
-                if (string.IsNullOrEmpty(e.Data)) return;
-                if (TraitErrorAsOutput) OnReadline(e.Data);
+                if (string.IsNullOrEmpty(e.Data))
+                {
+                    return;
+                }
 
-                if (progressFilter.IsMatch(e.Data)) return;
-                if (e.Data.StartsWith("remote: Counting objects:", StringComparison.Ordinal)) return;
+                if (TraitErrorAsOutput)
+                {
+                    OnReadline(e.Data);
+                }
+
+                if (progressFilter.IsMatch(e.Data))
+                {
+                    return;
+                }
+
+                if (e.Data.StartsWith("remote: Counting objects:", StringComparison.Ordinal))
+                {
+                    return;
+                }
+
                 errs.Add(e.Data);
             };
 
@@ -123,20 +200,27 @@ namespace SrcGit.Commands
             }
             catch (Exception e)
             {
-                if (!DontRaiseError) Models.Exception.Raise(e.Message);
+                if (!DontRaiseError)
+                {
+                    Models.Exception.Raise(e.Message);
+                }
+
                 return false;
             }
 
             proc.BeginOutputReadLine();
             proc.BeginErrorReadLine();
             proc.WaitForExit();
-
             int exitCode = proc.ExitCode;
             proc.Close();
 
             if (!isCancelled && exitCode != 0 && errs.Count > 0)
             {
-                if (!DontRaiseError) Models.Exception.Raise(string.Join("\n", errs));
+                if (!DontRaiseError)
+                {
+                    Models.Exception.Raise(string.Join("\n", errs));
+                }
+
                 return false;
             }
             else
@@ -160,9 +244,16 @@ namespace SrcGit.Commands
             start.StandardOutputEncoding = Encoding.UTF8;
             start.StandardErrorEncoding = Encoding.UTF8;
 
-            if (!string.IsNullOrEmpty(Cwd)) start.WorkingDirectory = Cwd;
+            if (!string.IsNullOrEmpty(Cwd))
+            {
+                start.WorkingDirectory = Cwd;
+            }
 
-            var proc = new Process() { StartInfo = start };
+            var proc = new Process()
+            {
+                StartInfo = start
+            };
+
             try
             {
                 proc.Start();
@@ -180,11 +271,9 @@ namespace SrcGit.Commands
             var rs = new ReadToEndResult();
             rs.Output = proc.StandardOutput.ReadToEnd();
             rs.Error = proc.StandardError.ReadToEnd();
-
             proc.WaitForExit();
             rs.IsSuccess = proc.ExitCode == 0;
             proc.Close();
-
             return rs;
         }
 

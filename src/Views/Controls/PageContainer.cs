@@ -16,7 +16,6 @@ namespace SrcGit.Views.Controls
         {
             pages = new Dictionary<string, UIElement>();
             front = null;
-
             Loaded += OnLoaded;
         }
 
@@ -29,17 +28,28 @@ namespace SrcGit.Views.Controls
 
         public UIElement Get(string id)
         {
-            if (pages.ContainsKey(id)) return pages[id];
+            if (pages.ContainsKey(id))
+            {
+                return pages[id];
+            }
+
             return null;
         }
 
         public void Goto(string id)
         {
-            if (!pages.ContainsKey(id)) return;
+            if (!pages.ContainsKey(id))
+            {
+                return;
+            }
 
             if (!string.IsNullOrEmpty(front))
             {
-                if (front == id) return;
+                if (front == id)
+                {
+                    return;
+                }
+
                 pages[front].Visibility = Visibility.Collapsed;
             }
 
@@ -49,8 +59,16 @@ namespace SrcGit.Views.Controls
 
         public void Remove(string id)
         {
-            if (!pages.ContainsKey(id)) return;
-            if (front == id) front = null;
+            if (!pages.ContainsKey(id))
+            {
+                return;
+            }
+
+            if (front == id)
+            {
+                front = null;
+            }
+
             Children.Remove(pages[id]);
             pages.Remove(id);
         }
@@ -61,7 +79,11 @@ namespace SrcGit.Views.Controls
             {
                 var elem = child as UIElement;
                 var id = elem.Uid;
-                if (string.IsNullOrEmpty(id)) continue;
+
+                if (string.IsNullOrEmpty(id))
+                {
+                    continue;
+                }
 
                 pages.Add(id, elem);
                 front = id;

@@ -22,7 +22,6 @@ namespace SrcGit.Views.Widgets
         public CommitDetail()
         {
             InitializeComponent();
-
             Unloaded += (o, e) =>
             {
                 changeList.ItemsSource = new List<Models.Change>();
@@ -35,10 +34,8 @@ namespace SrcGit.Views.Widgets
         {
             cancelToken.IsCancelRequested = true;
             cancelToken = new Commands.Context();
-
             this.repo = repo;
             this.commit = commit;
-
             revisionFiles.SetData(repo, commit.SHA, cancelToken);
             UpdateInformation(commit);
             UpdateChanges();
@@ -49,13 +46,11 @@ namespace SrcGit.Views.Widgets
         {
             txtSHA.Text = commit.SHA;
             txtMessage.Text = (commit.Subject + "\n\n" + commit.Message.Trim()).Trim();
-
             avatarAuthor.Email = commit.Author.Email;
             avatarAuthor.FallbackLabel = commit.Author.Name;
             txtAuthorName.Text = commit.Author.Name;
             txtAuthorEmail.Text = commit.Author.Email;
             txtAuthorTime.Text = commit.Author.Time;
-
             avatarCommitter.Email = commit.Committer.Email;
             avatarCommitter.FallbackLabel = commit.Committer.Name;
             txtCommitterName.Text = commit.Committer.Name;
@@ -81,7 +76,12 @@ namespace SrcGit.Views.Widgets
             {
                 rowParents.Height = GridLength.Auto;
                 var shortPIDs = new List<string>();
-                foreach (var p in commit.Parents) shortPIDs.Add(p.Substring(0, 10));
+
+                foreach (var p in commit.Parents)
+                {
+                    shortPIDs.Add(p.Substring(0, 10));
+                }
+
                 listParents.ItemsSource = shortPIDs;
             }
 
@@ -98,16 +98,26 @@ namespace SrcGit.Views.Widgets
 
         private void UpdateChanges()
         {
-            var cmd = new Commands.CommitChanges(repo, commit.SHA) { Ctx = cancelToken };
+            var cmd = new Commands.CommitChanges(repo, commit.SHA)
+            {
+                Ctx = cancelToken
+            };
             Task.Run(() =>
             {
                 var changes = cmd.Result();
-                if (cmd.Ctx.IsCancelRequested) return;
+
+                if (cmd.Ctx.IsCancelRequested)
+                {
+                    return;
+                }
 
                 Dispatcher.Invoke(() =>
                 {
                     changeList.ItemsSource = changes;
-                    changeContainer.SetData(repo, new List<Models.Commit>() { commit }, changes);
+                    changeContainer.SetData(repo, new List<Models.Commit>()
+                    {
+                        commit
+                    }, changes);
                 });
             });
         }
@@ -122,10 +132,18 @@ namespace SrcGit.Views.Widgets
         private void OnChangeListMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var row = sender as DataGridRow;
-            if (row == null) return;
+
+            if (row == null)
+            {
+                return;
+            }
 
             var change = row.DataContext as Models.Change;
-            if (change == null) return;
+
+            if (change == null)
+            {
+                return;
+            }
 
             body.SelectedIndex = 1;
             changeContainer.Select(change);
@@ -135,7 +153,11 @@ namespace SrcGit.Views.Widgets
         private void OnChangeListContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
             var row = sender as DataGridRow;
-            if (row == null) return;
+
+            if (row == null)
+            {
+                return;
+            }
 
             if (!row.IsSelected)
             {
@@ -145,10 +167,15 @@ namespace SrcGit.Views.Widgets
 
             var selectedCount = changeList.SelectedItems.Count;
             var menu = new ContextMenu();
+
             if (selectedCount == 1)
             {
                 var change = changeList.SelectedItems[0] as Models.Change;
-                if (change == null) return;
+
+                if (change == null)
+                {
+                    return;
+                }
 
                 if (change.Index != Models.Change.Status.Deleted)
                 {
@@ -161,7 +188,6 @@ namespace SrcGit.Views.Widgets
                         viewer.Show();
                         ev.Handled = true;
                     };
-
                     var blame = new MenuItem();
                     blame.Header = App.Text("Blame");
                     blame.IsEnabled = change.Index != Models.Change.Status.Deleted;
@@ -171,7 +197,6 @@ namespace SrcGit.Views.Widgets
                         viewer.Show();
                         ev.Handled = true;
                     };
-
                     var explore = new MenuItem();
                     explore.Header = App.Text("RevealFile");
                     explore.IsEnabled = change.Index != Models.Change.Status.Deleted;
@@ -181,7 +206,6 @@ namespace SrcGit.Views.Widgets
                         Process.Start("explorer", $"/select,{full}");
                         ev.Handled = true;
                     };
-
                     menu.Items.Add(history);
                     menu.Items.Add(blame);
                     menu.Items.Add(explore);
@@ -194,7 +218,6 @@ namespace SrcGit.Views.Widgets
                     Clipboard.SetDataObject(change.Path, true);
                     ev.Handled = true;
                 };
-
                 menu.Items.Add(copyPath);
             }
             else
@@ -204,15 +227,16 @@ namespace SrcGit.Views.Widgets
                 copyPath.Click += (_, ev) =>
                 {
                     var builder = new StringBuilder();
+
                     foreach (var obj in changeList.SelectedItems)
                     {
                         builder.Append((obj as Models.Change).Path);
                         builder.Append("\n");
                     }
+
                     Clipboard.SetDataObject(builder.ToString(), true);
                     ev.Handled = true;
                 };
-
                 menu.Items.Add(copyPath);
             }
 

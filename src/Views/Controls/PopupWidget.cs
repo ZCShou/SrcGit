@@ -31,8 +31,14 @@ namespace SrcGit.Views.Controls
         /// <param name="container">容器实例</param>
         public static void RegisterContainer(string id, IPopupContainer container)
         {
-            if (containers.ContainsKey(id)) containers[id] = container;
-            else containers.Add(id, container);
+            if (containers.ContainsKey(id))
+            {
+                containers[id] = container;
+            }
+            else
+            {
+                containers.Add(id, container);
+            }
         }
 
         /// <summary>
@@ -41,7 +47,10 @@ namespace SrcGit.Views.Controls
         /// <param name="id">容器ID</param>
         public static void UnregisterContainer(string id)
         {
-            if (containers.ContainsKey(id)) containers.Remove(id);
+            if (containers.ContainsKey(id))
+            {
+                containers.Remove(id);
+            }
         }
 
         /// <summary>
@@ -67,7 +76,11 @@ namespace SrcGit.Views.Controls
         /// </summary>
         public void Show()
         {
-            if (string.IsNullOrEmpty(currentContainer) || !containers.ContainsKey(currentContainer)) return;
+            if (string.IsNullOrEmpty(currentContainer) || !containers.ContainsKey(currentContainer))
+            {
+                return;
+            }
+
             mine = containers[currentContainer];
             mine.Show(this);
         }
@@ -77,7 +90,11 @@ namespace SrcGit.Views.Controls
         /// </summary>
         public void ShowAndStart()
         {
-            if (string.IsNullOrEmpty(currentContainer) || !containers.ContainsKey(currentContainer)) return;
+            if (string.IsNullOrEmpty(currentContainer) || !containers.ContainsKey(currentContainer))
+            {
+                return;
+            }
+
             mine = containers[currentContainer];
             mine.ShowAndStart(this);
         }

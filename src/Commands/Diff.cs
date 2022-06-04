@@ -28,21 +28,34 @@ namespace SrcGit.Commands
         {
             Exec();
             ProcessChanges();
-            if (changes.IsBinary) changes.Lines.Clear();
+
+            if (changes.IsBinary)
+            {
+                changes.Lines.Clear();
+            }
+
             lineIndex = 0;
             return changes;
         }
 
         public override void OnReadline(string line)
         {
-            if (changes.IsBinary) return;
+            if (changes.IsBinary)
+            {
+                return;
+            }
 
             if (changes.Lines.Count == 0)
             {
                 var match = REG_INDICATOR.Match(line);
+
                 if (!match.Success)
                 {
-                    if (line.StartsWith("Binary", StringComparison.Ordinal)) changes.IsBinary = true;
+                    if (line.StartsWith("Binary", StringComparison.Ordinal))
+                    {
+                        changes.IsBinary = true;
+                    }
+
                     return;
                 }
 
@@ -62,6 +75,7 @@ namespace SrcGit.Commands
                 }
 
                 var ch = line[0];
+
                 if (ch == '-')
                 {
                     deleted.Add(new Models.TextChanges.Line(lineIndex++, Models.TextChanges.LineMode.Deleted, line.Substring(1), $"{oldLine}", ""));
@@ -76,6 +90,7 @@ namespace SrcGit.Commands
                 {
                     ProcessChanges();
                     var match = REG_INDICATOR.Match(line);
+
                     if (match.Success)
                     {
                         oldLine = int.Parse(match.Groups[1].Value);
@@ -103,10 +118,17 @@ namespace SrcGit.Commands
                         var left = deleted[i];
                         var right = added[i];
 
-                        if (left.Content.Length > 1024 || right.Content.Length > 1024) continue;
+                        if (left.Content.Length > 1024 || right.Content.Length > 1024)
+                        {
+                            continue;
+                        }
 
                         var chunks = Models.TextCompare.Process(left.Content, right.Content);
-                        if (chunks.Count > 4) continue;
+
+                        if (chunks.Count > 4)
+                        {
+                            continue;
+                        }
 
                         foreach (var chunk in chunks)
                         {

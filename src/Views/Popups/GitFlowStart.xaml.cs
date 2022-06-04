@@ -11,26 +11,31 @@ namespace SrcGit.Views.Popups
         private string repo = null;
         private Models.GitFlowBranchType type = Models.GitFlowBranchType.None;
 
-        public string BranchName { get; set; }
+        public string BranchName
+        {
+            get;
+            set;
+        }
 
         public GitFlowStart(Models.Repository repo, Models.GitFlowBranchType type)
         {
             this.repo = repo.Path;
             this.type = type;
-
             InitializeComponent();
-
             ruleBranch.Repo = repo;
+
             switch (type)
             {
                 case Models.GitFlowBranchType.Feature:
                     ruleBranch.Prefix = repo.GitFlow.Feature;
                     txtPrefix.Text = repo.GitFlow.Feature;
                     break;
+
                 case Models.GitFlowBranchType.Release:
                     ruleBranch.Prefix = repo.GitFlow.Release;
                     txtPrefix.Text = repo.GitFlow.Release;
                     break;
+
                 case Models.GitFlowBranchType.Hotfix:
                     ruleBranch.Prefix = repo.GitFlow.Hotfix;
                     txtPrefix.Text = repo.GitFlow.Hotfix;
@@ -44,10 +49,13 @@ namespace SrcGit.Views.Popups
             {
                 case Models.GitFlowBranchType.Feature:
                     return App.Text("GitFlow.StartFeatureTitle");
+
                 case Models.GitFlowBranchType.Release:
                     return App.Text("GitFlow.StartReleaseTitle");
+
                 case Models.GitFlowBranchType.Hotfix:
                     return App.Text("GitFlow.StartHotfixTitle");
+
                 default:
                     return "";
             }
@@ -56,7 +64,11 @@ namespace SrcGit.Views.Popups
         public override Task<bool> Start()
         {
             txtBranchName.GetBindingExpression(TextBox.TextProperty).UpdateSource();
-            if (Validation.GetHasError(txtBranchName)) return null;
+
+            if (Validation.GetHasError(txtBranchName))
+            {
+                return null;
+            }
 
             return Task.Run(() =>
             {

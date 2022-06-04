@@ -23,14 +23,16 @@ namespace SrcGit.Views.Popups
         public override Task<bool> Start()
         {
             UpdateProgress(GetTitle());
-
             return Task.Run(() =>
             {
                 Models.Watcher.SetEnabled(repo, false);
                 new Commands.GC(repo, UpdateProgress).Exec();
-
                 var lfs = new Commands.LFS(repo);
-                if (lfs.IsEnabled()) lfs.Prune(UpdateProgress);
+
+                if (lfs.IsEnabled())
+                {
+                    lfs.Prune(UpdateProgress);
+                }
 
                 Models.Watcher.SetEnabled(repo, true);
                 return true;

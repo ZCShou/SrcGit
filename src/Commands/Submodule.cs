@@ -18,7 +18,11 @@ namespace SrcGit.Commands
         {
             Args = $"submodule add {url} {path}";
             onProgress = handler;
-            if (!Exec()) return false;
+
+            if (!Exec())
+            {
+                return false;
+            }
 
             if (recursive)
             {
@@ -40,7 +44,11 @@ namespace SrcGit.Commands
         public bool Delete(string path)
         {
             Args = $"submodule deinit -f {path}";
-            if (!Exec()) return false;
+
+            if (!Exec())
+            {
+                return false;
+            }
 
             Args = $"rm -rf {path}";
             return Exec();

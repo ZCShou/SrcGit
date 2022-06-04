@@ -65,7 +65,11 @@ namespace SrcGit.Views.Controls
         /// <summary>
         ///     选中的目录
         /// </summary>
-        public string SelectedPath { get; private set; } = string.Empty;
+        public string SelectedPath
+        {
+            get;
+            private set;
+        } = string.Empty;
 
         public override void Reset()
         {
@@ -76,6 +80,7 @@ namespace SrcGit.Views.Controls
         {
             BrowseCallbackProc callback = new BrowseCallbackProc(BrowseCallbackHandler);
             bool ok = false;
+
             try
             {
                 var info = new BrowseInfo();
@@ -87,8 +92,8 @@ namespace SrcGit.Views.Controls
                 info.lpfn = callback;
                 info.lParam = IntPtr.Zero;
                 info.iImage = 0;
-
                 IntPtr result = Shell32.SHBrowseForFolder(info);
+
                 if (result != IntPtr.Zero)
                 {
                     IntPtr pathPtr = Marshal.AllocHGlobal(260 * Marshal.SystemDefaultCharSize);
@@ -122,7 +127,9 @@ namespace SrcGit.Views.Controls
                         Int32 flag = Marshal.SystemDefaultCharSize == 1 ? 1126 : 1127;
                         User32.SendMessage(new HandleRef(null, hwnd), flag, 1, SelectedPath);
                     }
+
                     break;
+
                 case 2:
                     if (lParam != IntPtr.Zero)
                     {
@@ -131,6 +138,7 @@ namespace SrcGit.Views.Controls
                         Marshal.FreeHGlobal(pathPtr);
                         User32.SendMessage(new HandleRef(null, hwnd), 1125, 0, flag ? 1 : 0);
                     }
+
                     break;
             }
 

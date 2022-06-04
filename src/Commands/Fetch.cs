@@ -15,8 +15,8 @@ namespace SrcGit.Commands
         {
             Cwd = repo;
             TraitErrorAsOutput = true;
-
             var sshKey = new Config(repo).Get($"remote.{remote}.sshkey");
+
             if (!string.IsNullOrEmpty(sshKey))
             {
                 Envs.Add("GIT_SSH_COMMAND", $"ssh -i '{sshKey}'");
@@ -28,7 +28,12 @@ namespace SrcGit.Commands
             }
 
             Args += "fetch --progress --verbose ";
-            if (prune) Args += "--prune ";
+
+            if (prune)
+            {
+                Args += "--prune ";
+            }
+
             Args += remote;
             handler = outputHandler;
             AutoFetch.MarkFetched(repo);
@@ -53,11 +58,18 @@ namespace SrcGit.Commands
 
         public static void Start(string repo)
         {
-            if (!Models.Preference.Instance.Git.AutoFetchRemotes) return;
+            if (!Models.Preference.Instance.Git.AutoFetchRemotes)
+            {
+                return;
+            }
 
             // 只自动更新加入管理列表中的仓库（子模块等不自动更新）
             var exists = Models.Preference.Instance.FindRepository(repo);
-            if (exists == null) return;
+
+            if (exists == null)
+            {
+                return;
+            }
 
             var job = new AutoFetch(repo);
             jobs.Add(repo, job);
@@ -65,13 +77,20 @@ namespace SrcGit.Commands
 
         public static void MarkFetched(string repo)
         {
-            if (!jobs.ContainsKey(repo)) return;
+            if (!jobs.ContainsKey(repo))
+            {
+                return;
+            }
+
             jobs[repo].nextFetchPoint = DateTime.Now.AddMinutes(10).ToFileTime();
         }
 
         public static void Stop(string repo)
         {
-            if (!jobs.ContainsKey(repo)) return;
+            if (!jobs.ContainsKey(repo))
+            {
+                return;
+            }
 
             jobs[repo].timer.Dispose();
             jobs.Remove(repo);
@@ -81,7 +100,6 @@ namespace SrcGit.Commands
         {
             cmd = new Fetch(repo, "--all", true, null);
             cmd.DontRaiseError = true;
-
             nextFetchPoint = DateTime.Now.AddMinutes(10).ToFileTime();
             timer = new Timer(OnTick, null, 60000, 10000);
         }
@@ -89,7 +107,11 @@ namespace SrcGit.Commands
         private void OnTick(object o)
         {
             var now = DateTime.Now.ToFileTime();
-            if (nextFetchPoint > now) return;
+
+            if (nextFetchPoint > now)
+            {
+                return;
+            }
 
             Models.Watcher.SetEnabled(cmd.Cwd, false);
             cmd.Exec();

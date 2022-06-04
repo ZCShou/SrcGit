@@ -10,8 +10,16 @@ namespace SrcGit.Commands
         {
             Cwd = repo;
             Args = "apply ";
-            if (ignoreWhitespace) Args += "--ignore-whitespace ";
-            else Args += $"--whitespace={whitespaceMode} ";
+
+            if (ignoreWhitespace)
+            {
+                Args += "--ignore-whitespace ";
+            }
+            else
+            {
+                Args += $"--whitespace={whitespaceMode} ";
+            }
+
             Args += $"\"{file}\"";
         }
     }

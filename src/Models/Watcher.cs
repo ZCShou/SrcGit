@@ -59,7 +59,6 @@ namespace SrcGit.Models
             var watcher = new Watcher();
             watcher.Start(repo.Path, repo.GitDir);
             all.Add(repo.Path, watcher);
-
             Opened?.Invoke(repo);
         }
 
@@ -69,7 +68,11 @@ namespace SrcGit.Models
         /// <param name="repoPath"></param>
         public static void Close(string repoPath)
         {
-            if (!all.ContainsKey(repoPath)) return;
+            if (!all.ContainsKey(repoPath))
+            {
+                return;
+            }
+
             all[repoPath].Stop();
             all.Remove(repoPath);
         }
@@ -81,7 +84,11 @@ namespace SrcGit.Models
         /// <returns></returns>
         public static Watcher Get(string repoPath)
         {
-            if (all.ContainsKey(repoPath)) return all[repoPath];
+            if (all.ContainsKey(repoPath))
+            {
+                return all[repoPath];
+            }
+
             return null;
         }
 
@@ -95,9 +102,13 @@ namespace SrcGit.Models
             if (all.ContainsKey(repoPath))
             {
                 var watcher = all[repoPath];
+
                 if (enabled)
                 {
-                    if (watcher.lockCount > 0) watcher.lockCount--;
+                    if (watcher.lockCount > 0)
+                    {
+                        watcher.lockCount--;
+                    }
                 }
                 else
                 {
@@ -144,7 +155,6 @@ namespace SrcGit.Models
             wcWatcher.Changed += OnWorkingCopyChanged;
             wcWatcher.Deleted += OnWorkingCopyChanged;
             wcWatcher.EnableRaisingEvents = true;
-
             repoWatcher = new FileSystemWatcher();
             repoWatcher.Path = gitDir;
             repoWatcher.Filter = "*";
@@ -155,7 +165,6 @@ namespace SrcGit.Models
             repoWatcher.Changed += OnRepositoryChanged;
             repoWatcher.Deleted += OnRepositoryChanged;
             repoWatcher.EnableRaisingEvents = true;
-
             timer = new Timer(Tick, null, 100, 100);
         }
 
@@ -164,14 +173,11 @@ namespace SrcGit.Models
             repoWatcher.EnableRaisingEvents = false;
             repoWatcher.Dispose();
             repoWatcher = null;
-
             wcWatcher.EnableRaisingEvents = false;
             wcWatcher.Dispose();
             wcWatcher = null;
-
             timer.Dispose();
             timer = null;
-
             Navigate = null;
             WorkingCopyChanged = null;
             BranchChanged = null;
@@ -183,7 +189,10 @@ namespace SrcGit.Models
 
         private void OnRepositoryChanged(object o, FileSystemEventArgs e)
         {
-            if (string.IsNullOrEmpty(e.Name)) return;
+            if (string.IsNullOrEmpty(e.Name))
+            {
+                return;
+            }
 
             if (e.Name.StartsWith("modules", StringComparison.Ordinal))
             {
@@ -198,9 +207,9 @@ namespace SrcGit.Models
                 updateStashes = DateTime.Now.AddSeconds(.5).ToFileTime();
             }
             else if (e.Name.Equals("HEAD", StringComparison.Ordinal) ||
-              e.Name.StartsWith("refs\\heads\\", StringComparison.Ordinal) ||
-              e.Name.StartsWith("refs\\remotes\\", StringComparison.Ordinal) ||
-              e.Name.StartsWith("worktrees\\"))
+                     e.Name.StartsWith("refs\\heads\\", StringComparison.Ordinal) ||
+                     e.Name.StartsWith("refs\\remotes\\", StringComparison.Ordinal) ||
+                     e.Name.StartsWith("worktrees\\"))
             {
                 updateBranch = DateTime.Now.AddSeconds(.5).ToFileTime();
             }
@@ -212,17 +221,28 @@ namespace SrcGit.Models
 
         private void OnWorkingCopyChanged(object o, FileSystemEventArgs e)
         {
-            if (string.IsNullOrEmpty(e.Name)) return;
-            if (e.Name == ".git" || e.Name.StartsWith(".git\\", StringComparison.Ordinal)) return;
+            if (string.IsNullOrEmpty(e.Name))
+            {
+                return;
+            }
+
+            if (e.Name == ".git" || e.Name.StartsWith(".git\\", StringComparison.Ordinal))
+            {
+                return;
+            }
 
             updateWC = DateTime.Now.AddSeconds(1).ToFileTime();
         }
 
         private void Tick(object sender)
         {
-            if (lockCount > 0) return;
+            if (lockCount > 0)
+            {
+                return;
+            }
 
             var now = DateTime.Now.ToFileTime();
+
             if (updateBranch > 0 && now > updateBranch)
             {
                 BranchChanged?.Invoke();

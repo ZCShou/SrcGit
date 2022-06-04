@@ -26,7 +26,12 @@ namespace SrcGit.Commands
         public override void OnReadline(string line)
         {
             var match = REG_FORMAT.Match(line);
-            if (!match.Success) return;
+
+            if (!match.Success)
+            {
+                return;
+            }
+
             modules.Add(match.Groups[1].Value);
         }
     }

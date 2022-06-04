@@ -5,7 +5,15 @@ namespace SrcGit.Models
     /// </summary>
     public class LFSObject
     {
-        public string OID { get; set; }
-        public long Size { get; set; }
+        public string OID
+        {
+            get;
+            set;
+        }
+        public long Size
+        {
+            get;
+            set;
+        }
     }
 }

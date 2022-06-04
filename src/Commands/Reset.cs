@@ -23,15 +23,16 @@ namespace SrcGit.Commands
         public Reset(string repo, List<string> files)
         {
             Cwd = repo;
-
             StringBuilder builder = new StringBuilder();
             builder.Append("reset --");
+
             foreach (var f in files)
             {
                 builder.Append(" \"");
                 builder.Append(f);
                 builder.Append("\"");
             }
+
             Args = builder.ToString();
         }
     }

@@ -28,12 +28,14 @@ namespace SrcGit.Views.Popups
             return Task.Run(() =>
             {
                 var idx = repo.SubTrees.FindIndex(x => x.Prefix == prefix);
+
                 if (idx >= 0)
                 {
                     repo.SubTrees.RemoveAt(idx);
                     Models.Preference.Save();
                     Models.Watcher.Get(repo.Path)?.RefreshSubTrees();
                 }
+
                 return true;
             });
         }

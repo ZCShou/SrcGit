@@ -20,8 +20,16 @@ namespace SrcGit.Views.Widgets
         /// </summary>
         public class Node : Controls.BindableBase
         {
-            public string Id { get; set; }
-            public string ParentId { get; set; }
+            public string Id
+            {
+                get;
+                set;
+            }
+            public string ParentId
+            {
+                get;
+                set;
+            }
 
             private string name;
             public string Name
@@ -30,7 +38,11 @@ namespace SrcGit.Views.Widgets
                 set => SetProperty(ref name, value);
             }
 
-            public bool IsGroup { get; set; }
+            public bool IsGroup
+            {
+                get;
+                set;
+            }
 
             private bool isEditing = false;
             public bool IsEditing
@@ -39,7 +51,11 @@ namespace SrcGit.Views.Widgets
                 set => SetProperty(ref isEditing, value);
             }
 
-            public bool IsExpanded { get; set; }
+            public bool IsExpanded
+            {
+                get;
+                set;
+            }
 
             private int bookmark = 0;
             public int Bookmark
@@ -48,7 +64,11 @@ namespace SrcGit.Views.Widgets
                 set => SetProperty(ref bookmark, value);
             }
 
-            public List<Node> Children { get; set; }
+            public List<Node> Children
+            {
+                get;
+                set;
+            }
         }
 
         /// <summary>
@@ -84,7 +104,11 @@ namespace SrcGit.Views.Widgets
         private void OnOpenClicked(object sender, RoutedEventArgs e)
         {
             var dialog = new Controls.FolderDialog();
-            if (dialog.ShowDialog() == true) CheckAndOpen(dialog.SelectedPath);
+
+            if (dialog.ShowDialog() == true)
+            {
+                CheckAndOpen(dialog.SelectedPath);
+            }
         }
 
         private void OnOpenTerminalClicked(object sender, RoutedEventArgs e)
@@ -92,6 +116,7 @@ namespace SrcGit.Views.Widgets
             if (MakeSureReady())
             {
                 var bash = Path.Combine(Models.Preference.Instance.Git.Path, "..", "bash.exe");
+
                 if (!File.Exists(bash))
                 {
                     Models.Exception.Raise(App.Text("MissingBash"));
@@ -103,22 +128,28 @@ namespace SrcGit.Views.Widgets
                     FileName = bash,
                     UseShellExecute = true,
                 });
-
                 e.Handled = true;
             }
         }
 
         private void OnCloneClicked(object sender, RoutedEventArgs e)
         {
-            if (MakeSureReady()) new Popups.Clone().Show();
+            if (MakeSureReady())
+            {
+                new Popups.Clone().Show();
+            }
         }
 
         private void OnRecentContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
             var repo = (sender as DataGridRow).DataContext as Models.Repository;
+
             if (repo != null)
             {
-                var remove = new MenuItem();
+
+                var remove
+                        = new MenuItem();
+
                 remove.Header = App.Text("Welcome.Delete");
                 remove.Click += (o, ev) =>
                 {
@@ -126,7 +157,6 @@ namespace SrcGit.Views.Widgets
                     UpdateRecents();
                     ev.Handled = true;
                 };
-
                 var menu = new ContextMenu();
                 menu.Items.Add(remove);
                 menu.IsOpen = true;
@@ -137,7 +167,12 @@ namespace SrcGit.Views.Widgets
         private void OnRecentDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var repo = (sender as DataGridRow).DataContext as Models.Repository;
-            if (repo != null) CheckAndOpen(repo.Path);
+
+            if (repo != null)
+            {
+                CheckAndOpen(repo.Path);
+            }
+
             e.Handled = true;
         }
 
@@ -150,15 +185,24 @@ namespace SrcGit.Views.Widgets
         private void OnTreeLostFocus(object sender, RoutedEventArgs e)
         {
             var child = FocusManager.GetFocusedElement(body);
-            if (child == null) return;
 
-            if (!tree.IsAncestorOf(child as UIElement)) tree.UnselectAll();
+            if (child == null)
+            {
+                return;
+            }
+
+            if (!tree.IsAncestorOf(child as UIElement))
+            {
+                tree.UnselectAll();
+            }
+
             e.Handled = true;
         }
 
         private void OnTreeNodeStatusChange(object sender, RoutedEventArgs e)
         {
             var node = (sender as Controls.TreeItem).DataContext as Node;
+
             if (node != null)
             {
                 var group = Models.Preference.Instance.FindGroup(node.Id);
@@ -170,6 +214,7 @@ namespace SrcGit.Views.Widgets
         private void OnTreeNodeDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var node = (sender as Controls.TreeItem).DataContext as Node;
+
             if (node != null && !node.IsGroup)
             {
                 CheckAndOpen(node.Id);
@@ -180,6 +225,7 @@ namespace SrcGit.Views.Widgets
         private void OnTreeContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
             var item = tree.FindItem(e.OriginalSource as DependencyObject);
+
             if (item == null)
             {
                 var addFolder = new MenuItem();
@@ -190,7 +236,6 @@ namespace SrcGit.Views.Widgets
                     UpdateTree(group.Id);
                     ev.Handled = true;
                 };
-
                 var menu = new ContextMenu();
                 menu.Items.Add(addFolder);
                 menu.IsOpen = true;
@@ -199,9 +244,14 @@ namespace SrcGit.Views.Widgets
             else
             {
                 var node = item.DataContext as Node;
-                if (node == null) return;
+
+                if (node == null)
+                {
+                    return;
+                }
 
                 var menu = new ContextMenu();
+
                 if (!node.IsGroup)
                 {
                     var open = new MenuItem();
@@ -211,7 +261,6 @@ namespace SrcGit.Views.Widgets
                         CheckAndOpen(node.Id);
                         ev.Handled = true;
                     };
-
                     var explore = new MenuItem();
                     explore.Header = App.Text("RepoCM.Explore");
                     explore.Click += (o, ev) =>
@@ -219,25 +268,24 @@ namespace SrcGit.Views.Widgets
                         Process.Start("explorer", node.Id);
                         ev.Handled = true;
                     };
-
                     var iconBookmark = FindResource("Icon.Git") as Geometry;
                     var bookmark = new MenuItem();
                     bookmark.Header = App.Text("RepoCM.Bookmark");
+
                     for (int i = 0; i < Controls.Bookmark.COLORS.Length; i++)
                     {
                         var icon = new System.Windows.Shapes.Path();
                         icon.Data = iconBookmark;
                         icon.Fill = i == 0 ? (FindResource("Brush.FG1") as Brush) : Controls.Bookmark.COLORS[i];
                         icon.Width = 12;
-
                         var mark = new MenuItem();
                         mark.Icon = icon;
                         mark.Header = $"{i}";
-
                         var refIdx = i;
                         mark.Click += (o, ev) =>
                         {
                             var repo = Models.Preference.Instance.FindRepository(node.Id);
+
                             if (repo != null)
                             {
                                 repo.Bookmark = refIdx;
@@ -245,9 +293,9 @@ namespace SrcGit.Views.Widgets
                                 UpdateRecents();
                                 OnNodeEdited?.Invoke(node);
                             }
+
                             ev.Handled = true;
                         };
-
                         bookmark.Items.Add(mark);
                     }
 
@@ -262,13 +310,16 @@ namespace SrcGit.Views.Widgets
                     addSubFolder.Click += (o, ev) =>
                     {
                         var parent = Models.Preference.Instance.FindGroup(node.Id);
-                        if (parent != null) parent.IsExpanded = true;
+
+                        if (parent != null)
+                        {
+                            parent.IsExpanded = true;
+                        }
 
                         var group = Models.Preference.Instance.AddGroup("New Group", node.Id);
                         UpdateTree(group.Id);
                         ev.Handled = true;
                     };
-
                     menu.Items.Add(addSubFolder);
                 }
 
@@ -279,7 +330,6 @@ namespace SrcGit.Views.Widgets
                     UpdateTree(node.Id);
                     ev.Handled = true;
                 };
-
                 var delete = new MenuItem();
                 delete.Header = App.Text("Welcome.Delete");
                 delete.Click += (o, ev) =>
@@ -287,7 +337,6 @@ namespace SrcGit.Views.Widgets
                     DeleteNode(node);
                     ev.Handled = true;
                 };
-
                 menu.Items.Add(rename);
                 menu.Items.Add(delete);
                 menu.IsOpen = true;
@@ -317,13 +366,19 @@ namespace SrcGit.Views.Widgets
 
         private void OnTreeMouseMove(object sender, MouseEventArgs e)
         {
-            if (e.LeftButton != MouseButtonState.Pressed) return;
+            if (e.LeftButton != MouseButtonState.Pressed)
+            {
+                return;
+            }
 
             var item = tree.FindItem(e.OriginalSource as DependencyObject);
-            if (item == null) return;
+
+            if (item == null)
+            {
+                return;
+            }
 
             tree.UnselectAll();
-
             var adorner = new Controls.DragDropAdorner(item);
             DragDrop.DoDragDrop(item, item.DataContext, DragDropEffects.Move);
             adorner.Remove();
@@ -331,13 +386,25 @@ namespace SrcGit.Views.Widgets
 
         private void OnTreeDragOver(object sender, DragEventArgs e)
         {
-            if (!e.Data.GetDataPresent(DataFormats.FileDrop) && !e.Data.GetDataPresent(typeof(Node))) return;
+            if (!e.Data.GetDataPresent(DataFormats.FileDrop) && !e.Data.GetDataPresent(typeof(Node)))
+            {
+                return;
+            }
 
             var item = tree.FindItem(e.OriginalSource as DependencyObject);
-            if (item == null) return;
+
+            if (item == null)
+            {
+                return;
+            }
 
             var node = item.DataContext as Node;
-            if (node.IsGroup && !item.IsExpanded) item.IsExpanded = true;
+
+            if (node.IsGroup && !item.IsExpanded)
+            {
+                item.IsExpanded = true;
+            }
+
             e.Handled = true;
         }
 
@@ -345,9 +412,9 @@ namespace SrcGit.Views.Widgets
         {
             bool rebuild = false;
             dropArea.Visibility = Visibility.Hidden;
-
             var parent = "";
             var to = tree.FindItem(e.OriginalSource as DependencyObject);
+
             if (to != null)
             {
                 var dst = to.DataContext as Node;
@@ -356,12 +423,17 @@ namespace SrcGit.Views.Widgets
 
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                if (!MakeSureReady()) return;
+                if (!MakeSureReady())
+                {
+                    return;
+                }
 
                 var paths = e.Data.GetData(DataFormats.FileDrop) as string[];
+
                 foreach (var path in paths)
                 {
                     var dir = new Commands.QueryGitDir(path).Result();
+
                     if (dir != null)
                     {
                         var root = new Commands.GetRepositoryRootPath(path).Result();
@@ -373,6 +445,7 @@ namespace SrcGit.Views.Widgets
             else if (e.Data.GetDataPresent(typeof(Node)))
             {
                 var src = e.Data.GetData(typeof(Node)) as Node;
+
                 if (src.IsGroup)
                 {
                     if (!Models.Preference.Instance.IsSubGroup(src.Id, parent))
@@ -388,7 +461,11 @@ namespace SrcGit.Views.Widgets
                 }
             }
 
-            if (rebuild) UpdateTree();
+            if (rebuild)
+            {
+                UpdateTree();
+            }
+
             e.Handled = true;
         }
         #endregion
@@ -402,6 +479,7 @@ namespace SrcGit.Views.Widgets
             foreach (var path in Models.Preference.Instance.Recents)
             {
                 var repo = Models.Preference.Instance.FindRepository(path);
+
                 if (repo != null)
                 {
                     repos.Add(repo);
@@ -412,7 +490,11 @@ namespace SrcGit.Views.Widgets
                 }
             }
 
-            foreach (var path in dirty) Models.Preference.Instance.RemoveRecent(path);
+            foreach (var path in dirty)
+            {
+                Models.Preference.Instance.RemoveRecent(path);
+            }
+
             list.ItemsSource = repos;
 
             if (repos.Count == 0)
@@ -443,7 +525,6 @@ namespace SrcGit.Views.Widgets
                     Bookmark = 0,
                     Children = new List<Node>(),
                 };
-
                 groupNodes.Add(node.Id, node);
             }
 
@@ -519,12 +600,16 @@ namespace SrcGit.Views.Widgets
                 Models.Exception.Raise(App.Text("NotConfigured"));
                 return false;
             }
+
             return true;
         }
 
         private void CheckAndOpen(string path)
         {
-            if (!MakeSureReady()) return;
+            if (!MakeSureReady())
+            {
+                return;
+            }
 
             if (!Directory.Exists(path))
             {
@@ -533,6 +618,7 @@ namespace SrcGit.Views.Widgets
             }
 
             var root = new Commands.GetRepositoryRootPath(path).Result();
+
             if (root == null)
             {
                 new Popups.Init(path).Show();
@@ -547,7 +633,11 @@ namespace SrcGit.Views.Widgets
 
         public void UpdateNodes(string id, int bookmark, IEnumerable<Node> nodes = null)
         {
-            if (nodes == null) nodes = tree.ItemsSource.OfType<Node>();
+            if (nodes == null)
+            {
+                nodes = tree.ItemsSource.OfType<Node>();
+            }
+
             foreach (var node in nodes)
             {
                 if (!node.IsGroup)
@@ -570,7 +660,11 @@ namespace SrcGit.Views.Widgets
         private void RenameStart(object sender, RoutedEventArgs e)
         {
             var edit = sender as Controls.TextEdit;
-            if (edit == null || !edit.IsVisible) return;
+
+            if (edit == null || !edit.IsVisible)
+            {
+                return;
+            }
 
             edit.SelectAll();
             edit.Focus();
@@ -593,7 +687,11 @@ namespace SrcGit.Views.Widgets
         private void RenameEnd(object sender, RoutedEventArgs e)
         {
             var edit = sender as Controls.TextEdit;
-            if (edit == null) return;
+
+            if (edit == null)
+            {
+                return;
+            }
 
             if (string.IsNullOrWhiteSpace(edit.Text))
             {
@@ -603,10 +701,12 @@ namespace SrcGit.Views.Widgets
             }
 
             var node = edit.DataContext as Node;
+
             if (node != null)
             {
                 node.Name = edit.Text;
                 node.IsEditing = false;
+
                 if (node.IsGroup)
                 {
                     Models.Preference.Instance.RenameGroup(node.Id, edit.Text);
@@ -617,6 +717,7 @@ namespace SrcGit.Views.Widgets
                     UpdateRecents();
                     OnNodeEdited?.Invoke(node);
                 }
+
                 e.Handled = false;
             }
         }

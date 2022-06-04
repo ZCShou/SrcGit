@@ -12,27 +12,39 @@ namespace SrcGit.Views.Controls
     public class ChangeDisplaySwitcher : Button
     {
         public static readonly DependencyProperty ModeProperty = DependencyProperty.Register(
-            "Mode",
-            typeof(Models.Change.DisplayMode),
-            typeof(ChangeDisplaySwitcher),
-            new PropertyMetadata(Models.Change.DisplayMode.Tree, OnModeChanged));
+                    "Mode",
+                    typeof(Models.Change.DisplayMode),
+                    typeof(ChangeDisplaySwitcher),
+                    new PropertyMetadata(Models.Change.DisplayMode.Tree, OnModeChanged));
 
         public Models.Change.DisplayMode Mode
         {
-            get { return (Models.Change.DisplayMode)GetValue(ModeProperty); }
-            set { SetValue(ModeProperty, value); }
+            get
+            {
+                return (Models.Change.DisplayMode)GetValue(ModeProperty);
+            }
+            set
+            {
+                SetValue(ModeProperty, value);
+            }
         }
 
         public static readonly RoutedEvent ModeChangedEvent = EventManager.RegisterRoutedEvent(
-            "ModeChanged",
-            RoutingStrategy.Bubble,
-            typeof(RoutedEventHandler),
-            typeof(ChangeDisplaySwitcher));
+                    "ModeChanged",
+                    RoutingStrategy.Bubble,
+                    typeof(RoutedEventHandler),
+                    typeof(ChangeDisplaySwitcher));
 
         public event RoutedEventHandler ModeChanged
         {
-            add { AddHandler(ModeChangedEvent, value); }
-            remove { RemoveHandler(ModeChangedEvent, value); }
+            add
+            {
+                AddHandler(ModeChangedEvent, value);
+            }
+            remove
+            {
+                RemoveHandler(ModeChangedEvent, value);
+            }
         }
 
         private Path icon = null;
@@ -42,12 +54,10 @@ namespace SrcGit.Views.Controls
             icon = new Path();
             icon.Data = FindResource("Icon.Tree") as Geometry;
             icon.SetResourceReference(Path.FillProperty, "Brush.FG2");
-
             Content = icon;
             Style = FindResource("Style.Button") as Style;
             BorderThickness = new Thickness(0);
             ToolTip = App.Text("ChangeDisplayMode");
-
             Click += OnClicked;
         }
 
@@ -65,11 +75,9 @@ namespace SrcGit.Views.Controls
             menu.PlacementTarget = this;
             menu.StaysOpen = false;
             menu.Focusable = true;
-
             FillMenu(menu, "ChangeDisplayMode.Tree", "Icon.Tree", Models.Change.DisplayMode.Tree);
             FillMenu(menu, "ChangeDisplayMode.List", "Icon.List", Models.Change.DisplayMode.List);
             FillMenu(menu, "ChangeDisplayMode.Grid", "Icon.Grid", Models.Change.DisplayMode.Grid);
-
             ContextMenu = menu;
             ContextMenu.IsOpen = true;
             e.Handled = true;
@@ -82,18 +90,17 @@ namespace SrcGit.Views.Controls
             iconMode.Height = 12;
             iconMode.Data = FindResource(icon) as Geometry;
             iconMode.SetResourceReference(Path.FillProperty, "Brush.FG2");
-
             var item = new MenuItem();
             item.Icon = iconMode;
             item.Header = App.Text(header);
             item.Click += (o, e) => Mode = useMode;
-
             menu.Items.Add(item);
         }
 
         private static void OnModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var elem = d as ChangeDisplaySwitcher;
+
             if (elem != null)
             {
                 switch (elem.Mode)
@@ -101,13 +108,16 @@ namespace SrcGit.Views.Controls
                     case Models.Change.DisplayMode.Tree:
                         elem.icon.Data = elem.FindResource("Icon.Tree") as Geometry;
                         break;
+
                     case Models.Change.DisplayMode.List:
                         elem.icon.Data = elem.FindResource("Icon.List") as Geometry;
                         break;
+
                     case Models.Change.DisplayMode.Grid:
                         elem.icon.Data = elem.FindResource("Icon.Grid") as Geometry;
                         break;
                 }
+
                 elem.RaiseEvent(new RoutedEventArgs(ModeChangedEvent));
             }
         }

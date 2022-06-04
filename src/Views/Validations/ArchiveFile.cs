@@ -8,7 +8,12 @@ namespace SrcGit.Views.Validations
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             var path = value as string;
-            if (string.IsNullOrEmpty(path) || !path.EndsWith(".zip")) return new ValidationResult(false, App.Text("BadArchiveFile"));
+
+            if (string.IsNullOrEmpty(path) || !path.EndsWith(".zip"))
+            {
+                return new ValidationResult(false, App.Text("BadArchiveFile"));
+            }
+
             return ValidationResult.ValidResult;
         }
     }

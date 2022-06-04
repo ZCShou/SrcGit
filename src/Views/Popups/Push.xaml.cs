@@ -15,13 +15,18 @@ namespace SrcGit.Views.Popups
         public Push(Models.Repository repo, Models.Branch localBranch)
         {
             this.repo = repo;
-
             InitializeComponent();
-
             var localBranches = repo.Branches.Where(x => x.IsLocal).ToList();
             cmbLocalBranches.ItemsSource = localBranches;
-            if (localBranch != null) cmbLocalBranches.SelectedItem = localBranch;
-            else cmbLocalBranches.SelectedItem = localBranches.Find(x => x.IsCurrent);
+
+            if (localBranch != null)
+            {
+                cmbLocalBranches.SelectedItem = localBranch;
+            }
+            else
+            {
+                cmbLocalBranches.SelectedItem = localBranches.Find(x => x.IsCurrent);
+            }
         }
 
         public override string GetTitle()
@@ -32,15 +37,22 @@ namespace SrcGit.Views.Popups
         public override Task<bool> Start()
         {
             var localBranch = cmbLocalBranches.SelectedItem as Models.Branch;
-            if (localBranch == null) return null;
+
+            if (localBranch == null)
+            {
+                return null;
+            }
 
             var remoteBranch = cmbRemoteBranches.SelectedItem as Models.Branch;
-            if (remoteBranch == null) return null;
+
+            if (remoteBranch == null)
+            {
+                return null;
+            }
 
             var withTags = chkAllTags.IsChecked == true;
             var force = chkForce.IsChecked == true;
             var track = string.IsNullOrEmpty(localBranch.Upstream);
-
             return Task.Run(() =>
             {
                 Models.Watcher.SetEnabled(repo.Path, false);
@@ -61,7 +73,11 @@ namespace SrcGit.Views.Popups
         private void OnLocalSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var local = cmbLocalBranches.SelectedItem as Models.Branch;
-            if (local == null) return;
+
+            if (local == null)
+            {
+                return;
+            }
 
             cmbRemotes.ItemsSource = null;
             cmbRemotes.ItemsSource = repo.Remotes;
@@ -79,10 +95,18 @@ namespace SrcGit.Views.Popups
         private void OnRemoteSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var local = cmbLocalBranches.SelectedItem as Models.Branch;
-            if (local == null) return;
+
+            if (local == null)
+            {
+                return;
+            }
 
             var remote = cmbRemotes.SelectedItem as Models.Remote;
-            if (remote == null) return;
+
+            if (remote == null)
+            {
+                return;
+            }
 
             var remoteBranches = new List<Models.Branch>();
             remoteBranches.AddRange(repo.Branches.Where(x => x.Remote == remote.Name));
@@ -102,6 +126,7 @@ namespace SrcGit.Views.Popups
             }
 
             var match = $"refs/remotes/{remote.Name}/{local.Name}";
+
             foreach (var b in remoteBranches)
             {
                 if (b.FullName == match)

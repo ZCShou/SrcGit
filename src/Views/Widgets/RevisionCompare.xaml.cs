@@ -22,20 +22,21 @@ namespace SrcGit.Views.Widgets
             txtStartSHA.Text = start.ShortSHA;
             txtStartTime.Text = start.Committer.Time;
             txtStartSubject.Text = start.Subject;
-
             avatarEnd.Email = end.Committer.Email;
             avatarEnd.FallbackLabel = end.Committer.Name;
             avatarEnd.ToolTip = end.Committer.Name;
             txtEndSHA.Text = end.ShortSHA;
             txtEndTime.Text = end.Committer.Time;
             txtEndSubject.Text = end.Subject;
-
             Task.Run(() =>
             {
                 var changes = new Commands.CommitRangeChanges(repo, start.SHA, end.SHA).Result();
                 Dispatcher.Invoke(() =>
                 {
-                    changesContainer.SetData(repo, new List<Models.Commit>() { start, end }, changes);
+                    changesContainer.SetData(repo, new List<Models.Commit>()
+                    {
+                        start, end
+                    }, changes);
                 });
             });
         }

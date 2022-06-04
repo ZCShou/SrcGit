@@ -15,7 +15,10 @@ namespace SrcGit.Views.Widgets
 
         public bool IsLocked
         {
-            get { return locked; }
+            get
+            {
+                return locked;
+            }
         }
 
         public PopupPanel()
@@ -25,18 +28,19 @@ namespace SrcGit.Views.Widgets
 
         public void Show(Controls.PopupWidget widget)
         {
-            if (locked) return;
+            if (locked)
+            {
+                return;
+            }
+
             view = widget;
             txtTitle.Text = widget.GetTitle();
             Visibility = Visibility.Hidden;
             container.Content = view;
-
             body.Margin = new Thickness(0, 0, 0, 0);
             body.UpdateLayout();
-
             var gone = new Thickness(0, -body.ActualHeight, 0, 0);
             body.Margin = gone;
-
             ThicknessAnimation anim = new ThicknessAnimation();
             anim.Duration = TimeSpan.FromMilliseconds(150);
             anim.From = gone;
@@ -47,7 +51,11 @@ namespace SrcGit.Views.Widgets
 
         public void ShowAndStart(Controls.PopupWidget widget)
         {
-            if (locked) return;
+            if (locked)
+            {
+                return;
+            }
+
             Show(widget);
             Sure(null, null);
         }
@@ -59,12 +67,18 @@ namespace SrcGit.Views.Widgets
 
         public void CancelDirectly()
         {
-            if (Visibility == Visibility.Visible) Cancel(this, null);
+            if (Visibility == Visibility.Visible)
+            {
+                Cancel(this, null);
+            }
         }
 
         public void Close()
         {
-            if (Visibility != Visibility.Visible) return;
+            if (Visibility != Visibility.Visible)
+            {
+                return;
+            }
 
             ThicknessAnimation anim = new ThicknessAnimation();
             anim.Duration = TimeSpan.FromMilliseconds(150);
@@ -85,7 +99,10 @@ namespace SrcGit.Views.Widgets
 
         private async void Sure(object sender, RoutedEventArgs e)
         {
-            if (Visibility != Visibility.Visible) return;
+            if (Visibility != Visibility.Visible)
+            {
+                return;
+            }
 
             if (view == null)
             {
@@ -93,16 +110,20 @@ namespace SrcGit.Views.Widgets
                 return;
             }
 
-            if (locked) return;
+            if (locked)
+            {
+                return;
+            }
 
             locked = true;
             mask.Visibility = Visibility.Visible;
             processing.IsAnimating = true;
-
             var task = view.Start();
+
             if (task != null)
             {
                 var close = await task;
+
                 if (close)
                 {
                     Close();
@@ -118,7 +139,11 @@ namespace SrcGit.Views.Widgets
 
         private void Cancel(object sender, RoutedEventArgs e)
         {
-            if (locked) return;
+            if (locked)
+            {
+                return;
+            }
+
             Close();
         }
     }

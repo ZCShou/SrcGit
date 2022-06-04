@@ -37,37 +37,68 @@ namespace SrcGit.Views.Widgets
         /// </summary>
         public class BranchNode
         {
-            public string Name { get; set; } = "";
-            public bool IsExpanded { get; set; } = false;
-            public bool IsFiltered { get; set; } = false;
-            public BranchNodeType Type { get; set; } = BranchNodeType.Folder;
-            public object Data { get; set; } = null;
-            public List<BranchNode> Children { get; set; } = new List<BranchNode>();
+            public string Name
+            {
+                get;
+                set;
+            } = "";
+            public bool IsExpanded
+            {
+                get;
+                set;
+            } = false;
+            public bool IsFiltered
+            {
+                get;
+                set;
+            } = false;
+            public BranchNodeType Type
+            {
+                get;
+                set;
+            } = BranchNodeType.Folder;
+            public object Data
+            {
+                get;
+                set;
+            } = null;
+            public List<BranchNode> Children
+            {
+                get;
+                set;
+            } = new List<BranchNode>();
 
             public string UpstreamTrackStatus
             {
-                get { return Type == BranchNodeType.Branch ? (Data as Models.Branch).UpstreamTrackStatus : ""; }
+                get
+                {
+                    return Type == BranchNodeType.Branch ? (Data as Models.Branch).UpstreamTrackStatus : "";
+                }
             }
 
             public bool IsCurrent
             {
-                get { return Type == BranchNodeType.Branch ? (Data as Models.Branch).IsCurrent : false; }
+                get
+                {
+                    return Type == BranchNodeType.Branch ? (Data as Models.Branch).IsCurrent : false;
+                }
             }
         }
 
         public Dashboard(Models.Repository repo)
         {
             this.repo = repo;
-
             InitializeComponent();
             InitPages();
-
             Task.Run(() =>
             {
                 var vscode = Models.ExecutableFinder.Find("code.cmd");
-                if (vscode != null) Dispatcher.Invoke(() => btnVSCode.Visibility = Visibility.Visible);
-            });
 
+                if (vscode != null)
+                {
+                    Dispatcher.Invoke(() => btnVSCode.Visibility = Visibility.Visible);
+                }
+            });
             var watcher = Models.Watcher.Get(repo.Path);
             watcher.Navigate += NavigateTo;
             watcher.BranchChanged += UpdateBranches;
@@ -78,7 +109,6 @@ namespace SrcGit.Views.Widgets
             watcher.TagChanged += UpdateCommits;
             watcher.SubmoduleChanged += UpdateSubmodules;
             watcher.SubTreeChanged += UpdateSubTrees;
-
             IsVisibleChanged += OnVisibleChanged;
             Unloaded += (o, e) =>
             {
@@ -131,7 +161,10 @@ namespace SrcGit.Views.Widgets
 
         private void NavigateTo(string commitId)
         {
-            if (!isFirstLoaded) return;
+            if (!isFirstLoaded)
+            {
+                return;
+            }
 
             workspace.SelectedIndex = 0;
             (pages.Get("histories") as Histories).NavigateTo(commitId);
@@ -170,9 +203,11 @@ namespace SrcGit.Views.Widgets
 
             BranchNode lastFolder = null;
             string path = prefix;
+
             for (int i = 0; i < subs.Length - 1; i++)
             {
                 path = string.Concat(path, "/", subs[i]);
+
                 if (folders.ContainsKey(path))
                 {
                     lastFolder = folders[path];
@@ -227,22 +262,26 @@ namespace SrcGit.Views.Widgets
                 }
             });
 
-            foreach (var node in nodes) SortBranches(node.Children);
+            foreach (var node in nodes)
+            {
+                SortBranches(node.Children);
+            }
         }
 
         private void UpdateBranches()
         {
-            if (!isFirstLoaded) return;
+            if (!isFirstLoaded)
+            {
+                return;
+            }
 
             Task.Run(() =>
             {
                 repo.Branches = new Commands.Branches(repo.Path).Result();
                 repo.Remotes = new Commands.Remotes(repo.Path).Result();
-
                 var states = new Dictionary<string, bool>();
                 BackupBranchExpandState(states, localBranches, "locals");
                 BackupBranchExpandState(states, remoteBranches, "remotes");
-
                 var folders = new Dictionary<string, BranchNode>();
                 localBranches = new List<BranchNode>();
                 remoteBranches = new List<BranchNode>();
@@ -270,13 +309,16 @@ namespace SrcGit.Views.Widgets
                     else
                     {
                         var r = remoteBranches.Find(x => x.Name == b.Remote);
-                        if (r != null) MakeBranchNode(b, r.Children, folders, states, $"remotes/{b.Remote}");
+
+                        if (r != null)
+                        {
+                            MakeBranchNode(b, r.Children, folders, states, $"remotes/{b.Remote}");
+                        }
                     }
                 }
 
                 SortBranches(localBranches);
                 SortBranches(remoteBranches);
-
                 Dispatcher.Invoke(() =>
                 {
                     localBranchTree.ItemsSource = localBranches;
@@ -287,7 +329,10 @@ namespace SrcGit.Views.Widgets
 
         private void UpdateWorkingCopy()
         {
-            if (!isFirstLoaded) return;
+            if (!isFirstLoaded)
+            {
+                return;
+            }
 
             Task.Run(() =>
             {
@@ -303,7 +348,10 @@ namespace SrcGit.Views.Widgets
 
         private void UpdateStashes()
         {
-            if (!isFirstLoaded) return;
+            if (!isFirstLoaded)
+            {
+                return;
+            }
 
             Task.Run(() =>
             {
@@ -318,12 +366,20 @@ namespace SrcGit.Views.Widgets
 
         private void UpdateTags()
         {
-            if (!isFirstLoaded) return;
+            if (!isFirstLoaded)
+            {
+                return;
+            }
 
             Task.Run(() =>
             {
                 var tags = new Commands.Tags(repo.Path).Result();
-                foreach (var t in tags) t.IsFiltered = repo.Filters.Contains(t.Name);
+
+                foreach (var t in tags)
+                {
+                    t.IsFiltered = repo.Filters.Contains(t.Name);
+                }
+
                 Dispatcher.Invoke(() =>
                 {
                     txtTagCount.Text = $"({tags.Count})";
@@ -334,7 +390,10 @@ namespace SrcGit.Views.Widgets
 
         private void UpdateSubmodules()
         {
-            if (!isFirstLoaded) return;
+            if (!isFirstLoaded)
+            {
+                return;
+            }
 
             Task.Run(() =>
             {
@@ -349,7 +408,10 @@ namespace SrcGit.Views.Widgets
 
         private void UpdateSubTrees()
         {
-            if (!isFirstLoaded) return;
+            if (!isFirstLoaded)
+            {
+                return;
+            }
 
             Dispatcher.Invoke(() =>
             {
@@ -361,7 +423,10 @@ namespace SrcGit.Views.Widgets
 
         private void UpdateCommits()
         {
-            if (!isFirstLoaded) return;
+            if (!isFirstLoaded)
+            {
+                return;
+            }
 
             (pages.Get("histories") as Histories).UpdateCommits();
         }
@@ -376,6 +441,7 @@ namespace SrcGit.Views.Widgets
         private void OpenInTerminal(object sender, RoutedEventArgs e)
         {
             var bash = Path.Combine(Models.Preference.Instance.Git.Path, "..", "bash.exe");
+
             if (!File.Exists(bash))
             {
                 Models.Exception.Raise(App.Text("MissingBash"));
@@ -393,7 +459,11 @@ namespace SrcGit.Views.Widgets
         private void OpenInVSCode(object sender, RoutedEventArgs e)
         {
             var vscode = Models.ExecutableFinder.Find("code.cmd");
-            if (vscode == null) return;
+
+            if (vscode == null)
+            {
+                return;
+            }
 
             vscode = Path.Combine(Path.GetDirectoryName(vscode), "..", "Code.exe");
             Process.Start(new ProcessStartInfo
@@ -461,23 +531,32 @@ namespace SrcGit.Views.Widgets
 
         public void OpenSearch(object sender, RoutedEventArgs e)
         {
-            if (popup.IsLocked) return;
-            popup.Close();
+            if (popup.IsLocked)
+            {
+                return;
+            }
 
+            popup.Close();
             workspace.SelectedIndex = 0;
             (pages.Get("histories") as Histories).ToggleSearch();
         }
 
         private void ChangeOrientation(object sender, RoutedEventArgs e)
         {
-            if (!IsLoaded) return;
+            if (!IsLoaded)
+            {
+                return;
+            }
 
             (pages.Get("histories") as Histories)?.ChangeOrientation();
         }
 
         private void OpenStatistics(object sender, RoutedEventArgs e)
         {
-            var dialog = new Statistics(repo.Path) { Owner = App.Current.MainWindow };
+            var dialog = new Statistics(repo.Path)
+            {
+                Owner = App.Current.MainWindow
+            };
             dialog.ShowDialog();
         }
 
@@ -505,13 +584,24 @@ namespace SrcGit.Views.Widgets
 
         private void OnPageSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (pages == null) return;
+            if (pages == null)
+            {
+                return;
+            }
 
             switch (workspace.SelectedIndex)
             {
-                case 0: pages.Goto("histories"); break;
-                case 1: pages.Goto("working_copy"); break;
-                case 2: pages.Goto("stashes"); break;
+                case 0:
+                    pages.Goto("histories");
+                    break;
+
+                case 1:
+                    pages.Goto("working_copy");
+                    break;
+
+                case 2:
+                    pages.Goto("stashes");
+                    break;
             }
 
             if (mergeNavigator.Visibility == Visibility.Visible)
@@ -525,6 +615,7 @@ namespace SrcGit.Views.Widgets
         private void OpenGitFlowPanel(object sender, RoutedEventArgs ev)
         {
             var button = sender as Button;
+
             if (button.ContextMenu == null)
             {
                 button.ContextMenu = new ContextMenu();
@@ -547,7 +638,6 @@ namespace SrcGit.Views.Widgets
                     new Popups.GitFlowStart(repo, Models.GitFlowBranchType.Feature).Show();
                     e.Handled = true;
                 };
-
                 var startRelease = new MenuItem();
                 startRelease.Header = App.Text("GitFlow.StartRelease");
                 startRelease.Click += (o, e) =>
@@ -555,7 +645,6 @@ namespace SrcGit.Views.Widgets
                     new Popups.GitFlowStart(repo, Models.GitFlowBranchType.Release).Show();
                     e.Handled = true;
                 };
-
                 var startHotfix = new MenuItem();
                 startHotfix.Header = App.Text("GitFlow.StartHotfix");
                 startHotfix.Click += (o, e) =>
@@ -563,7 +652,6 @@ namespace SrcGit.Views.Widgets
                     new Popups.GitFlowStart(repo, Models.GitFlowBranchType.Hotfix).Show();
                     e.Handled = true;
                 };
-
                 button.ContextMenu.Items.Add(startFeature);
                 button.ContextMenu.Items.Add(startRelease);
                 button.ContextMenu.Items.Add(startHotfix);
@@ -587,6 +675,7 @@ namespace SrcGit.Views.Widgets
         private void OpenNewBranch(object sender, RoutedEventArgs e)
         {
             var current = repo.Branches.Find(x => x.IsCurrent);
+
             if (current != null)
             {
                 new Popups.CreateBranch(repo, current).Show();
@@ -595,6 +684,7 @@ namespace SrcGit.Views.Widgets
             {
                 Models.Exception.Raise(App.Text("CreateBranch.Idle"));
             }
+
             e.Handled = true;
         }
 
@@ -608,29 +698,54 @@ namespace SrcGit.Views.Widgets
         {
             var tree = sender as Controls.Tree;
             var child = FocusManager.GetFocusedElement(leftPanel);
-            if (child != null && tree.IsAncestorOf(child as DependencyObject)) return;
+
+            if (child != null && tree.IsAncestorOf(child as DependencyObject))
+            {
+                return;
+            }
+
             tree.UnselectAll();
         }
 
         private void OnTreeSelectionChanged(object sender, RoutedEventArgs e)
         {
             var tree = sender as Controls.Tree;
-            if (tree.Selected.Count == 0) return;
+
+            if (tree.Selected.Count == 0)
+            {
+                return;
+            }
 
             var node = tree.Selected[0] as BranchNode;
-            if (node.Type == BranchNodeType.Branch) NavigateTo((node.Data as Models.Branch).Head);
+
+            if (node.Type == BranchNodeType.Branch)
+            {
+                NavigateTo((node.Data as Models.Branch).Head);
+            }
         }
 
         private void OnTreeDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var item = sender as Controls.TreeItem;
-            if (item == null) return;
+
+            if (item == null)
+            {
+                return;
+            }
 
             var node = item.DataContext as BranchNode;
-            if (node == null || node.Type != BranchNodeType.Branch) return;
+
+            if (node == null || node.Type != BranchNodeType.Branch)
+            {
+                return;
+            }
 
             var branch = node.Data as Models.Branch;
-            if (!branch.IsLocal || branch.IsCurrent) return;
+
+            if (!branch.IsLocal || branch.IsCurrent)
+            {
+                return;
+            }
 
             new Popups.Checkout(repo.Path, branch.Name).ShowAndStart();
         }
@@ -638,12 +753,21 @@ namespace SrcGit.Views.Widgets
         private void OnTreeContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
             var item = sender as Controls.TreeItem;
-            if (item == null) return;
+
+            if (item == null)
+            {
+                return;
+            }
 
             var node = item.DataContext as BranchNode;
-            if (node == null || node.Type == BranchNodeType.Folder) return;
+
+            if (node == null || node.Type == BranchNodeType.Folder)
+            {
+                return;
+            }
 
             var menu = new ContextMenu();
+
             if (node.Type == BranchNodeType.Remote)
             {
                 FillRemoteContextMenu(menu, node.Data as Models.Remote);
@@ -651,6 +775,7 @@ namespace SrcGit.Views.Widgets
             else
             {
                 var branch = node.Data as Models.Branch;
+
                 if (branch.IsLocal)
                 {
                     FillLocalBranchContextMenu(menu, branch);
@@ -685,7 +810,6 @@ namespace SrcGit.Views.Widgets
                     new Popups.Discard(repo.Path, null).Show();
                     e.Handled = true;
                 };
-
                 menu.Items.Add(discard);
                 menu.Items.Add(new Separator());
 
@@ -700,7 +824,6 @@ namespace SrcGit.Views.Widgets
                         new Popups.Merge(repo.Path, upstream, branch.Name).ShowAndStart();
                         e.Handled = true;
                     };
-
                     var pull = new MenuItem();
                     pull.Header = App.Text("BranchCM.Pull", upstream);
                     pull.IsEnabled = !string.IsNullOrEmpty(branch.UpstreamTrackStatus);
@@ -709,7 +832,6 @@ namespace SrcGit.Views.Widgets
                         new Popups.Pull(repo, null).Show();
                         e.Handled = true;
                     };
-
                     menu.Items.Add(fastForward);
                     menu.Items.Add(pull);
                 }
@@ -719,7 +841,6 @@ namespace SrcGit.Views.Widgets
             else
             {
                 var current = repo.Branches.Find(x => x.IsCurrent);
-
                 var checkout = new MenuItem();
                 checkout.Header = App.Text("BranchCM.Checkout", branch.Name);
                 checkout.Click += (o, e) =>
@@ -730,7 +851,6 @@ namespace SrcGit.Views.Widgets
                 menu.Items.Add(checkout);
                 menu.Items.Add(new Separator());
                 menu.Items.Add(push);
-
                 var merge = new MenuItem();
                 merge.Header = App.Text("BranchCM.Merge", branch.Name, current.Name);
                 merge.Click += (o, e) =>
@@ -738,7 +858,6 @@ namespace SrcGit.Views.Widgets
                     new Popups.Merge(repo.Path, branch.Name, current.Name).Show();
                     e.Handled = true;
                 };
-
                 var rebase = new MenuItem();
                 rebase.Header = App.Text("BranchCM.Rebase", current.Name, branch.Name);
                 rebase.Click += (o, e) =>
@@ -746,18 +865,17 @@ namespace SrcGit.Views.Widgets
                     new Popups.Rebase(repo.Path, current.Name, branch).Show();
                     e.Handled = true;
                 };
-
                 menu.Items.Add(merge);
                 menu.Items.Add(rebase);
             }
 
             var type = repo.GitFlow.GetBranchType(branch.Name);
+
             if (type != Models.GitFlowBranchType.None)
             {
                 var flowIcon = new System.Windows.Shapes.Path();
                 flowIcon.Data = FindResource("Icon.Flow") as Geometry;
                 flowIcon.Width = 10;
-
                 var finish = new MenuItem();
                 finish.Header = App.Text("BranchCM.Finish", branch.Name);
                 finish.Icon = flowIcon;
@@ -777,7 +895,6 @@ namespace SrcGit.Views.Widgets
                 new Popups.RenameBranch(repo, branch.Name).Show();
                 e.Handled = true;
             };
-
             var delete = new MenuItem();
             delete.Header = App.Text("BranchCM.Delete", branch.Name);
             delete.IsEnabled = !branch.IsCurrent;
@@ -786,7 +903,6 @@ namespace SrcGit.Views.Widgets
                 new Popups.DeleteBranch(repo.Path, branch.Name).Show();
                 e.Handled = true;
             };
-
             var createBranchIcon = new System.Windows.Shapes.Path();
             createBranchIcon.Data = FindResource("Icon.Branch.Add") as Geometry;
             createBranchIcon.Width = 10;
@@ -798,7 +914,6 @@ namespace SrcGit.Views.Widgets
                 new Popups.CreateBranch(repo, branch).Show();
                 e.Handled = true;
             };
-
             var createTagIcon = new System.Windows.Shapes.Path();
             createTagIcon.Data = FindResource("Icon.Tag.Add") as Geometry;
             createTagIcon.Width = 10;
@@ -810,7 +925,6 @@ namespace SrcGit.Views.Widgets
                 new Popups.CreateTag(repo, branch).Show();
                 e.Handled = true;
             };
-
             menu.Items.Add(new Separator());
             menu.Items.Add(rename);
             menu.Items.Add(delete);
@@ -818,20 +932,18 @@ namespace SrcGit.Views.Widgets
             menu.Items.Add(createBranch);
             menu.Items.Add(createTag);
             menu.Items.Add(new Separator());
-
             var remoteBranches = repo.Branches.Where(x => !x.IsLocal).ToList();
+
             if (remoteBranches.Count > 0)
             {
                 var trackingIcon = new System.Windows.Shapes.Path();
                 trackingIcon.Data = FindResource("Icon.Branch") as Geometry;
                 trackingIcon.VerticalAlignment = VerticalAlignment.Bottom;
                 trackingIcon.Width = 10;
-
                 var currentTrackingIcon = new System.Windows.Shapes.Path();
                 currentTrackingIcon.Data = FindResource("Icon.Check") as Geometry;
                 currentTrackingIcon.VerticalAlignment = VerticalAlignment.Center;
                 currentTrackingIcon.Width = 10;
-
                 var tracking = new MenuItem();
                 tracking.Header = App.Text("BranchCM.Tracking");
                 tracking.Icon = trackingIcon;
@@ -841,7 +953,12 @@ namespace SrcGit.Views.Widgets
                     var upstream = b.FullName.Replace("refs/remotes/", "");
                     var target = new MenuItem();
                     target.Header = upstream;
-                    if (branch.Upstream == b.FullName) target.Icon = currentTrackingIcon;
+
+                    if (branch.Upstream == b.FullName)
+                    {
+                        target.Icon = currentTrackingIcon;
+                    }
+
                     target.Click += (o, e) =>
                     {
                         new Commands.Branch(repo.Path, branch.Name).SetUpstream(upstream);
@@ -861,7 +978,6 @@ namespace SrcGit.Views.Widgets
                 };
                 tracking.Items.Add(new Separator());
                 tracking.Items.Add(unsetUpstream);
-
                 menu.Items.Add(tracking);
             }
 
@@ -878,7 +994,6 @@ namespace SrcGit.Views.Widgets
             };
             menu.Items.Add(archive);
             menu.Items.Add(new Separator());
-
             var copy = new MenuItem();
             copy.Header = App.Text("BranchCM.CopyName");
             copy.Click += (o, e) =>
@@ -898,7 +1013,6 @@ namespace SrcGit.Views.Widgets
                 new Popups.Fetch(repo, remote.Name).Show();
                 e.Handled = true;
             };
-
             var prune = new MenuItem();
             prune.Header = App.Text("RemoteCM.Prune");
             prune.Click += (o, e) =>
@@ -906,7 +1020,6 @@ namespace SrcGit.Views.Widgets
                 new Popups.Prune(repo.Path, remote.Name).ShowAndStart();
                 e.Handled = true;
             };
-
             var edit = new MenuItem();
             edit.Header = App.Text("RemoteCM.Edit");
             edit.Click += (o, e) =>
@@ -914,7 +1027,6 @@ namespace SrcGit.Views.Widgets
                 new Popups.Remote(repo, remote).Show();
                 e.Handled = true;
             };
-
             var delete = new MenuItem();
             delete.Header = App.Text("RemoteCM.Delete");
             delete.Click += (o, e) =>
@@ -922,7 +1034,6 @@ namespace SrcGit.Views.Widgets
                 new Popups.DeleteRemote(repo.Path, remote.Name).Show();
                 e.Handled = true;
             };
-
             var copy = new MenuItem();
             copy.Header = App.Text("RemoteCM.CopyURL");
             copy.Click += (o, e) =>
@@ -930,7 +1041,6 @@ namespace SrcGit.Views.Widgets
                 Clipboard.SetDataObject(remote.URL, true);
                 e.Handled = true;
             };
-
             menu.Items.Add(fetch);
             menu.Items.Add(prune);
             menu.Items.Add(new Separator());
@@ -943,7 +1053,6 @@ namespace SrcGit.Views.Widgets
         private void FillRemoteBranchContextMenu(ContextMenu menu, Models.Branch branch)
         {
             var current = repo.Branches.Find(x => x.IsCurrent);
-
             var checkout = new MenuItem();
             checkout.Header = App.Text("BranchCM.Checkout", branch.Name);
             checkout.Click += (o, e) =>
@@ -952,7 +1061,11 @@ namespace SrcGit.Views.Widgets
                 {
                     if (b.IsLocal && b.Upstream == branch.FullName)
                     {
-                        if (b.IsCurrent) return;
+                        if (b.IsCurrent)
+                        {
+                            return;
+                        }
+
                         new Popups.Checkout(repo.Path, b.Name).ShowAndStart();
                         return;
                     }
@@ -973,7 +1086,6 @@ namespace SrcGit.Views.Widgets
                     new Popups.Pull(repo, branch).Show();
                     e.Handled = true;
                 };
-
                 var merge = new MenuItem();
                 merge.Header = App.Text("BranchCM.Merge", branch.Name, current.Name);
                 merge.Click += (o, e) =>
@@ -981,7 +1093,6 @@ namespace SrcGit.Views.Widgets
                     new Popups.Merge(repo.Path, $"{branch.Remote}/{branch.Name}", current.Name).Show();
                     e.Handled = true;
                 };
-
                 var rebase = new MenuItem();
                 rebase.Header = App.Text("BranchCM.Rebase", current.Name, branch.Name);
                 rebase.Click += (o, e) =>
@@ -989,7 +1100,6 @@ namespace SrcGit.Views.Widgets
                     new Popups.Rebase(repo.Path, current.Name, branch).Show();
                     e.Handled = true;
                 };
-
                 menu.Items.Add(pull);
                 menu.Items.Add(merge);
                 menu.Items.Add(rebase);
@@ -1001,15 +1111,14 @@ namespace SrcGit.Views.Widgets
             delete.Click += (o, e) =>
             {
                 new Popups.DeleteBranch(repo.Path, branch.Name, branch.Remote)
-                    .Then(() =>
-                    {
-                        repo.Branches.FindAll(item => item.Upstream == branch.FullName).ForEach(item =>
+                .Then(() =>
+                {
+                    repo.Branches.FindAll(item => item.Upstream == branch.FullName).ForEach(item =>
                             new Commands.Branch(repo.Path, item.Name).SetUpstream(string.Empty));
-                    })
-                    .Show();
+                })
+                .Show();
                 e.Handled = true;
             };
-
             var createBranchIcon = new System.Windows.Shapes.Path();
             createBranchIcon.Data = FindResource("Icon.Branch.Add") as Geometry;
             createBranchIcon.Width = 10;
@@ -1021,7 +1130,6 @@ namespace SrcGit.Views.Widgets
                 new Popups.CreateBranch(repo, branch).Show();
                 e.Handled = true;
             };
-
             var createTagIcon = new System.Windows.Shapes.Path();
             createTagIcon.Data = FindResource("Icon.Tag.Add") as Geometry;
             createTagIcon.Width = 10;
@@ -1033,7 +1141,6 @@ namespace SrcGit.Views.Widgets
                 new Popups.CreateTag(repo, branch).Show();
                 e.Handled = true;
             };
-
             var archiveIcon = new System.Windows.Shapes.Path();
             archiveIcon.Data = FindResource("Icon.Archive") as Geometry;
             archiveIcon.Width = 10;
@@ -1045,7 +1152,6 @@ namespace SrcGit.Views.Widgets
                 new Popups.Archive(repo.Path, branch).Show();
                 e.Handled = true;
             };
-
             var copy = new MenuItem();
             copy.Header = App.Text("BranchCM.CopyName");
             copy.Click += (o, e) =>
@@ -1053,7 +1159,6 @@ namespace SrcGit.Views.Widgets
                 Clipboard.SetDataObject(branch.Remote + "/" + branch.Name, true);
                 e.Handled = true;
             };
-
             menu.Items.Add(delete);
             menu.Items.Add(new Separator());
             menu.Items.Add(createBranch);
@@ -1080,13 +1185,21 @@ namespace SrcGit.Views.Widgets
         private void OnTagSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var tag = tagList.SelectedItem as Models.Tag;
-            if (tag != null) NavigateTo(tag.SHA);
+
+            if (tag != null)
+            {
+                NavigateTo(tag.SHA);
+            }
         }
 
         private void OnTagContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
             var tag = tagList.SelectedItem as Models.Tag;
-            if (tag == null) return;
+
+            if (tag == null)
+            {
+                return;
+            }
 
             var createBranchIcon = new System.Windows.Shapes.Path();
             createBranchIcon.Data = FindResource("Icon.Branch.Add") as Geometry;
@@ -1099,7 +1212,6 @@ namespace SrcGit.Views.Widgets
                 new Popups.CreateBranch(repo, tag).Show();
                 ev.Handled = true;
             };
-
             var pushTag = new MenuItem();
             pushTag.Header = App.Text("TagCM.Push", tag.Name);
             pushTag.IsEnabled = repo.Remotes.Count > 0;
@@ -1108,7 +1220,6 @@ namespace SrcGit.Views.Widgets
                 new Popups.PushTag(repo, tag.Name).Show();
                 ev.Handled = true;
             };
-
             var deleteTag = new MenuItem();
             deleteTag.Header = App.Text("TagCM.Delete", tag.Name);
             deleteTag.Click += (o, ev) =>
@@ -1116,7 +1227,6 @@ namespace SrcGit.Views.Widgets
                 new Popups.DeleteTag(repo.Path, tag.Name).Show();
                 ev.Handled = true;
             };
-
             var archiveIcon = new System.Windows.Shapes.Path();
             archiveIcon.Data = FindResource("Icon.Archive") as Geometry;
             archiveIcon.Width = 10;
@@ -1128,7 +1238,6 @@ namespace SrcGit.Views.Widgets
                 new Popups.Archive(repo.Path, tag).Show();
                 ev.Handled = true;
             };
-
             var copy = new MenuItem();
             copy.Header = App.Text("TagCM.Copy");
             copy.Click += (o, ev) =>
@@ -1136,7 +1245,6 @@ namespace SrcGit.Views.Widgets
                 Clipboard.SetDataObject(tag.Name, true);
                 ev.Handled = true;
             };
-
             var menu = new ContextMenu();
             menu.Items.Add(createBranch);
             menu.Items.Add(new Separator());
@@ -1171,7 +1279,11 @@ namespace SrcGit.Views.Widgets
         private void OnSubmoduleContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
             var submodule = submoduleList.SelectedItem as string;
-            if (submodule == null) return;
+
+            if (submodule == null)
+            {
+                return;
+            }
 
             var copy = new MenuItem();
             copy.Header = App.Text("Submodule.CopyPath");
@@ -1180,7 +1292,6 @@ namespace SrcGit.Views.Widgets
                 Clipboard.SetDataObject(submodule, true);
                 ev.Handled = true;
             };
-
             var rm = new MenuItem();
             rm.Header = App.Text("Submodule.Remove");
             rm.Click += (o, ev) =>
@@ -1188,7 +1299,6 @@ namespace SrcGit.Views.Widgets
                 new Popups.DeleteSubmodule(repo.Path, submodule).Show();
                 ev.Handled = true;
             };
-
             var menu = new ContextMenu();
             menu.Items.Add(copy);
             menu.Items.Add(rm);
@@ -1199,16 +1309,23 @@ namespace SrcGit.Views.Widgets
         private void OnSubmoduleMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var submodule = submoduleList.SelectedItem as string;
-            if (submodule == null) return;
+
+            if (submodule == null)
+            {
+                return;
+            }
 
             var hitted = (e.OriginalSource as FrameworkElement).DataContext as string;
-            if (hitted == null || hitted != submodule) return;
+
+            if (hitted == null || hitted != submodule)
+            {
+                return;
+            }
 
             var sub = new Models.Repository();
             sub.Path = Path.GetFullPath(Path.Combine(repo.Path, submodule));
             sub.GitDir = new Commands.QueryGitDir(sub.Path).Result();
             sub.Name = repo.Name + " : " + Path.GetFileName(submodule);
-
             Models.Watcher.Open(sub);
             e.Handled = true;
         }
@@ -1224,7 +1341,11 @@ namespace SrcGit.Views.Widgets
         private void OnSubTreeContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
             var subtree = subTreeList.SelectedItem as Models.SubTree;
-            if (subtree == null) return;
+
+            if (subtree == null)
+            {
+                return;
+            }
 
             var edit = new MenuItem();
             edit.Header = App.Text("SubTree.Edit");
@@ -1233,7 +1354,6 @@ namespace SrcGit.Views.Widgets
                 new Popups.EditSubTree(repo, subtree.Prefix).Show();
                 ev.Handled = true;
             };
-
             var unlink = new MenuItem();
             unlink.Header = App.Text("SubTree.Unlink");
             unlink.Click += (o, ev) =>
@@ -1241,7 +1361,6 @@ namespace SrcGit.Views.Widgets
                 new Popups.UnlinkSubTree(repo, subtree.Prefix).Show();
                 ev.Handled = true;
             };
-
             var pull = new MenuItem();
             pull.Header = App.Text("SubTree.Pull");
             pull.Click += (o, ev) =>
@@ -1249,7 +1368,6 @@ namespace SrcGit.Views.Widgets
                 new Popups.SubTreePull(repo.Path, subtree).Show();
                 ev.Handled = true;
             };
-
             var push = new MenuItem();
             push.Header = App.Text("SubTree.Push");
             push.Click += (o, ev) =>
@@ -1257,7 +1375,6 @@ namespace SrcGit.Views.Widgets
                 new Popups.SubTreePush(repo.Path, subtree).Show();
                 ev.Handled = true;
             };
-
             var menu = new ContextMenu();
             menu.Items.Add(edit);
             menu.Items.Add(unlink);
@@ -1273,7 +1390,11 @@ namespace SrcGit.Views.Widgets
         private void OnFilterChanged(object sender, RoutedEventArgs e)
         {
             var toggle = sender as ToggleButton;
-            if (toggle == null) return;
+
+            if (toggle == null)
+            {
+                return;
+            }
 
             var filter = "";
             var changed = false;
@@ -1281,7 +1402,12 @@ namespace SrcGit.Views.Widgets
             if (toggle.DataContext is BranchNode)
             {
                 var branch = (toggle.DataContext as BranchNode).Data as Models.Branch;
-                if (branch == null) return;
+
+                if (branch == null)
+                {
+                    return;
+                }
+
                 filter = branch.FullName;
             }
             else if (toggle.DataContext is Models.Tag)
@@ -1306,7 +1432,10 @@ namespace SrcGit.Views.Widgets
                 }
             }
 
-            if (changed) (pages.Get("histories") as Histories).UpdateCommits();
+            if (changed)
+            {
+                (pages.Get("histories") as Histories).UpdateCommits();
+            }
         }
         #endregion
 
@@ -1332,19 +1461,26 @@ namespace SrcGit.Views.Widgets
             else
             {
                 mergeNavigator.Visibility = Visibility.Collapsed;
-
                 var rebaseTempFolder = Path.Combine(repo.GitDir, "rebase-apply");
-                if (Directory.Exists(rebaseTempFolder)) Directory.Delete(rebaseTempFolder);
+
+                if (Directory.Exists(rebaseTempFolder))
+                {
+                    Directory.Delete(rebaseTempFolder);
+                }
 
                 var rebaseMergeFolder = Path.Combine(repo.GitDir, "rebase-merge");
-                if (Directory.Exists(rebaseMergeFolder)) Directory.Delete(rebaseMergeFolder);
+
+                if (Directory.Exists(rebaseMergeFolder))
+                {
+                    Directory.Delete(rebaseMergeFolder);
+                }
+
                 return;
             }
 
             mergeNavigator.Visibility = Visibility.Visible;
             btnResolve.Visibility = workspace.SelectedIndex == 1 ? Visibility.Collapsed : Visibility.Visible;
             btnContinue.Visibility = changes.Find(x => x.IsConflit) == null ? Visibility.Visible : Visibility.Collapsed;
-
             (pages.Get("working_copy") as WorkingCopy).TryLoadMergeMessage();
         }
 
@@ -1360,8 +1496,8 @@ namespace SrcGit.Views.Widgets
             var rebaseMerge = Path.Combine(repo.GitDir, "REBASE_HEAD");
             var revertMerge = Path.Combine(repo.GitDir, "REVERT_HEAD");
             var otherMerge = Path.Combine(repo.GitDir, "MERGE_HEAD");
-
             var mode = "";
+
             if (File.Exists(cherryPickMerge))
             {
                 mode = "cherry-pick";
@@ -1387,7 +1523,6 @@ namespace SrcGit.Views.Widgets
             var cmd = new Commands.Command();
             cmd.Cwd = repo.Path;
             cmd.Args = $"-c core.editor=true {mode} --continue";
-
             Models.Watcher.SetEnabled(repo.Path, false);
             var succ = await Task.Run(() => cmd.Exec());
             Models.Watcher.SetEnabled(repo.Path, true);
@@ -1395,16 +1530,29 @@ namespace SrcGit.Views.Widgets
             if (succ)
             {
                 (pages.Get("working_copy") as WorkingCopy).ClearMessage();
+
                 if (mode == "rebase")
                 {
                     var rebaseTempFolder = Path.Combine(repo.GitDir, "rebase-apply");
-                    if (Directory.Exists(rebaseTempFolder)) Directory.Delete(rebaseTempFolder);
+
+                    if (Directory.Exists(rebaseTempFolder))
+                    {
+                        Directory.Delete(rebaseTempFolder);
+                    }
 
                     var rebaseFile = Path.Combine(repo.GitDir, "REBASE_HEAD");
-                    if (File.Exists(rebaseFile)) File.Delete(rebaseFile);
+
+                    if (File.Exists(rebaseFile))
+                    {
+                        File.Delete(rebaseFile);
+                    }
 
                     var rebaseMergeFolder = Path.Combine(repo.GitDir, "rebase-merge");
-                    if (Directory.Exists(rebaseMergeFolder)) Directory.Delete(rebaseMergeFolder);
+
+                    if (Directory.Exists(rebaseMergeFolder))
+                    {
+                        Directory.Delete(rebaseMergeFolder);
+                    }
                 }
             }
         }

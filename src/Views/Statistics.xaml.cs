@@ -28,6 +28,7 @@ namespace SrcGit.Views
         private void Refresh()
         {
             var mapsWeek = new Dictionary<int, Models.StatisticSample>();
+
             for (int i = 0; i < 7; i++)
             {
                 mapsWeek.Add(i, new Models.StatisticSample
@@ -41,6 +42,7 @@ namespace SrcGit.Views
             var mapsMonth = new Dictionary<int, Models.StatisticSample>();
             var today = DateTime.Now;
             var maxDays = DateTime.DaysInMonth(today.Year, today.Month);
+
             for (int i = 1; i <= maxDays; i++)
             {
                 mapsMonth.Add(i, new Models.StatisticSample
@@ -52,6 +54,7 @@ namespace SrcGit.Views
             }
 
             var mapsYear = new Dictionary<int, Models.StatisticSample>();
+
             for (int i = 1; i <= 12; i++)
             {
                 mapsYear.Add(i, new Models.StatisticSample
@@ -65,19 +68,19 @@ namespace SrcGit.Views
             var mapCommitterWeek = new Dictionary<string, Models.StatisticSample>();
             var mapCommitterMonth = new Dictionary<string, Models.StatisticSample>();
             var mapCommitterYear = new Dictionary<string, Models.StatisticSample>();
-
             var weekStart = today.AddSeconds(-(int)today.DayOfWeek * 3600 * 24 - today.Hour * 3600 - today.Minute * 60 - today.Second);
             var weekEnd = weekStart.AddDays(7);
             var month = today.Month;
-
-            var limits = $"--branches --remotes --since=\"{today.ToString("yyyy-01-01 00:00:00")}\"";
+            var limits = $"--branches --remotes --since=\"{today.ToString("yyyy - 01 - 01 00: 00: 00")}\"";
             var commits = new Commands.Commits(repo, limits).Result();
             var totalCommitsWeek = 0;
             var totalCommitsMonth = 0;
             var totalCommitsYear = commits.Count;
+
             foreach (var c in commits)
             {
                 var commitTime = DateTime.Parse(c.Committer.Time);
+
                 if (commitTime.CompareTo(weekStart) >= 0 && commitTime.CompareTo(weekEnd) < 0)
                 {
                     mapsWeek[(int)commitTime.DayOfWeek].Count++;
@@ -117,6 +120,7 @@ namespace SrcGit.Views
                 }
 
                 mapsYear[commitTime.Month].Count++;
+
                 if (mapCommitterYear.ContainsKey(c.Committer.Name))
                 {
                     mapCommitterYear[c.Committer.Name].Count++;
@@ -134,7 +138,6 @@ namespace SrcGit.Views
             SetPage(pageWeek, mapCommitterWeek.Values.ToList(), mapsWeek.Values.ToList(), totalCommitsWeek);
             SetPage(pageMonth, mapCommitterMonth.Values.ToList(), mapsMonth.Values.ToList(), totalCommitsMonth);
             SetPage(pageYear, mapCommitterYear.Values.ToList(), mapsYear.Values.ToList(), totalCommitsYear);
-
             mapsMonth.Clear();
             mapsWeek.Clear();
             mapsYear.Clear();
@@ -142,7 +145,6 @@ namespace SrcGit.Views
             mapCommitterWeek.Clear();
             mapCommitterYear.Clear();
             commits.Clear();
-
             Dispatcher.Invoke(() =>
             {
                 loading.IsAnimating = false;

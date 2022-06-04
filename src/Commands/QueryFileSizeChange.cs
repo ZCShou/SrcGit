@@ -19,7 +19,12 @@ namespace SrcGit.Commands
             {
                 string data = ReadToEnd().Output;
                 long size;
-                if (!long.TryParse(data, out size)) size = 0;
+
+                if (!long.TryParse(data, out size))
+                {
+                    size = 0;
+                }
+
                 return size;
             }
         }
@@ -36,6 +41,7 @@ namespace SrcGit.Commands
             else if (revisions.Length == 1)
             {
                 change.NewSize = new QuerySizeCmd(repo, path, "HEAD").Result();
+
                 if (string.IsNullOrEmpty(orgPath))
                 {
                     change.OldSize = new QuerySizeCmd(repo, path, revisions[0]).Result();
@@ -48,6 +54,7 @@ namespace SrcGit.Commands
             else
             {
                 change.NewSize = new QuerySizeCmd(repo, path, revisions[1]).Result();
+
                 if (string.IsNullOrEmpty(orgPath))
                 {
                     change.OldSize = new QuerySizeCmd(repo, path, revisions[0]).Result();

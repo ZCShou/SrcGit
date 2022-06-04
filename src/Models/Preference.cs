@@ -14,9 +14,9 @@ namespace SrcGit.Models
     public class Preference
     {
         private static readonly string SAVE_PATH = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "SrcGit",
-            "preference_v4.json");
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    "SrcGit",
+                    "preference_v4.json");
         private static Preference instance = null;
 
         /// <summary>
@@ -28,12 +28,20 @@ namespace SrcGit.Models
             /// <summary>
             ///     显示语言
             /// </summary>
-            public string Locale { get; set; } = "en_US";
+            public string Locale
+            {
+                get;
+                set;
+            } = "en_US";
 
             /// <summary>
             ///     系统字体
             /// </summary>
-            public string FontFamilyWindowSetting { get; set; } = "Microsoft YaHei UI";
+            public string FontFamilyWindowSetting
+            {
+                get;
+                set;
+            } = "Microsoft YaHei UI";
 
             [JsonIgnore]
             public string FontFamilyWindow
@@ -45,7 +53,11 @@ namespace SrcGit.Models
             /// <summary>
             ///     用户字体（提交列表、提交日志、差异比较等）
             /// </summary>
-            public string FontFamilyContentSetting { get; set; } = "Consolas";
+            public string FontFamilyContentSetting
+            {
+                get;
+                set;
+            } = "Consolas";
 
             [JsonIgnore]
             public string FontFamilyContent
@@ -57,22 +69,38 @@ namespace SrcGit.Models
             /// <summary>
             ///     头像服务器
             /// </summary>
-            public string AvatarServer { get; set; } = "https://www.gravatar.com/avatar/";
+            public string AvatarServer
+            {
+                get;
+                set;
+            } = "https://www.gravatar.com/avatar/";
 
             /// <summary>
             ///     是否启用深色主题
             /// </summary>
-            public bool UseDarkTheme { get; set; } = true;
+            public bool UseDarkTheme
+            {
+                get;
+                set;
+            } = true;
 
             /// <summary>
             ///     启用更新检测
             /// </summary>
-            public bool CheckForUpdate { get; set; } = true;
+            public bool CheckForUpdate
+            {
+                get;
+                set;
+            } = true;
 
             /// <summary>
             ///     上一次检测的时间（用于控制每天仅第一次启动软件时，检测）
             /// </summary>
-            public int LastCheckDay { get; set; } = 0;
+            public int LastCheckDay
+            {
+                get;
+                set;
+            } = 0;
         }
 
         /// <summary>
@@ -84,22 +112,38 @@ namespace SrcGit.Models
             /// <summary>
             ///     git.exe所在路径
             /// </summary>
-            public string Path { get; set; }
+            public string Path
+            {
+                get;
+                set;
+            }
 
             /// <summary>
             ///     默认克隆路径
             /// </summary>
-            public string DefaultCloneDir { get; set; }
+            public string DefaultCloneDir
+            {
+                get;
+                set;
+            }
 
             /// <summary>
             ///     启用自动拉取远程变更（每10分钟一次）
             /// </summary>
-            public bool AutoFetchRemotes { get; set; } = true;
+            public bool AutoFetchRemotes
+            {
+                get;
+                set;
+            } = true;
 
             /// <summary>
             ///     在本地变更列表中显示未跟踪文件
             /// </summary>
-            public bool IncludeUntrackedInWC { get; set; } = true;
+            public bool IncludeUntrackedInWC
+            {
+                get;
+                set;
+            } = true;
         }
 
         /// <summary>
@@ -110,12 +154,20 @@ namespace SrcGit.Models
             /// <summary>
             ///     合并工具类型
             /// </summary>
-            public int Type { get; set; } = 0;
+            public int Type
+            {
+                get;
+                set;
+            } = 0;
 
             /// <summary>
             ///     合并工具可执行文件路径
             /// </summary>
-            public string Path { get; set; } = "";
+            public string Path
+            {
+                get;
+                set;
+            } = "";
         }
 
         /// <summary>
@@ -127,52 +179,92 @@ namespace SrcGit.Models
             /// <summary>
             ///     最近一次设置的宽度
             /// </summary>
-            public double Width { get; set; } = 800;
+            public double Width
+            {
+                get;
+                set;
+            } = 800;
 
             /// <summary>
             ///     最近一次设置的高度
             /// </summary>
-            public double Height { get; set; } = 600;
+            public double Height
+            {
+                get;
+                set;
+            } = 600;
 
             /// <summary>
             ///     保存上次关闭时是否最大化中
             /// </summary>
-            public WindowState State { get; set; } = WindowState.Normal;
+            public WindowState State
+            {
+                get;
+                set;
+            } = WindowState.Normal;
 
             /// <summary>
             ///     将提交信息面板与提交记录左右排布
             /// </summary>
-            public bool MoveCommitInfoRight { get; set; } = false;
+            public bool MoveCommitInfoRight
+            {
+                get;
+                set;
+            } = false;
 
             /// <summary>
             ///     使用合并Diff视图
             /// </summary>
-            public bool UseCombinedDiff { get; set; } = false;
+            public bool UseCombinedDiff
+            {
+                get;
+                set;
+            } = false;
 
             /// <summary>
             ///     Pull时是否使用Rebase替换Merge
             /// </summary>
-            public bool UseRebaseOnPull { get; set; } = true;
+            public bool UseRebaseOnPull
+            {
+                get;
+                set;
+            } = true;
 
             /// <summary>
             ///     Pull时是否使用自动暂存
             /// </summary>
-            public bool UseAutoStashOnPull { get; set; } = true;
+            public bool UseAutoStashOnPull
+            {
+                get;
+                set;
+            } = true;
 
             /// <summary>
             ///     未暂存视图中变更显示方式
             /// </summary>
-            public Change.DisplayMode ChangeInUnstaged { get; set; } = Change.DisplayMode.Tree;
+            public Change.DisplayMode ChangeInUnstaged
+            {
+                get;
+                set;
+            } = Change.DisplayMode.Tree;
 
             /// <summary>
             ///     暂存视图中变更显示方式
             /// </summary>
-            public Change.DisplayMode ChangeInStaged { get; set; } = Change.DisplayMode.Tree;
+            public Change.DisplayMode ChangeInStaged
+            {
+                get;
+                set;
+            } = Change.DisplayMode.Tree;
 
             /// <summary>
             ///     提交信息视图中变更显示方式
             /// </summary>
-            public Change.DisplayMode ChangeInCommitInfo { get; set; } = Change.DisplayMode.Tree;
+            public Change.DisplayMode ChangeInCommitInfo
+            {
+                get;
+                set;
+            } = Change.DisplayMode.Tree;
         }
 
         /// <summary>
@@ -184,17 +276,29 @@ namespace SrcGit.Models
             /// <summary>
             ///     是否开启该功能
             /// </summary>
-            public bool IsEnabled { get; set; } = false;
+            public bool IsEnabled
+            {
+                get;
+                set;
+            } = false;
 
             /// <summary>
             ///     上次打开的仓库
             /// </summary>
-            public List<string> Opened { get; set; } = new List<string>();
+            public List<string> Opened
+            {
+                get;
+                set;
+            } = new List<string>();
 
             /// <summary>
             ///     最后浏览的仓库
             /// </summary>
-            public string Actived { get; set; } = null;
+            public string Actived
+            {
+                get;
+                set;
+            } = null;
         }
 
         /// <summary>
@@ -205,7 +309,11 @@ namespace SrcGit.Models
         {
             get
             {
-                if (instance == null) return Load();
+                if (instance == null)
+                {
+                    return Load();
+                }
+
                 return instance;
             }
         }
@@ -216,18 +324,50 @@ namespace SrcGit.Models
         [JsonIgnore]
         public bool IsReady
         {
-            get => File.Exists(Git.Path) && new Commands.Version().Query() != null;
+            get => File.Exists(Git.Path) &&new Commands.Version().Query() != null;
         }
 
         #region DATA
-        public GeneralInfo General { get; set; } = new GeneralInfo();
-        public GitInfo Git { get; set; } = new GitInfo();
-        public MergeToolInfo MergeTool { get; set; } = new MergeToolInfo();
-        public WindowInfo Window { get; set; } = new WindowInfo();
-        public List<Group> Groups { get; set; } = new List<Group>();
-        public List<Repository> Repositories { get; set; } = new List<Repository>();
-        public List<string> Recents { get; set; } = new List<string>();
-        public RestoreTabs Restore { get; set; } = new RestoreTabs();
+        public GeneralInfo General
+        {
+            get;
+            set;
+        } = new GeneralInfo();
+        public GitInfo Git
+        {
+            get;
+            set;
+        } = new GitInfo();
+        public MergeToolInfo MergeTool
+        {
+            get;
+            set;
+        } = new MergeToolInfo();
+        public WindowInfo Window
+        {
+            get;
+            set;
+        } = new WindowInfo();
+        public List<Group> Groups
+        {
+            get;
+            set;
+        } = new List<Group>();
+        public List<Repository> Repositories
+        {
+            get;
+            set;
+        } = new List<Repository>();
+        public List<string> Recents
+        {
+            get;
+            set;
+        } = new List<string>();
+        public RestoreTabs Restore
+        {
+            get;
+            set;
+        } = new RestoreTabs();
         #endregion
 
         #region LOAD_SAVE
@@ -252,9 +392,10 @@ namespace SrcGit.Models
             if (!instance.IsReady)
             {
                 var reg = RegistryKey.OpenBaseKey(
-                    RegistryHive.LocalMachine,
-                    Environment.Is64BitOperatingSystem ? RegistryView.Registry64 : RegistryView.Registry32);
+                              RegistryHive.LocalMachine,
+                              Environment.Is64BitOperatingSystem ? RegistryView.Registry64 : RegistryView.Registry32);
                 var git = reg.OpenSubKey("SOFTWARE\\GitForWindows");
+
                 if (git != null)
                 {
                     instance.Git.Path = Path.Combine(git.GetValue("InstallPath") as string, "bin", "git.exe");
@@ -267,8 +408,16 @@ namespace SrcGit.Models
         public static void Save()
         {
             var dir = Path.GetDirectoryName(SAVE_PATH);
-            if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-            var data = JsonSerializer.Serialize(instance, new JsonSerializerOptions() { WriteIndented = true });
+
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+
+            var data = JsonSerializer.Serialize(instance, new JsonSerializerOptions()
+            {
+                WriteIndented = true
+            });
             File.WriteAllText(SAVE_PATH, data);
         }
         #endregion
@@ -283,10 +432,8 @@ namespace SrcGit.Models
                 Parent = parentId,
                 IsExpanded = false,
             };
-
             Groups.Add(group);
             Groups.Sort((l, r) => l.Name.CompareTo(r.Name));
-
             return group;
         }
 
@@ -294,8 +441,12 @@ namespace SrcGit.Models
         {
             foreach (var group in Groups)
             {
-                if (group.Id == id) return group;
+                if (group.Id == id)
+                {
+                    return group;
+                }
             }
+
             return null;
         }
 
@@ -326,21 +477,40 @@ namespace SrcGit.Models
                 }
             }
 
-            if (removedIdx >= 0) Groups.RemoveAt(removedIdx);
+            if (removedIdx >= 0)
+            {
+                Groups.RemoveAt(removedIdx);
+            }
         }
 
         public bool IsSubGroup(string parent, string subId)
         {
-            if (string.IsNullOrEmpty(parent)) return false;
-            if (parent == subId) return true;
+            if (string.IsNullOrEmpty(parent))
+            {
+                return false;
+            }
+
+            if (parent == subId)
+            {
+                return true;
+            }
 
             var g = FindGroup(subId);
-            if (g == null) return false;
+
+            if (g == null)
+            {
+                return false;
+            }
 
             g = FindGroup(g.Parent);
+
             while (g != null)
             {
-                if (g.Id == parent) return true;
+                if (g.Id == parent)
+                {
+                    return true;
+                }
+
                 g = FindGroup(g.Parent);
             }
 
@@ -352,7 +522,11 @@ namespace SrcGit.Models
         public Repository AddRepository(string path, string gitDir, string groupId)
         {
             var repo = FindRepository(path);
-            if (repo != null) return repo;
+
+            if (repo != null)
+            {
+                return repo;
+            }
 
             var dir = new DirectoryInfo(path);
             repo = new Repository()
@@ -362,7 +536,6 @@ namespace SrcGit.Models
                 Name = dir.Name,
                 GroupId = groupId,
             };
-
             Repositories.Add(repo);
             Repositories.Sort((l, r) => l.Name.CompareTo(r.Name));
             return repo;
@@ -371,17 +544,26 @@ namespace SrcGit.Models
         public Repository FindRepository(string path)
         {
             var dir = new DirectoryInfo(path);
+
             foreach (var repo in Repositories)
             {
-                if (repo.Path == dir.FullName) return repo;
+                if (repo.Path == dir.FullName)
+                {
+                    return repo;
+                }
             }
+
             return null;
         }
 
         public void RenameRepository(string path, string newName)
         {
             var repo = FindRepository(path);
-            if (repo == null) return;
+
+            if (repo == null)
+            {
+                return;
+            }
 
             repo.Name = newName;
             Repositories.Sort((l, r) => l.Name.CompareTo(r.Name));
@@ -401,7 +583,10 @@ namespace SrcGit.Models
                 }
             }
 
-            if (removedIdx >= 0) Repositories.RemoveAt(removedIdx);
+            if (removedIdx >= 0)
+            {
+                Repositories.RemoveAt(removedIdx);
+            }
         }
         #endregion
 

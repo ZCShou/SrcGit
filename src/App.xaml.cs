@@ -18,7 +18,12 @@ namespace SrcGit
         public static string Text(string key, params object[] args)
         {
             var data = Current.FindResource($"Text.{key}") as string;
-            if (string.IsNullOrEmpty(data)) return $"Text.{key}";
+
+            if (string.IsNullOrEmpty(data))
+            {
+                return $"Text.{key}";
+            }
+
             return string.Format(data, args);
         }
 
@@ -30,7 +35,6 @@ namespace SrcGit
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-
             // 崩溃上报
             AppDomain.CurrentDomain.UnhandledException += (_, ev) => Models.Issue.Create(ev.ExceptionObject as Exception);
 
@@ -42,7 +46,6 @@ namespace SrcGit
 
             Models.Theme.Change();
             Models.Locale.Change();
-
             // 如果启动命令中指定了路径，打开指定目录的仓库
             MainWindow = new Views.Launcher();
 
@@ -112,11 +115,13 @@ namespace SrcGit
 
             // 主界面显示
             MainWindow.Show();
-
             // 检测版本更新
             Models.Version.Check(ver => Dispatcher.Invoke(() =>
             {
-                var dialog = new Views.Upgrade(ver) { Owner = MainWindow };
+                var dialog = new Views.Upgrade(ver)
+                {
+                    Owner = MainWindow
+                };
                 dialog.ShowDialog();
             }));
         }

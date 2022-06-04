@@ -13,18 +13,28 @@ namespace SrcGit.Views.Popups
         private string repo = null;
         private string basedOn = null;
 
-        public string BranchName { get; set; } = "";
-        public bool AutoStash { get; set; } = true;
+        public string BranchName
+        {
+            get;
+            set;
+        } = "";
+        public bool AutoStash
+        {
+            get;
+            set;
+        } = true;
 
         public CreateBranch(Models.Repository repo, Models.Branch branch)
         {
             this.repo = repo.Path;
             this.basedOn = branch.FullName;
 
-            if (!branch.IsLocal) BranchName = branch.Name;
+            if (!branch.IsLocal)
+            {
+                BranchName = branch.Name;
+            }
 
             InitializeComponent();
-
             ruleBranch.Repo = repo;
             iconBased.Data = FindResource("Icon.Branch") as Geometry;
             txtBased.Text = !string.IsNullOrEmpty(branch.Remote) ? $"{branch.Remote}/{branch.Name}" : branch.Name;
@@ -34,9 +44,7 @@ namespace SrcGit.Views.Popups
         {
             this.repo = repo.Path;
             this.basedOn = commit.SHA;
-
             InitializeComponent();
-
             ruleBranch.Repo = repo;
             iconBased.Data = FindResource("Icon.Commit") as Geometry;
             txtSHA.Text = commit.ShortSHA;
@@ -48,9 +56,7 @@ namespace SrcGit.Views.Popups
         {
             this.repo = repo.Path;
             this.basedOn = tag.Name;
-
             InitializeComponent();
-
             ruleBranch.Repo = repo;
             iconBased.Data = FindResource("Icon.Tag") as Geometry;
             txtBased.Text = tag.Name;
@@ -64,16 +70,21 @@ namespace SrcGit.Views.Popups
         public override Task<bool> Start()
         {
             txtBranchName.GetBindingExpression(TextBox.TextProperty).UpdateSource();
-            if (Validation.GetHasError(txtBranchName)) return null;
+
+            if (Validation.GetHasError(txtBranchName))
+            {
+                return null;
+            }
 
             var checkout = chkCheckout.IsChecked == true;
-
             return Task.Run(() =>
             {
                 Models.Watcher.SetEnabled(repo, false);
+
                 if (checkout)
                 {
                     var changes = new Commands.LocalChanges(repo).Result();
+
                     if (changes.Count > 0)
                     {
                         if (AutoStash)
@@ -95,12 +106,17 @@ namespace SrcGit.Views.Popups
 
                     UpdateProgress($"Create new branch '{BranchName}'");
                     new Commands.Checkout(repo).Branch(BranchName, basedOn, UpdateProgress);
-                    if (AutoStash) new Commands.Stash(repo).Pop("stash@{0}");
+
+                    if (AutoStash)
+                    {
+                        new Commands.Stash(repo).Pop("stash@{0}");
+                    }
                 }
                 else
                 {
                     new Commands.Branch(repo, BranchName).Create(basedOn);
                 }
+
                 Models.Watcher.SetEnabled(repo, true);
                 return true;
             });

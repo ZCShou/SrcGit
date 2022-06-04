@@ -11,15 +11,21 @@ namespace SrcGit.Views.Controls
     public class Window : System.Windows.Window
     {
         public static readonly DependencyProperty IsMaximizedProperty = DependencyProperty.Register(
-            "IsMaximized",
-            typeof(bool),
-            typeof(Window),
-            new PropertyMetadata(false, OnIsMaximizedChanged));
+                    "IsMaximized",
+                    typeof(bool),
+                    typeof(Window),
+                    new PropertyMetadata(false, OnIsMaximizedChanged));
 
         public bool IsMaximized
         {
-            get { return (bool)GetValue(IsMaximizedProperty); }
-            set { SetValue(IsMaximizedProperty, value); }
+            get
+            {
+                return (bool)GetValue(IsMaximizedProperty);
+            }
+            set
+            {
+                SetValue(IsMaximizedProperty, value);
+            }
         }
 
         private AdornerLayer adornerLayer = null;
@@ -28,7 +34,6 @@ namespace SrcGit.Views.Controls
         public Window()
         {
             Style = FindResource("Style.Window") as Style;
-
             Loaded += (_, __) =>
             {
                 adornerLayer = AdornerLayer.GetAdornerLayer(Content as FrameworkElement);
@@ -39,6 +44,7 @@ namespace SrcGit.Views.Controls
         public static void AddAdorner(FrameworkElement windowContext, Adorner adorner)
         {
             var wnd = GetWindow(windowContext) as Window;
+
             if (wnd != null && wnd.adornerLayer != null)
             {
                 wnd.adorners.Add(adorner);
@@ -49,6 +55,7 @@ namespace SrcGit.Views.Controls
         public static void RemoveAdorner(FrameworkElement windowContext, Adorner adorner)
         {
             var wnd = GetWindow(windowContext) as Window;
+
             if (wnd != null && wnd.adornerLayer != null)
             {
                 wnd.adorners.Remove(adorner);
@@ -59,20 +66,32 @@ namespace SrcGit.Views.Controls
         protected override void OnPreviewGiveFeedback(GiveFeedbackEventArgs e)
         {
             base.OnPreviewGiveFeedback(e);
-            if (adornerLayer != null && adorners.Count > 0) adornerLayer.Update();
+
+            if (adornerLayer != null && adorners.Count > 0)
+            {
+                adornerLayer.Update();
+            }
         }
 
         protected override void OnStateChanged(EventArgs e)
         {
             if (WindowState == WindowState.Maximized)
             {
-                if (!IsMaximized) IsMaximized = true;
+                if (!IsMaximized)
+                {
+                    IsMaximized = true;
+                }
+
                 BorderThickness = new Thickness(0);
                 Padding = new Thickness((SystemParameters.MaximizedPrimaryScreenWidth - SystemParameters.WorkArea.Width) / 2);
             }
             else
             {
-                if (IsMaximized) IsMaximized = false;
+                if (IsMaximized)
+                {
+                    IsMaximized = false;
+                }
+
                 BorderThickness = new Thickness(1);
                 Padding = new Thickness(0);
             }
@@ -81,6 +100,7 @@ namespace SrcGit.Views.Controls
         private static void OnIsMaximizedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Window w = d as Window;
+
             if (w != null)
             {
                 if (w.IsMaximized)

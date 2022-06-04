@@ -14,9 +14,7 @@ namespace SrcGit.Views.Popups
         {
             this.repo = repo;
             this.source = source;
-
             InitializeComponent();
-
             txtSource.Text = source;
             txtInto.Text = dest;
         }

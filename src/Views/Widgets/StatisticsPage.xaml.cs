@@ -19,7 +19,6 @@ namespace SrcGit.Views.Widgets
             {
                 txtMemberCount.Text = App.Text("Statistics.TotalCommitterCount", committers.Count);
                 txtCommitCount.Text = App.Text("Statistics.TotalCommitsCount", totalCommits);
-
                 lstCommitters.ItemsSource = committers;
                 chartCommits.SetData(commits);
             });

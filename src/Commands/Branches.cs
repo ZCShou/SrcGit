@@ -33,11 +33,19 @@ namespace SrcGit.Commands
         public override void OnReadline(string line)
         {
             var match = REG_FORMAT.Match(line);
-            if (!match.Success) return;
+
+            if (!match.Success)
+            {
+                return;
+            }
 
             var branch = new Models.Branch();
             var refName = match.Groups[1].Value;
-            if (refName.EndsWith("/HEAD")) return;
+
+            if (refName.EndsWith("/HEAD"))
+            {
+                return;
+            }
 
             if (refName.StartsWith(PREFIX_LOCAL, StringComparison.Ordinal))
             {
@@ -48,7 +56,11 @@ namespace SrcGit.Commands
             {
                 var name = refName.Substring(PREFIX_REMOTE.Length);
                 var shortNameIdx = name.IndexOf('/');
-                if (shortNameIdx < 0) return;
+
+                if (shortNameIdx < 0)
+                {
+                    return;
+                }
 
                 branch.Remote = name.Substring(0, shortNameIdx);
                 branch.Name = name.Substring(branch.Remote.Length + 1);
@@ -66,23 +78,26 @@ namespace SrcGit.Commands
             branch.Upstream = match.Groups[4].Value;
             branch.UpstreamTrackStatus = ParseTrackStatus(match.Groups[5].Value);
             branch.HeadSubject = match.Groups[6].Value;
-
             loaded.Add(branch);
         }
 
         private string ParseTrackStatus(string data)
         {
-            if (string.IsNullOrEmpty(data)) return "";
+            if (string.IsNullOrEmpty(data))
+            {
+                return "";
+            }
 
             string track = "";
-
             var ahead = REG_AHEAD.Match(data);
+
             if (ahead.Success)
             {
                 track += ahead.Groups[1].Value + "↑ ";
             }
 
             var behind = REG_BEHIND.Match(data);
+
             if (behind.Success)
             {
                 track += behind.Groups[1].Value + "↓";

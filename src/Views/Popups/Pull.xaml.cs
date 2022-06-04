@@ -16,11 +16,13 @@ namespace SrcGit.Views.Popups
         {
             this.repo = repo;
             this.prefered = preferRemoteBranch;
-
             InitializeComponent();
-
             var current = repo.Branches.Find(x => x.IsCurrent);
-            if (current == null) return;
+
+            if (current == null)
+            {
+                return;
+            }
 
             txtInto.Text = current.Name;
 
@@ -30,6 +32,7 @@ namespace SrcGit.Views.Popups
             }
 
             cmbRemotes.ItemsSource = repo.Remotes;
+
             if (prefered != null)
             {
                 cmbRemotes.SelectedItem = repo.Remotes.Find(x => x.Name == prefered.Remote);
@@ -48,11 +51,14 @@ namespace SrcGit.Views.Popups
         public override Task<bool> Start()
         {
             var branch = cmbBranches.SelectedItem as Models.Branch;
-            if (branch == null) return null;
+
+            if (branch == null)
+            {
+                return null;
+            }
 
             var rebase = Models.Preference.Instance.Window.UseRebaseOnPull;
             var autoStash = Models.Preference.Instance.Window.UseAutoStashOnPull;
-
             return Task.Run(() =>
             {
                 Models.Watcher.SetEnabled(repo.Path, false);
@@ -65,12 +71,19 @@ namespace SrcGit.Views.Popups
         private void OnRemoteSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var remote = cmbRemotes.SelectedItem as Models.Remote;
-            if (remote == null) return;
+
+            if (remote == null)
+            {
+                return;
+            }
 
             var branches = repo.Branches.Where(x => x.Remote == remote.Name).ToList();
             cmbBranches.ItemsSource = branches;
 
-            if (branches.Count == 0) return;
+            if (branches.Count == 0)
+            {
+                return;
+            }
 
             if (prefered != null && remote.Name == prefered.Remote)
             {

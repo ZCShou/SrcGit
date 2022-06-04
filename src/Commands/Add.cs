@@ -18,6 +18,7 @@ namespace SrcGit.Commands
         {
             StringBuilder builder = new StringBuilder();
             builder.Append("add --");
+
             foreach (var p in paths)
             {
                 builder.Append(" \"");

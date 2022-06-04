@@ -15,16 +15,18 @@ namespace SrcGit.Views.Popups
         private string repo;
         private string revision;
 
-        public string SaveTo { get; set; }
+        public string SaveTo
+        {
+            get;
+            set;
+        }
 
         public Archive(string repo, Models.Branch branch)
         {
             this.repo = repo;
             this.revision = branch.Head;
             this.SaveTo = $"archive-{Path.GetFileNameWithoutExtension(branch.Name)}.zip";
-
             InitializeComponent();
-
             iconBased.Data = FindResource("Icon.Branch") as Geometry;
             txtBased.Text = branch.IsLocal ? branch.Name : $"{branch.Remote}/{branch.Name}";
         }
@@ -34,9 +36,7 @@ namespace SrcGit.Views.Popups
             this.repo = repo;
             this.revision = revision.SHA;
             this.SaveTo = $"archive-{revision.ShortSHA}.zip";
-
             InitializeComponent();
-
             iconBased.Data = FindResource("Icon.Commit") as Geometry;
             txtSHA.Text = revision.ShortSHA;
             badgeSHA.Visibility = Visibility.Visible;
@@ -48,9 +48,7 @@ namespace SrcGit.Views.Popups
             this.repo = repo;
             this.revision = tag.SHA;
             this.SaveTo = $"archive-{tag.Name}.zip";
-
             InitializeComponent();
-
             iconBased.Data = FindResource("Icon.Tag") as Geometry;
             txtBased.Text = tag.Name;
         }
@@ -63,7 +61,11 @@ namespace SrcGit.Views.Popups
         public override Task<bool> Start()
         {
             txtSaveTo.GetBindingExpression(TextBox.TextProperty).UpdateSource();
-            if (Validation.GetHasError(txtSaveTo)) return null;
+
+            if (Validation.GetHasError(txtSaveTo))
+            {
+                return null;
+            }
 
             return Task.Run(() =>
             {

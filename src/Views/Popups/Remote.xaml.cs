@@ -15,8 +15,16 @@ namespace SrcGit.Views.Popups
         private Models.Repository repo = null;
         private Models.Remote remote = null;
 
-        public string RemoteName { get; set; }
-        public string RemoteURL { get; set; }
+        public string RemoteName
+        {
+            get;
+            set;
+        }
+        public string RemoteURL
+        {
+            get;
+            set;
+        }
 
         public Remote(Models.Repository repo, Models.Remote remote)
         {
@@ -30,8 +38,8 @@ namespace SrcGit.Views.Popups
             }
 
             InitializeComponent();
-
             ruleName.Repo = repo;
+
             if (!string.IsNullOrEmpty(RemoteURL) && RemoteURL.StartsWith("git@"))
             {
                 txtSSHKey.Text = new Commands.Config(repo.Path).Get($"remote.{remote.Name}.sshkey");
@@ -52,21 +60,33 @@ namespace SrcGit.Views.Popups
             if (remote == null || remote.Name != RemoteName)
             {
                 txtName.GetBindingExpression(TextBox.TextProperty).UpdateSource();
-                if (Validation.GetHasError(txtName)) return null;
+
+                if (Validation.GetHasError(txtName))
+                {
+                    return null;
+                }
             }
 
             txtUrl.GetBindingExpression(TextBox.TextProperty).UpdateSource();
-            if (Validation.GetHasError(txtUrl)) return null;
+
+            if (Validation.GetHasError(txtUrl))
+            {
+                return null;
+            }
 
             var sshKey = txtSSHKey.Text;
-
             return Task.Run(() =>
             {
                 Models.Watcher.SetEnabled(repo.Path, false);
+
                 if (remote == null)
                 {
                     var succ = new Commands.Remote(repo.Path).Add(RemoteName, RemoteURL);
-                    if (succ) new Commands.Fetch(repo.Path, RemoteName, true, UpdateProgress).Exec();
+
+                    if (succ)
+                    {
+                        new Commands.Fetch(repo.Path, RemoteName, true, UpdateProgress).Exec();
+                    }
 
                     if (!string.IsNullOrEmpty(sshKey))
                     {
@@ -78,13 +98,21 @@ namespace SrcGit.Views.Popups
                     if (remote.URL != RemoteURL)
                     {
                         var succ = new Commands.Remote(repo.Path).SetURL(remote.Name, RemoteURL);
-                        if (succ) remote.URL = RemoteURL;
+
+                        if (succ)
+                        {
+                            remote.URL = RemoteURL;
+                        }
                     }
 
                     if (remote.Name != RemoteName)
                     {
                         var succ = new Commands.Remote(repo.Path).Rename(remote.Name, RemoteName);
-                        if (succ) remote.Name = RemoteName;
+
+                        if (succ)
+                        {
+                            remote.Name = RemoteName;
+                        }
                     }
 
                     if (!string.IsNullOrEmpty(sshKey))
@@ -92,6 +120,7 @@ namespace SrcGit.Views.Popups
                         new Commands.Config(repo.Path).Set($"remote.{RemoteName}.sshkey", sshKey);
                     }
                 }
+
                 Models.Watcher.SetEnabled(repo.Path, true);
                 return true;
             });
@@ -100,7 +129,11 @@ namespace SrcGit.Views.Popups
         private void OnSelectSSHKey(object sender, RoutedEventArgs e)
         {
             var initPath = Path.GetFullPath(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "..", ".ssh"));
-            if (!Directory.Exists(initPath)) Directory.CreateDirectory(initPath);
+
+            if (!Directory.Exists(initPath))
+            {
+                Directory.CreateDirectory(initPath);
+            }
 
             var dialog = new OpenFileDialog();
             dialog.Filter = $"SSH Private Key|*";
@@ -109,7 +142,10 @@ namespace SrcGit.Views.Popups
             dialog.CheckFileExists = true;
             dialog.Multiselect = false;
 
-            if (dialog.ShowDialog() == true) txtSSHKey.Text = dialog.FileName;
+            if (dialog.ShowDialog() == true)
+            {
+                txtSSHKey.Text = dialog.FileName;
+            }
         }
 
         private void OnUrlChanged(object sender, TextChangedEventArgs e)

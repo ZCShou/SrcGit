@@ -8,14 +8,26 @@
         /// <summary>
         ///     在图表中的顺序
         /// </summary>
-        public int Index { get; set; }
+        public int Index
+        {
+            get;
+            set;
+        }
         /// <summary>
         ///     样品名
         /// </summary>
-        public string Name { get; set; }
+        public string Name
+        {
+            get;
+            set;
+        }
         /// <summary>
         ///     提交个数
         /// </summary>
-        public int Count { get; set; }
+        public int Count
+        {
+            get;
+            set;
+        }
     }
 }

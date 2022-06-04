@@ -14,10 +14,26 @@ namespace SrcGit.Models
         /// </summary>
         public class Different
         {
-            public int DeletedStart { get; set; }
-            public int DeletedCount { get; set; }
-            public int AddedStart { get; set; }
-            public int AddedCount { get; set; }
+            public int DeletedStart
+            {
+                get;
+                set;
+            }
+            public int DeletedCount
+            {
+                get;
+                set;
+            }
+            public int AddedStart
+            {
+                get;
+                set;
+            }
+            public int AddedCount
+            {
+                get;
+                set;
+            }
 
             public Different(int dp, int dc, int ap, int ac)
             {
@@ -88,11 +104,11 @@ namespace SrcGit.Models
             var forward = new int[max];
             var reverse = new int[max];
             CheckModified(chunksOld, 0, sizeOld, chunksNew, 0, sizeNew, forward, reverse);
-
             var ret = new List<Different>();
             var posOld = 0;
             var posNew = 0;
             var last = null as Different;
+
             do
             {
                 while (posOld < sizeOld && posNew < sizeNew && !chunksOld[posOld].Modified && !chunksNew[posNew].Modified)
@@ -105,20 +121,33 @@ namespace SrcGit.Models
                 var beginNew = posNew;
                 var countOld = 0;
                 var countNew = 0;
-                for (; posOld < sizeOld && chunksOld[posOld].Modified; posOld++) countOld += chunksOld[posOld].Size;
-                for (; posNew < sizeNew && chunksNew[posNew].Modified; posNew++) countNew += chunksNew[posNew].Size;
 
-                if (countOld + countNew == 0) continue;
+                for (; posOld < sizeOld && chunksOld[posOld].Modified; posOld++)
+                {
+                    countOld += chunksOld[posOld].Size;
+                }
+
+                for (; posNew < sizeNew && chunksNew[posNew].Modified; posNew++)
+                {
+                    countNew += chunksNew[posNew].Size;
+                }
+
+                if (countOld + countNew == 0)
+                {
+                    continue;
+                }
 
                 var diff = new Different(
                     countOld > 0 ? chunksOld[beginOld].Start : 0,
                     countOld,
                     countNew > 0 ? chunksNew[beginNew].Start : 0,
                     countNew);
+
                 if (last != null)
                 {
                     var midSizeOld = diff.DeletedStart - last.DeletedStart - last.DeletedCount;
                     var midSizeNew = diff.AddedStart - last.AddedStart - last.AddedCount;
+
                     if (midSizeOld == 1 && midSizeNew == 1)
                     {
                         last.DeletedCount += (1 + countOld);
@@ -129,7 +158,8 @@ namespace SrcGit.Models
 
                 last = diff;
                 ret.Add(diff);
-            } while (posOld < sizeOld && posNew < sizeNew);
+            }
+            while (posOld < sizeOld && posNew < sizeNew);
 
             return ret;
         }
@@ -143,15 +173,24 @@ namespace SrcGit.Models
             for (int i = 0; i < size; i++)
             {
                 var ch = text[i];
+
                 if (SEPS.Contains(ch))
                 {
-                    if (start != i) AddChunk(chunks, hashes, text.Substring(start, i - start), start);
+                    if (start != i)
+                    {
+                        AddChunk(chunks, hashes, text.Substring(start, i - start), start);
+                    }
+
                     AddChunk(chunks, hashes, text.Substring(i, 1), i);
                     start = i + 1;
                 }
             }
 
-            if (start < size) AddChunk(chunks, hashes, text.Substring(start), start);
+            if (start < size)
+            {
+                AddChunk(chunks, hashes, text.Substring(start), start);
+            }
+
             return chunks;
         }
 
@@ -171,10 +210,15 @@ namespace SrcGit.Models
 
             var lenOld = endOld - startOld;
             var lenNew = endNew - startNew;
+
             if (lenOld > 0 && lenNew > 0)
             {
                 var rs = CheckModifiedEdit(chunksOld, startOld, endOld, chunksNew, startNew, endNew, forward, reverse);
-                if (rs.State == Edit.None) return;
+
+                if (rs.State == Edit.None)
+                {
+                    return;
+                }
 
                 if (rs.State == Edit.DeletedRight && rs.DeleteStart - 1 > startOld)
                 {
@@ -198,11 +242,17 @@ namespace SrcGit.Models
             }
             else if (lenOld > 0)
             {
-                for (int i = startOld; i < endOld; i++) chunksOld[i].Modified = true;
+                for (int i = startOld; i < endOld; i++)
+                {
+                    chunksOld[i].Modified = true;
+                }
             }
             else if (lenNew > 0)
             {
-                for (int i = startNew; i < endNew; i++) chunksNew[i].Modified = true;
+                for (int i = startNew; i < endNew; i++)
+                {
+                    chunksNew[i].Modified = true;
+                }
             }
         }
 
@@ -214,19 +264,21 @@ namespace SrcGit.Models
             var half = max / 2;
             var delta = lenOld - lenNew;
             var deltaEven = delta % 2 == 0;
-            var rs = new EditResult() { State = Edit.None };
-
+            var rs = new EditResult()
+            {
+                State = Edit.None
+            };
             forward[1 + half] = 0;
             reverse[1 + half] = lenOld + 1;
 
             for (int i = 0; i <= half; i++)
             {
-
                 // 正向
                 for (int j = -i; j <= i; j += 2)
                 {
                     var idx = j + half;
                     int o, n;
+
                     if (j == -i || (j != i && forward[idx - 1] < forward[idx + 1]))
                     {
                         o = forward[idx + 1];
@@ -239,9 +291,9 @@ namespace SrcGit.Models
                     }
 
                     n = o - j;
-
                     var startX = o;
                     var startY = n;
+
                     while (o < lenOld && n < lenNew && chunksOld[o + startOld].Hash == chunksNew[n + startNew].Hash)
                     {
                         o++;
@@ -255,6 +307,7 @@ namespace SrcGit.Models
                         var revIdx = (j - delta) + half;
                         var revOld = reverse[revIdx];
                         int revNew = revOld - j;
+
                         if (revOld <= o && revNew <= n)
                         {
                             if (i == 0)
@@ -268,6 +321,7 @@ namespace SrcGit.Models
                                 rs.AddStart = startY + startNew;
                                 rs.AddEnd = n + startNew;
                             }
+
                             return rs;
                         }
                     }
@@ -278,6 +332,7 @@ namespace SrcGit.Models
                 {
                     var idx = j + half;
                     int o, n;
+
                     if (j == -i || (j != i && reverse[idx + 1] <= reverse[idx - 1]))
                     {
                         o = reverse[idx + 1] - 1;
@@ -290,9 +345,9 @@ namespace SrcGit.Models
                     }
 
                     n = o - (j + delta);
-
                     var endX = o;
                     var endY = n;
+
                     while (o > 0 && n > 0 && chunksOld[startOld + o - 1].Hash == chunksNew[startNew + n - 1].Hash)
                     {
                         o--;
@@ -306,6 +361,7 @@ namespace SrcGit.Models
                         var forIdx = (j + delta) + half;
                         var forOld = forward[forIdx];
                         int forNew = forOld - (j + delta);
+
                         if (forOld >= o && forNew >= n)
                         {
                             if (i == 0)
@@ -319,6 +375,7 @@ namespace SrcGit.Models
                                 rs.AddStart = n + startNew;
                                 rs.AddEnd = endY + startNew;
                             }
+
                             return rs;
                         }
                     }
@@ -332,6 +389,7 @@ namespace SrcGit.Models
         private static void AddChunk(List<Chunk> chunks, Dictionary<string, int> hashes, string data, int start)
         {
             int hash;
+
             if (hashes.TryGetValue(data, out hash))
             {
                 chunks.Add(new Chunk(hash, start, data.Length));

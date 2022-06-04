@@ -24,7 +24,6 @@ namespace SrcGit.Models
             builder.Append($"Source: {e.Source}");
             builder.Append($"---------------------------\n\n");
             builder.Append(e.StackTrace);
-
             var time = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
             var file = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
             file = Path.Combine(file, $"SrcGit_crash_{time}.log");

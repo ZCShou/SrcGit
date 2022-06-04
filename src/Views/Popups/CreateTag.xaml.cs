@@ -12,16 +12,22 @@ namespace SrcGit.Views.Popups
         private string repo = null;
         private string basedOn = null;
 
-        public string TagName { get; set; }
-        public string Message { get; set; }
+        public string TagName
+        {
+            get;
+            set;
+        }
+        public string Message
+        {
+            get;
+            set;
+        }
 
         public CreateTag(Models.Repository repo, Models.Branch branch)
         {
             this.repo = repo.Path;
             this.basedOn = branch.Head;
-
             InitializeComponent();
-
             ruleTag.Tags = new Commands.Tags(repo.Path).Result();
             iconBased.Data = FindResource("Icon.Branch") as Geometry;
             txtBased.Text = !string.IsNullOrEmpty(branch.Remote) ? $"{branch.Remote}/{branch.Name}" : branch.Name;
@@ -31,9 +37,7 @@ namespace SrcGit.Views.Popups
         {
             this.repo = repo.Path;
             this.basedOn = commit.SHA;
-
             InitializeComponent();
-
             ruleTag.Tags = new Commands.Tags(repo.Path).Result();
             iconBased.Data = FindResource("Icon.Commit") as Geometry;
             txtSHA.Text = commit.ShortSHA;
@@ -49,7 +53,11 @@ namespace SrcGit.Views.Popups
         public override Task<bool> Start()
         {
             txtTagName.GetBindingExpression(TextBox.TextProperty).UpdateSource();
-            if (Validation.GetHasError(txtTagName)) return null;
+
+            if (Validation.GetHasError(txtTagName))
+            {
+                return null;
+            }
 
             return Task.Run(() =>
             {

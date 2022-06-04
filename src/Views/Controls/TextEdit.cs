@@ -14,27 +14,39 @@ namespace SrcGit.Views.Controls
         private bool isPlaceholderShow = false;
 
         public static readonly DependencyProperty PlaceholderProperty = DependencyProperty.Register(
-            "Placeholder",
-            typeof(string),
-            typeof(TextEdit),
-            new PropertyMetadata(""));
+                    "Placeholder",
+                    typeof(string),
+                    typeof(TextEdit),
+                    new PropertyMetadata(""));
 
         public string Placeholder
         {
-            get { return (string)GetValue(PlaceholderProperty); }
-            set { SetValue(PlaceholderProperty, value); }
+            get
+            {
+                return (string)GetValue(PlaceholderProperty);
+            }
+            set
+            {
+                SetValue(PlaceholderProperty, value);
+            }
         }
 
         public static readonly DependencyProperty PlaceholderBaselineProperty = DependencyProperty.Register(
-            "PlaceholderBaseline",
-            typeof(AlignmentY),
-            typeof(TextEdit),
-            new PropertyMetadata(AlignmentY.Center));
+                    "PlaceholderBaseline",
+                    typeof(AlignmentY),
+                    typeof(TextEdit),
+                    new PropertyMetadata(AlignmentY.Center));
 
         public AlignmentY PlaceholderBaseline
         {
-            get { return (AlignmentY)GetValue(PlaceholderBaselineProperty); }
-            set { SetValue(PlaceholderBaselineProperty, value); }
+            get
+            {
+                return (AlignmentY)GetValue(PlaceholderBaselineProperty);
+            }
+            set
+            {
+                SetValue(PlaceholderBaselineProperty, value);
+            }
         }
 
         public TextEdit()
@@ -50,7 +62,6 @@ namespace SrcGit.Views.Controls
             if (string.IsNullOrEmpty(Text) && !string.IsNullOrEmpty(Placeholder))
             {
                 isPlaceholderShow = true;
-
                 var text = new FormattedText(
                     Placeholder,
                     CultureInfo.CurrentCulture,
@@ -67,9 +78,11 @@ namespace SrcGit.Views.Controls
                     case AlignmentY.Top:
                         dc.DrawText(text, new Point(4, 4));
                         break;
+
                     case AlignmentY.Center:
                         dc.DrawText(text, new Point(4, ActualHeight * .5 - text.Height * .5));
                         break;
+
                     default:
                         dc.DrawText(text, new Point(4, ActualHeight - text.Height - 4));
                         break;
@@ -83,16 +96,23 @@ namespace SrcGit.Views.Controls
 
         private void OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            if (string.IsNullOrEmpty(Text) || isPlaceholderShow) InvalidateVisual();
+            if (string.IsNullOrEmpty(Text) || isPlaceholderShow)
+            {
+                InvalidateVisual();
+            }
         }
 
         private void OnSelectionChanged(object sender, RoutedEventArgs e)
         {
-            if (!IsFocused) return;
+            if (!IsFocused)
+            {
+                return;
+            }
 
             if (Mouse.LeftButton == MouseButtonState.Pressed && SelectionLength > 0)
             {
                 var p = Mouse.GetPosition(this);
+
                 if (p.X <= 8)
                 {
                     LineLeft();
@@ -114,6 +134,7 @@ namespace SrcGit.Views.Controls
             else
             {
                 var rect = GetRectFromCharacterIndex(CaretIndex);
+
                 if (rect.Left <= 0)
                 {
                     ScrollToHorizontalOffset(HorizontalOffset + rect.Left);

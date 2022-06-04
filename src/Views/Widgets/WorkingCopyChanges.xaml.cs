@@ -18,51 +18,77 @@ namespace SrcGit.Views.Widgets
     {
 
         public static readonly DependencyProperty IsUnstagedProperty = DependencyProperty.Register(
-            "IsUnstaged",
-            typeof(bool),
-            typeof(WorkingCopyChanges),
-            new PropertyMetadata(false));
+                    "IsUnstaged",
+                    typeof(bool),
+                    typeof(WorkingCopyChanges),
+                    new PropertyMetadata(false));
 
         public bool IsUnstaged
         {
-            get { return (bool)GetValue(IsUnstagedProperty); }
-            set { SetValue(IsUnstagedProperty, value); }
+            get
+            {
+                return (bool)GetValue(IsUnstagedProperty);
+            }
+            set
+            {
+                SetValue(IsUnstagedProperty, value);
+            }
         }
 
         public static readonly DependencyProperty IsStagingProperty = DependencyProperty.Register(
-            "IsStaging",
-            typeof(bool),
-            typeof(WorkingCopyChanges),
-            new PropertyMetadata(false));
+                    "IsStaging",
+                    typeof(bool),
+                    typeof(WorkingCopyChanges),
+                    new PropertyMetadata(false));
 
         public bool IsStaging
         {
-            get { return (bool)GetValue(IsStagingProperty); }
-            set { SetValue(IsStagingProperty, value); }
+            get
+            {
+                return (bool)GetValue(IsStagingProperty);
+            }
+            set
+            {
+                SetValue(IsStagingProperty, value);
+            }
         }
 
         public static readonly DependencyProperty ModeProperty = DependencyProperty.Register(
-            "Mode",
-            typeof(Models.Change.DisplayMode),
-            typeof(WorkingCopyChanges),
-            new PropertyMetadata(Models.Change.DisplayMode.Tree, OnModeChanged));
+                    "Mode",
+                    typeof(Models.Change.DisplayMode),
+                    typeof(WorkingCopyChanges),
+                    new PropertyMetadata(Models.Change.DisplayMode.Tree, OnModeChanged));
 
         public Models.Change.DisplayMode Mode
         {
-            get { return (Models.Change.DisplayMode)GetValue(ModeProperty); }
-            set { SetValue(ModeProperty, value); }
+            get
+            {
+                return (Models.Change.DisplayMode)GetValue(ModeProperty);
+            }
+            set
+            {
+                SetValue(ModeProperty, value);
+            }
         }
 
         public static readonly RoutedEvent DiffTargetChangedEvent = EventManager.RegisterRoutedEvent(
-            "DiffTargetChanged",
-            RoutingStrategy.Bubble,
-            typeof(EventHandler<DiffTargetChangedEventArgs>),
-            typeof(WorkingCopyChanges));
+                    "DiffTargetChanged",
+                    RoutingStrategy.Bubble,
+                    typeof(EventHandler<DiffTargetChangedEventArgs>),
+                    typeof(WorkingCopyChanges));
 
         public class DiffTargetChangedEventArgs : RoutedEventArgs
         {
-            public Models.Change Target { get; set; }
-            public bool HasOthers { get; set; }
+            public Models.Change Target
+            {
+                get;
+                set;
+            }
+            public bool HasOthers
+            {
+                get;
+                set;
+            }
             public DiffTargetChangedEventArgs(RoutedEvent re, object src, Models.Change c, bool hasOthers) : base(re, src)
             {
                 Target = c;
@@ -72,17 +98,39 @@ namespace SrcGit.Views.Widgets
 
         public event RoutedEventHandler DiffTargetChanged
         {
-            add { AddHandler(DiffTargetChangedEvent, value); }
-            remove { RemoveHandler(DiffTargetChangedEvent, value); }
+            add
+            {
+                AddHandler(DiffTargetChangedEvent, value);
+            }
+            remove
+            {
+                RemoveHandler(DiffTargetChangedEvent, value);
+            }
         }
 
         public class ChangeNode
         {
-            public string Path { get; set; } = "";
-            public Models.Change Change { get; set; } = null;
-            public bool IsExpanded { get; set; } = false;
+            public string Path
+            {
+                get;
+                set;
+            } = "";
+            public Models.Change Change
+            {
+                get;
+                set;
+            } = null;
+            public bool IsExpanded
+            {
+                get;
+                set;
+            } = false;
             public bool IsFolder => Change == null;
-            public ObservableCollection<ChangeNode> Children { get; set; } = new ObservableCollection<ChangeNode>();
+            public ObservableCollection<ChangeNode> Children
+            {
+                get;
+                set;
+            } = new ObservableCollection<ChangeNode>();
         }
 
         public ObservableCollection<Models.Change> Changes
@@ -111,7 +159,6 @@ namespace SrcGit.Views.Widgets
             Changes = new ObservableCollection<Models.Change>();
             Nodes = new ObservableCollection<ChangeNode>();
             DiffTarget = null;
-
             InitializeComponent();
         }
 
@@ -128,9 +175,11 @@ namespace SrcGit.Views.Widgets
                 case Models.Change.DisplayMode.Tree:
                     modeTree.UnselectAll();
                     break;
+
                 case Models.Change.DisplayMode.List:
                     modeList.SelectedItems.Clear();
                     break;
+
                 case Models.Change.DisplayMode.Grid:
                     modeGrid.SelectedItems.Clear();
                     break;
@@ -140,21 +189,40 @@ namespace SrcGit.Views.Widgets
         public void StageSelected()
         {
             var changes = new List<Models.Change>();
+
             switch (Mode)
             {
                 case Models.Change.DisplayMode.Tree:
-                    foreach (var node in modeTree.Selected) GetChangesFromNode(node as ChangeNode, changes);
+                    foreach (var node in modeTree.Selected)
+                    {
+                        GetChangesFromNode(node as ChangeNode, changes);
+                    }
+
                     break;
+
                 case Models.Change.DisplayMode.List:
-                    foreach (var c in modeList.SelectedItems) changes.Add(c as Models.Change);
+                    foreach (var c in modeList.SelectedItems)
+                    {
+                        changes.Add(c as Models.Change);
+                    }
+
                     break;
+
                 case Models.Change.DisplayMode.Grid:
-                    foreach (var c in modeGrid.SelectedItems) changes.Add(c as Models.Change);
+                    foreach (var c in modeGrid.SelectedItems)
+                    {
+                        changes.Add(c as Models.Change);
+                    }
+
                     break;
             }
 
             var files = GetPathsFromChanges(changes);
-            if (files.Count > 0) DoStage(files);
+
+            if (files.Count > 0)
+            {
+                DoStage(files);
+            }
         }
 
         public void StageAll()
@@ -166,7 +234,12 @@ namespace SrcGit.Views.Widgets
             else
             {
                 var changes = new List<string>();
-                foreach (var c in Changes) changes.Add(c.Path);
+
+                foreach (var c in Changes)
+                {
+                    changes.Add(c.Path);
+                }
+
                 DoStage(changes);
             }
         }
@@ -174,21 +247,40 @@ namespace SrcGit.Views.Widgets
         public void UnstageSelected()
         {
             var changes = new List<Models.Change>();
+
             switch (Mode)
             {
                 case Models.Change.DisplayMode.Tree:
-                    foreach (var node in modeTree.Selected) GetChangesFromNode(node as ChangeNode, changes);
+                    foreach (var node in modeTree.Selected)
+                    {
+                        GetChangesFromNode(node as ChangeNode, changes);
+                    }
+
                     break;
+
                 case Models.Change.DisplayMode.List:
-                    foreach (var c in modeList.SelectedItems) changes.Add(c as Models.Change);
+                    foreach (var c in modeList.SelectedItems)
+                    {
+                        changes.Add(c as Models.Change);
+                    }
+
                     break;
+
                 case Models.Change.DisplayMode.Grid:
-                    foreach (var c in modeGrid.SelectedItems) changes.Add(c as Models.Change);
+                    foreach (var c in modeGrid.SelectedItems)
+                    {
+                        changes.Add(c as Models.Change);
+                    }
+
                     break;
             }
 
             var files = GetPathsFromChanges(changes);
-            if (files.Count > 0) DoUnstage(files);
+
+            if (files.Count > 0)
+            {
+                DoUnstage(files);
+            }
         }
 
         public void UnstageAll()
@@ -199,30 +291,53 @@ namespace SrcGit.Views.Widgets
         public void SetData(List<Models.Change> changes)
         {
             isLoadingData = true;
-
             var oldSet = new Dictionary<string, Models.Change>();
             var newSet = new Dictionary<string, Models.Change>();
-            foreach (var c in changes) newSet.Add(c.Path, c);
+
+            foreach (var c in changes)
+            {
+                newSet.Add(c.Path, c);
+            }
 
             for (int i = Changes.Count - 1; i >= 0; i--)
             {
                 var old = Changes[i];
+
                 if (!newSet.ContainsKey(old.Path))
                 {
                     Changes.RemoveAt(i);
                     RemoveTreeNode(Nodes, old);
-                    if (modeTree.Selected.Contains(old)) modeTree.Selected.Remove(old);
-                    if (DiffTarget == old) DiffTarget = null;
+
+                    if (modeTree.Selected.Contains(old))
+                    {
+                        modeTree.Selected.Remove(old);
+                    }
+
+                    if (DiffTarget == old)
+                    {
+                        DiffTarget = null;
+                    }
+
                     continue;
                 }
 
                 var cur = newSet[old.Path];
+
                 if (cur.Index != old.Index || cur.WorkTree != old.WorkTree)
                 {
                     Changes.RemoveAt(i);
                     RemoveTreeNode(Nodes, old);
-                    if (modeTree.Selected.Contains(old)) modeTree.Selected.Remove(old);
-                    if (DiffTarget == old) DiffTarget = null;
+
+                    if (modeTree.Selected.Contains(old))
+                    {
+                        modeTree.Selected.Remove(old);
+                    }
+
+                    if (DiffTarget == old)
+                    {
+                        DiffTarget = null;
+                    }
+
                     continue;
                 }
 
@@ -230,11 +345,16 @@ namespace SrcGit.Views.Widgets
             }
 
             var isDefaultExpand = changes.Count <= 50;
+
             foreach (var c in changes)
             {
-                if (oldSet.ContainsKey(c.Path)) continue;
+                if (oldSet.ContainsKey(c.Path))
+                {
+                    continue;
+                }
 
                 bool added = false;
+
                 for (int i = 0; i < Changes.Count; i++)
                 {
                     if (c.Path.CompareTo(Changes[i].Path) < 0)
@@ -245,9 +365,13 @@ namespace SrcGit.Views.Widgets
                     }
                 }
 
-                if (!added) Changes.Add(c);
+                if (!added)
+                {
+                    Changes.Add(c);
+                }
 
                 int sepIdx = c.Path.IndexOf('/', StringComparison.Ordinal);
+
                 if (sepIdx < 0)
                 {
                     GetOrAddTreeNode(Nodes, c.Path, c, false);
@@ -255,12 +379,15 @@ namespace SrcGit.Views.Widgets
                 else
                 {
                     ObservableCollection<ChangeNode> last = Nodes;
+
                     do
                     {
                         var path = c.Path.Substring(0, sepIdx);
                         last = GetOrAddTreeNode(last, path, null, isDefaultExpand).Children;
                         sepIdx = c.Path.IndexOf('/', sepIdx + 1);
-                    } while (sepIdx > 0);
+                    }
+                    while (sepIdx > 0);
+
                     GetOrAddTreeNode(last, c.Path, c, false);
                 }
             }
@@ -272,15 +399,18 @@ namespace SrcGit.Views.Widgets
         {
             foreach (var n in nodes)
             {
-                if (n.Path == path) return n;
+                if (n.Path == path)
+                {
+                    return n;
+                }
             }
 
             var node = new ChangeNode();
             node.Path = path;
             node.Change = change;
             node.IsExpanded = isExpand;
-
             var added = false;
+
             if (change == null)
             {
                 for (int i = 0; i < nodes.Count; i++)
@@ -297,7 +427,11 @@ namespace SrcGit.Views.Widgets
             {
                 for (int i = 0; i < nodes.Count; i++)
                 {
-                    if (nodes[i].IsFolder) continue;
+                    if (nodes[i].IsFolder)
+                    {
+                        continue;
+                    }
+
                     if (nodes[i].Path.CompareTo(path) > 0)
                     {
                         added = true;
@@ -307,7 +441,11 @@ namespace SrcGit.Views.Widgets
                 }
             }
 
-            if (!added) nodes.Add(node);
+            if (!added)
+            {
+                nodes.Add(node);
+            }
+
             return node;
         }
 
@@ -316,11 +454,16 @@ namespace SrcGit.Views.Widgets
             for (int i = nodes.Count - 1; i >= 0; i--)
             {
                 var node = nodes[i];
+
                 if (node.Change == null)
                 {
                     if (RemoveTreeNode(node.Children, change))
                     {
-                        if (node.Children.Count == 0) nodes.RemoveAt(i);
+                        if (node.Children.Count == 0)
+                        {
+                            nodes.RemoveAt(i);
+                        }
+
                         return true;
                     }
                 }
@@ -339,22 +482,35 @@ namespace SrcGit.Views.Widgets
             if (node.Change != null)
             {
                 var idx = changes.FindIndex(x => x.Path == node.Change.Path);
-                if (idx < 0) changes.Add(node.Change);
+
+                if (idx < 0)
+                {
+                    changes.Add(node.Change);
+                }
             }
             else
             {
-                foreach (var sub in node.Children) GetChangesFromNode(sub, changes);
+                foreach (var sub in node.Children)
+                {
+                    GetChangesFromNode(sub, changes);
+                }
             }
         }
 
         private List<string> GetPathsFromChanges(List<Models.Change> changes)
         {
             var files = new List<string>();
+
             foreach (var c in changes)
             {
                 files.Add(c.Path);
-                if (!string.IsNullOrEmpty(c.OriginalPath)) files.Add(c.OriginalPath);
+
+                if (!string.IsNullOrEmpty(c.OriginalPath))
+                {
+                    files.Add(c.OriginalPath);
+                }
             }
+
             return files;
         }
         #endregion
@@ -364,6 +520,7 @@ namespace SrcGit.Views.Widgets
         {
             IsStaging = true;
             Models.Watcher.SetEnabled(repo, false);
+
             if (files == null || files.Count == 0)
             {
                 await Task.Run(() => new Commands.Add(repo).Exec());
@@ -377,6 +534,7 @@ namespace SrcGit.Views.Widgets
                     await Task.Run(() => new Commands.Add(repo, step).Exec());
                 }
             }
+
             Models.Watcher.SetEnabled(repo, true);
             Models.Watcher.Get(repo)?.RefreshWC();
             IsStaging = false;
@@ -401,23 +559,32 @@ namespace SrcGit.Views.Widgets
         private void OpenUnstagedContextMenuByNodes(ContextMenu menu, List<ChangeNode> nodes, List<Models.Change> changes)
         {
             var files = new List<string>();
-            foreach (var c in changes) files.Add(c.Path);
+
+            foreach (var c in changes)
+            {
+                files.Add(c.Path);
+            }
 
             if (nodes.Count == 1)
             {
                 var node = nodes[0];
                 var path = Path.GetFullPath(Path.Combine(repo, node.Path));
-
                 var explore = new MenuItem();
                 explore.IsEnabled = File.Exists(path) || Directory.Exists(path);
                 explore.Header = App.Text("RevealFile");
                 explore.Click += (o, e) =>
                 {
-                    if (node.IsFolder) Process.Start("explorer", path);
-                    else Process.Start("explorer", $"/select,{path}");
+                    if (node.IsFolder)
+                    {
+                        Process.Start("explorer", path);
+                    }
+                    else
+                    {
+                        Process.Start("explorer", $"/select,{path}");
+                    }
+
                     e.Handled = true;
                 };
-
                 var stage = new MenuItem();
                 stage.Header = App.Text("FileCM.Stage");
                 stage.Click += (o, e) =>
@@ -425,7 +592,6 @@ namespace SrcGit.Views.Widgets
                     DoStage(files);
                     e.Handled = true;
                 };
-
                 var discard = new MenuItem();
                 discard.Header = App.Text("FileCM.Discard");
                 discard.Click += (o, e) =>
@@ -433,7 +599,6 @@ namespace SrcGit.Views.Widgets
                     new Popups.Discard(repo, changes).Show();
                     e.Handled = true;
                 };
-
                 var stashIcon = new System.Windows.Shapes.Path();
                 stashIcon.Data = FindResource("Icon.Stashes") as System.Windows.Media.Geometry;
                 stashIcon.Width = 10;
@@ -445,7 +610,6 @@ namespace SrcGit.Views.Widgets
                     new Popups.Stash(repo, changes).Show();
                     e.Handled = true;
                 };
-
                 var patchIcon = new System.Windows.Shapes.Path();
                 patchIcon.Data = FindResource("Icon.Diff") as System.Windows.Media.Geometry;
                 patchIcon.Width = 10;
@@ -466,7 +630,6 @@ namespace SrcGit.Views.Widgets
 
                     e.Handled = true;
                 };
-
                 var copyPath = new MenuItem();
                 copyPath.Header = App.Text("CopyPath");
                 copyPath.Click += (o, e) =>
@@ -474,7 +637,6 @@ namespace SrcGit.Views.Widgets
                     Clipboard.SetDataObject(node.Path, true);
                     e.Handled = true;
                 };
-
                 menu.Items.Add(explore);
                 menu.Items.Add(new Separator());
                 menu.Items.Add(stage);
@@ -482,6 +644,7 @@ namespace SrcGit.Views.Widgets
                 menu.Items.Add(stash);
                 menu.Items.Add(patch);
                 menu.Items.Add(new Separator());
+
                 if (node.Change != null)
                 {
                     var history = new MenuItem();
@@ -495,6 +658,7 @@ namespace SrcGit.Views.Widgets
                     menu.Items.Add(history);
                     menu.Items.Add(new Separator());
                 }
+
                 menu.Items.Add(copyPath);
             }
             else
@@ -506,7 +670,6 @@ namespace SrcGit.Views.Widgets
                     DoStage(files);
                     e.Handled = true;
                 };
-
                 var discard = new MenuItem();
                 discard.Header = App.Text("FileCM.DiscardMulti", changes.Count);
                 discard.Click += (o, e) =>
@@ -514,7 +677,6 @@ namespace SrcGit.Views.Widgets
                     new Popups.Discard(repo, changes).Show();
                     e.Handled = true;
                 };
-
                 var stashIcon = new System.Windows.Shapes.Path();
                 stashIcon.Data = FindResource("Icon.Stashes") as System.Windows.Media.Geometry;
                 stashIcon.Width = 10;
@@ -526,7 +688,6 @@ namespace SrcGit.Views.Widgets
                     new Popups.Stash(repo, changes).Show();
                     e.Handled = true;
                 };
-
                 var patchIcon = new System.Windows.Shapes.Path();
                 patchIcon.Data = FindResource("Icon.Diff") as System.Windows.Media.Geometry;
                 patchIcon.Width = 10;
@@ -547,7 +708,6 @@ namespace SrcGit.Views.Widgets
 
                     e.Handled = true;
                 };
-
                 menu.Items.Add(stage);
                 menu.Items.Add(discard);
                 menu.Items.Add(stash);
@@ -558,13 +718,16 @@ namespace SrcGit.Views.Widgets
         private void OpenUnstagedContextMenuByChanges(ContextMenu menu, List<Models.Change> changes)
         {
             var files = new List<string>();
-            foreach (var c in changes) files.Add(c.Path);
+
+            foreach (var c in changes)
+            {
+                files.Add(c.Path);
+            }
 
             if (changes.Count == 1)
             {
                 var change = changes[0];
                 var path = Path.GetFullPath(Path.Combine(repo, change.Path));
-
                 var explore = new MenuItem();
                 explore.IsEnabled = File.Exists(path) || Directory.Exists(path);
                 explore.Header = App.Text("RevealFile");
@@ -573,7 +736,6 @@ namespace SrcGit.Views.Widgets
                     Process.Start("explorer", $"/select,{path}");
                     e.Handled = true;
                 };
-
                 var stage = new MenuItem();
                 stage.Header = App.Text("FileCM.Stage");
                 stage.Click += (o, e) =>
@@ -581,7 +743,6 @@ namespace SrcGit.Views.Widgets
                     DoStage(files);
                     e.Handled = true;
                 };
-
                 var discard = new MenuItem();
                 discard.Header = App.Text("FileCM.Discard");
                 discard.Click += (o, e) =>
@@ -589,7 +750,6 @@ namespace SrcGit.Views.Widgets
                     new Popups.Discard(repo, changes).Show();
                     e.Handled = true;
                 };
-
                 var stashIcon = new System.Windows.Shapes.Path();
                 stashIcon.Data = FindResource("Icon.Stashes") as System.Windows.Media.Geometry;
                 stashIcon.Width = 10;
@@ -601,7 +761,6 @@ namespace SrcGit.Views.Widgets
                     new Popups.Stash(repo, changes).Show();
                     e.Handled = true;
                 };
-
                 var patchIcon = new System.Windows.Shapes.Path();
                 patchIcon.Data = FindResource("Icon.Diff") as System.Windows.Media.Geometry;
                 patchIcon.Width = 10;
@@ -622,7 +781,6 @@ namespace SrcGit.Views.Widgets
 
                     e.Handled = true;
                 };
-
                 var copyPath = new MenuItem();
                 copyPath.Header = App.Text("CopyPath");
                 copyPath.Click += (o, e) =>
@@ -630,7 +788,6 @@ namespace SrcGit.Views.Widgets
                     Clipboard.SetDataObject(change.Path, true);
                     e.Handled = true;
                 };
-
                 var history = new MenuItem();
                 history.Header = App.Text("FileHistory");
                 history.Click += (o, e) =>
@@ -639,7 +796,6 @@ namespace SrcGit.Views.Widgets
                     viewer.Show();
                     e.Handled = true;
                 };
-
                 menu.Items.Add(explore);
                 menu.Items.Add(new Separator());
                 menu.Items.Add(stage);
@@ -660,7 +816,6 @@ namespace SrcGit.Views.Widgets
                     DoStage(files);
                     e.Handled = true;
                 };
-
                 var discard = new MenuItem();
                 discard.Header = App.Text("FileCM.DiscardMulti", changes.Count);
                 discard.Click += (o, e) =>
@@ -668,7 +823,6 @@ namespace SrcGit.Views.Widgets
                     new Popups.Discard(repo, changes).Show();
                     e.Handled = true;
                 };
-
                 var stashIcon = new System.Windows.Shapes.Path();
                 stashIcon.Data = FindResource("Icon.Stashes") as System.Windows.Media.Geometry;
                 stashIcon.Width = 10;
@@ -680,7 +834,6 @@ namespace SrcGit.Views.Widgets
                     new Popups.Stash(repo, changes).Show();
                     e.Handled = true;
                 };
-
                 var patchIcon = new System.Windows.Shapes.Path();
                 patchIcon.Data = FindResource("Icon.Diff") as System.Windows.Media.Geometry;
                 patchIcon.Width = 10;
@@ -701,7 +854,6 @@ namespace SrcGit.Views.Widgets
 
                     e.Handled = true;
                 };
-
                 menu.Items.Add(stage);
                 menu.Items.Add(discard);
                 menu.Items.Add(stash);
@@ -714,6 +866,7 @@ namespace SrcGit.Views.Widgets
         private async void DoUnstage(List<string> files)
         {
             Models.Watcher.SetEnabled(repo, false);
+
             if (files == null || files.Count == 0)
             {
                 await Task.Run(() => new Commands.Reset(repo).Exec());
@@ -727,6 +880,7 @@ namespace SrcGit.Views.Widgets
                     await Task.Run(() => new Commands.Reset(repo, step).Exec());
                 }
             }
+
             Models.Watcher.SetEnabled(repo, true);
             Models.Watcher.Get(repo)?.RefreshWC();
         }
@@ -739,17 +893,22 @@ namespace SrcGit.Views.Widgets
             {
                 var node = nodes[0];
                 var path = Path.GetFullPath(Path.Combine(repo, node.Path));
-
                 var explore = new MenuItem();
                 explore.IsEnabled = File.Exists(path) || Directory.Exists(path);
                 explore.Header = App.Text("RevealFile");
                 explore.Click += (o, e) =>
                 {
-                    if (node.IsFolder) Process.Start(path);
-                    else Process.Start("explorer", $"/select,{path}");
+                    if (node.IsFolder)
+                    {
+                        Process.Start(path);
+                    }
+                    else
+                    {
+                        Process.Start("explorer", $"/select,{path}");
+                    }
+
                     e.Handled = true;
                 };
-
                 var unstage = new MenuItem();
                 unstage.Header = App.Text("FileCM.Unstage");
                 unstage.Click += (o, e) =>
@@ -757,7 +916,6 @@ namespace SrcGit.Views.Widgets
                     DoUnstage(files);
                     e.Handled = true;
                 };
-
                 var copyPath = new MenuItem();
                 copyPath.Header = App.Text("CopyPath");
                 copyPath.Click += (o, e) =>
@@ -765,7 +923,6 @@ namespace SrcGit.Views.Widgets
                     Clipboard.SetDataObject(node.Path, true);
                     e.Handled = true;
                 };
-
                 menu.Items.Add(explore);
                 menu.Items.Add(unstage);
                 menu.Items.Add(copyPath);
@@ -779,7 +936,6 @@ namespace SrcGit.Views.Widgets
                     DoUnstage(files);
                     e.Handled = true;
                 };
-
                 menu.Items.Add(unstage);
             }
         }
@@ -792,7 +948,6 @@ namespace SrcGit.Views.Widgets
             {
                 var change = changes[0];
                 var path = Path.GetFullPath(Path.Combine(repo, change.Path));
-
                 var explore = new MenuItem();
                 explore.IsEnabled = File.Exists(path) || Directory.Exists(path);
                 explore.Header = App.Text("RevealFile");
@@ -801,7 +956,6 @@ namespace SrcGit.Views.Widgets
                     Process.Start("explorer", $"/select,{path}");
                     e.Handled = true;
                 };
-
                 var unstage = new MenuItem();
                 unstage.Header = App.Text("FileCM.Unstage");
                 unstage.Click += (o, e) =>
@@ -809,7 +963,6 @@ namespace SrcGit.Views.Widgets
                     DoUnstage(files);
                     e.Handled = true;
                 };
-
                 var copyPath = new MenuItem();
                 copyPath.Header = App.Text("CopyPath");
                 copyPath.Click += (o, e) =>
@@ -817,7 +970,6 @@ namespace SrcGit.Views.Widgets
                     Clipboard.SetDataObject(change.Path, true);
                     e.Handled = true;
                 };
-
                 menu.Items.Add(explore);
                 menu.Items.Add(new Separator());
                 menu.Items.Add(unstage);
@@ -833,7 +985,6 @@ namespace SrcGit.Views.Widgets
                     DoUnstage(files);
                     e.Handled = true;
                 };
-
                 menu.Items.Add(unstage);
             }
         }
@@ -859,9 +1010,13 @@ namespace SrcGit.Views.Widgets
 
         private void OnTreeSelectionChanged(object sender, RoutedEventArgs e)
         {
-            if (Mode != Models.Change.DisplayMode.Tree) return;
+            if (Mode != Models.Change.DisplayMode.Tree)
+            {
+                return;
+            }
 
             bool hasOthers = false;
+
             if (modeTree.Selected.Count == 0)
             {
                 DiffTarget = null;
@@ -869,6 +1024,7 @@ namespace SrcGit.Views.Widgets
             else if (modeTree.Selected.Count == 1)
             {
                 var node = modeTree.Selected[0] as ChangeNode;
+
                 if (node.IsFolder)
                 {
                     DiffTarget = null;
@@ -881,56 +1037,81 @@ namespace SrcGit.Views.Widgets
             }
             else
             {
-                if (DiffTarget == null) return;
+                if (DiffTarget == null)
+                {
+                    return;
+                }
+
                 DiffTarget = null;
                 hasOthers = true;
             }
 
-            if (!isLoadingData) RaiseEvent(new DiffTargetChangedEventArgs(DiffTargetChangedEvent, this, DiffTarget, hasOthers));
+            if (!isLoadingData)
+            {
+                RaiseEvent(new DiffTargetChangedEventArgs(DiffTargetChangedEvent, this, DiffTarget, hasOthers));
+            }
         }
 
         private void OnListSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (Mode != Models.Change.DisplayMode.List) return;
+            if (Mode != Models.Change.DisplayMode.List)
+            {
+                return;
+            }
 
             bool hasOthers = false;
+
             switch (modeList.SelectedItems.Count)
             {
                 case 0:
                     DiffTarget = null;
                     break;
+
                 case 1:
                     DiffTarget = modeList.SelectedItems[0] as Models.Change;
                     break;
+
                 default:
                     DiffTarget = null;
                     hasOthers = true;
                     break;
             }
 
-            if (!isLoadingData) RaiseEvent(new DiffTargetChangedEventArgs(DiffTargetChangedEvent, this, DiffTarget, hasOthers));
+            if (!isLoadingData)
+            {
+                RaiseEvent(new DiffTargetChangedEventArgs(DiffTargetChangedEvent, this, DiffTarget, hasOthers));
+            }
         }
 
         private void OnGridSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (Mode != Models.Change.DisplayMode.Grid) return;
+            if (Mode != Models.Change.DisplayMode.Grid)
+            {
+                return;
+            }
 
             bool hasOthers = false;
+
             switch (modeGrid.SelectedItems.Count)
             {
                 case 0:
                     DiffTarget = null;
                     break;
+
                 case 1:
                     DiffTarget = modeGrid.SelectedItems[0] as Models.Change;
                     break;
+
                 default:
                     DiffTarget = null;
                     hasOthers = true;
                     break;
             }
 
-            if (!isLoadingData) RaiseEvent(new DiffTargetChangedEventArgs(DiffTargetChangedEvent, this, DiffTarget, hasOthers));
+            if (!isLoadingData)
+            {
+                RaiseEvent(new DiffTargetChangedEventArgs(DiffTargetChangedEvent, this, DiffTarget, hasOthers));
+            }
         }
 
         private void OnTreeContextMenuOpening(object sender, ContextMenuEventArgs ev)
@@ -945,6 +1126,7 @@ namespace SrcGit.Views.Widgets
             }
 
             var menu = new ContextMenu();
+
             if (IsUnstaged)
             {
                 OpenUnstagedContextMenuByNodes(menu, nodes, changes);
@@ -961,9 +1143,14 @@ namespace SrcGit.Views.Widgets
         private void OnDataGridContextMenuOpening(object sender, ContextMenuEventArgs ev)
         {
             var row = sender as DataGridRow;
-            if (row == null) return;
+
+            if (row == null)
+            {
+                return;
+            }
 
             var changes = new List<Models.Change>();
+
             if (Mode == Models.Change.DisplayMode.List)
             {
                 if (!row.IsSelected)
@@ -973,7 +1160,10 @@ namespace SrcGit.Views.Widgets
                 }
                 else
                 {
-                    foreach (var c in modeList.SelectedItems) changes.Add(c as Models.Change);
+                    foreach (var c in modeList.SelectedItems)
+                    {
+                        changes.Add(c as Models.Change);
+                    }
                 }
             }
             else
@@ -985,11 +1175,15 @@ namespace SrcGit.Views.Widgets
                 }
                 else
                 {
-                    foreach (var c in modeGrid.SelectedItems) changes.Add(c as Models.Change);
+                    foreach (var c in modeGrid.SelectedItems)
+                    {
+                        changes.Add(c as Models.Change);
+                    }
                 }
             }
 
             var menu = new ContextMenu();
+
             if (IsUnstaged)
             {
                 OpenUnstagedContextMenuByChanges(menu, changes);
@@ -1010,22 +1204,38 @@ namespace SrcGit.Views.Widgets
 
         private void OnListSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (Mode != Models.Change.DisplayMode.List) return;
+            if (Mode != Models.Change.DisplayMode.List)
+            {
+                return;
+            }
 
             int last = modeList.Columns.Count - 1;
             double offset = 0;
-            for (int i = 0; i < last; i++) offset += modeList.Columns[i].ActualWidth;
+
+            for (int i = 0; i < last; i++)
+            {
+                offset += modeList.Columns[i].ActualWidth;
+            }
+
             modeList.Columns[last].MinWidth = Math.Max(modeList.ActualWidth - offset, 10);
             modeList.UpdateLayout();
         }
 
         private void OnGridSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (Mode != Models.Change.DisplayMode.Grid) return;
+            if (Mode != Models.Change.DisplayMode.Grid)
+            {
+                return;
+            }
 
             int last = modeGrid.Columns.Count - 1;
             double offset = 0;
-            for (int i = 0; i < last; i++) offset += modeGrid.Columns[i].ActualWidth;
+
+            for (int i = 0; i < last; i++)
+            {
+                offset += modeGrid.Columns[i].ActualWidth;
+            }
+
             modeGrid.Columns[last].MinWidth = Math.Max(modeGrid.ActualWidth - offset, 10);
             modeGrid.UpdateLayout();
         }
@@ -1033,6 +1243,7 @@ namespace SrcGit.Views.Widgets
         private static void OnModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var elem = d as WorkingCopyChanges;
+
             if (elem != null)
             {
                 if (elem.modeTree != null)

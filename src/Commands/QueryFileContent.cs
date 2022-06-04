@@ -25,7 +25,10 @@ namespace SrcGit.Commands
         public override void OnReadline(string line)
         {
             added++;
-            lines.Add(new Models.TextLine() { Number = added, Data = line });
+            lines.Add(new Models.TextLine()
+            {
+                Number = added, Data = line
+            });
         }
     }
 }

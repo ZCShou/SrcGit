@@ -15,8 +15,8 @@ namespace SrcGit.Commands
         {
             var tmp = Path.GetTempFileName();
             var cmd = $"\"{Models.Preference.Instance.Git.Path}\" --no-pager ";
-
             var isLFS = new LFS(repo).IsFiltered(path);
+
             if (isLFS)
             {
                 cmd += $"show {sha}:\"{path}\" > {tmp}.lfs\n";
@@ -29,7 +29,6 @@ namespace SrcGit.Commands
 
             cwd = repo;
             bat = tmp + ".bat";
-
             File.WriteAllText(bat, cmd);
         }
 
@@ -40,11 +39,9 @@ namespace SrcGit.Commands
             starter.WorkingDirectory = cwd;
             starter.CreateNoWindow = true;
             starter.WindowStyle = ProcessWindowStyle.Hidden;
-
             var proc = Process.Start(starter);
             proc.WaitForExit();
             proc.Close();
-
             File.Delete(bat);
         }
     }

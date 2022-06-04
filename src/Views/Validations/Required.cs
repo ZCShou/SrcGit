@@ -9,8 +9,8 @@ namespace SrcGit.Views.Validations
         {
             var path = value as string;
             return string.IsNullOrEmpty(path) ?
-                new ValidationResult(false, App.Text("Required")) :
-                ValidationResult.ValidResult;
+                   new ValidationResult(false, App.Text("Required")) :
+                   ValidationResult.ValidResult;
         }
     }
 }

@@ -14,9 +14,7 @@ namespace SrcGit.Views.Popups
         {
             this.repo = repo;
             this.tag = tag;
-
             InitializeComponent();
-
             txtTag.Text = tag;
         }
 
@@ -28,7 +26,6 @@ namespace SrcGit.Views.Popups
         public override Task<bool> Start()
         {
             var push = chkPush.IsChecked == true;
-
             return Task.Run(() =>
             {
                 Models.Watcher.SetEnabled(repo, false);

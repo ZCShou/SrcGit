@@ -22,7 +22,12 @@ namespace SrcGit.Commands
         public List<Models.Stash> Result()
         {
             Exec();
-            if (current != null) parsed.Add(current);
+
+            if (current != null)
+            {
+                parsed.Add(current);
+            }
+
             return parsed;
         }
 
@@ -30,17 +35,31 @@ namespace SrcGit.Commands
         {
             if (line.StartsWith("commit ", StringComparison.Ordinal))
             {
-                if (current != null && !string.IsNullOrEmpty(current.Name)) parsed.Add(current);
-                current = new Models.Stash() { SHA = line.Substring(7, 8) };
+                if (current != null && !string.IsNullOrEmpty(current.Name))
+                {
+                    parsed.Add(current);
+                }
+
+                current = new Models.Stash()
+                {
+                    SHA = line.Substring(7, 8)
+                };
                 return;
             }
 
-            if (current == null) return;
+            if (current == null)
+            {
+                return;
+            }
 
             if (line.StartsWith("Reflog: refs/stash@", StringComparison.Ordinal))
             {
                 var match = REG_STASH.Match(line);
-                if (match.Success) current.Name = match.Groups[1].Value;
+
+                if (match.Success)
+                {
+                    current.Name = match.Groups[1].Value;
+                }
             }
             else if (line.StartsWith("Reflog message: ", StringComparison.Ordinal))
             {

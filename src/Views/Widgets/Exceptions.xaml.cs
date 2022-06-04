@@ -9,7 +9,11 @@ namespace SrcGit.Views.Widgets
     /// </summary>
     public partial class Exceptions : UserControl
     {
-        public ObservableCollection<string> Messages { get; set; }
+        public ObservableCollection<string> Messages
+        {
+            get;
+            set;
+        }
 
         public Exceptions()
         {

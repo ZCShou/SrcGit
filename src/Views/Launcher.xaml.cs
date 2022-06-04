@@ -11,20 +11,26 @@ namespace SrcGit.Views
     /// </summary>
     public partial class Launcher : Controls.Window
     {
-
         public Launcher()
         {
             Models.Watcher.Opened += OpenRepository;
             InitializeComponent();
             tabs.Add();
-
             tabs.OnTabEdited += (t) =>
             {
                 foreach (var tab in tabs.Tabs)
                 {
-                    if (!tab.IsWelcomePage) continue;
+                    if (!tab.IsWelcomePage)
+                    {
+                        continue;
+                    }
+
                     var page = container.Get(tab.Id) as Widgets.Welcome;
-                    if (page != null) page.UpdateNodes(t.Id, t.Bookmark);
+
+                    if (page != null)
+                    {
+                        page.UpdateNodes(t.Id, t.Bookmark);
+                    }
                 }
             };
         }
@@ -32,18 +38,29 @@ namespace SrcGit.Views
         private void OnClosing(object sender, CancelEventArgs e)
         {
             var restore = Models.Preference.Instance.Restore;
-            if (!restore.IsEnabled) return;
+
+            if (!restore.IsEnabled)
+            {
+                return;
+            }
 
             restore.Opened.Clear();
             restore.Actived = null;
 
             foreach (var tab in tabs.Tabs)
             {
-                if (tab.IsWelcomePage) continue;
+                if (tab.IsWelcomePage)
+                {
+                    continue;
+                }
 
                 // 仅支持恢复加入管理的仓库页，Submodules等未加入管理的不支持
                 var repo = Models.Preference.Instance.FindRepository(tab.Id);
-                if (repo != null) restore.Opened.Add(tab.Id);
+
+                if (repo != null)
+                {
+                    restore.Opened.Add(tab.Id);
+                }
             }
 
             if (restore.Opened.Count > 0)
@@ -64,7 +81,10 @@ namespace SrcGit.Views
         #region OPEN_REPO
         private void OpenRepository(Models.Repository repo)
         {
-            if (tabs.Goto(repo.Path)) return;
+            if (tabs.Goto(repo.Path))
+            {
+                return;
+            }
 
             Task.Run(() =>
             {
@@ -73,14 +93,12 @@ namespace SrcGit.Views
                 repo.GitFlow.Release = cmd.Get("gitflow.prefix.release");
                 repo.GitFlow.Hotfix = cmd.Get("gitflow.prefix.hotfix");
             });
-
             Commands.AutoFetch.Start(repo.Path);
-
             var page = new Widgets.Dashboard(repo);
             container.Add(repo.Path, page);
             Controls.PopupWidget.RegisterContainer(repo.Path, page);
-
             var front = container.Get(tabs.Current);
+
             if (front == null || front is Widgets.Dashboard)
             {
                 tabs.Add(repo.Name, repo.Path, repo.Bookmark);
@@ -95,13 +113,19 @@ namespace SrcGit.Views
         #region RIGHT_COMMANDS
         private void OpenPreference(object sender, RoutedEventArgs e)
         {
-            var dialog = new Preference() { Owner = this };
+            var dialog = new Preference()
+            {
+                Owner = this
+            };
             dialog.ShowDialog();
         }
 
         private void OpenAbout(object sender, RoutedEventArgs e)
         {
-            var dialog = new About() { Owner = this };
+            var dialog = new About()
+            {
+                Owner = this
+            };
             dialog.ShowDialog();
         }
 
@@ -170,6 +194,7 @@ namespace SrcGit.Views
                 if (Keyboard.IsKeyDown(Key.F))
                 {
                     var dashboard = container.Get(tabs.Current) as Widgets.Dashboard;
+
                     if (dashboard != null)
                     {
                         dashboard.OpenSearch(null, null);
@@ -195,7 +220,12 @@ namespace SrcGit.Views
             if (Keyboard.IsKeyDown(Key.F5))
             {
                 var dashboard = container.Get(tabs.Current) as Widgets.Dashboard;
-                if (dashboard != null) dashboard.Refresh();
+
+                if (dashboard != null)
+                {
+                    dashboard.Refresh();
+                }
+
                 e.Handled = true;
                 return;
             }
@@ -203,8 +233,8 @@ namespace SrcGit.Views
             if (Keyboard.IsKeyDown(Key.Escape))
             {
                 var page = container.Get(tabs.Current);
-
                 var popup = null as Widgets.PopupPanel;
+
                 if (page is Widgets.Dashboard)
                 {
                     popup = (page as Widgets.Dashboard).popup;

@@ -5,7 +5,15 @@ namespace SrcGit.Models
     /// </summary>
     public class TextLine
     {
-        public int Number { get; set; }
-        public string Data { get; set; }
+        public int Number
+        {
+            get;
+            set;
+        }
+        public string Data
+        {
+            get;
+            set;
+        }
     }
 }

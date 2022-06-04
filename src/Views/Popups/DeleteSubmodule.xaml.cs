@@ -14,9 +14,7 @@ namespace SrcGit.Views.Popups
         {
             this.repo = repo;
             this.submodule = submodule;
-
             InitializeComponent();
-
             txtPath.Text = submodule;
         }
 

@@ -16,27 +16,39 @@ namespace SrcGit.Views.Controls
         public static readonly double MAX_SHAPE_WIDTH = 24;
 
         public static readonly DependencyProperty LineBrushProperty = DependencyProperty.Register(
-            "LineBrush",
-            typeof(Brush),
-            typeof(Chart),
-            new PropertyMetadata(Brushes.White));
+                    "LineBrush",
+                    typeof(Brush),
+                    typeof(Chart),
+                    new PropertyMetadata(Brushes.White));
 
         public Brush LineBrush
         {
-            get { return (Brush)GetValue(LineBrushProperty); }
-            set { SetValue(LineBrushProperty, value); }
+            get
+            {
+                return (Brush)GetValue(LineBrushProperty);
+            }
+            set
+            {
+                SetValue(LineBrushProperty, value);
+            }
         }
 
         public static readonly DependencyProperty ChartBrushProperty = DependencyProperty.Register(
-            "ChartBrush",
-            typeof(Brush),
-            typeof(Chart),
-            new PropertyMetadata(Brushes.White));
+                    "ChartBrush",
+                    typeof(Brush),
+                    typeof(Chart),
+                    new PropertyMetadata(Brushes.White));
 
         public Brush ChartBrush
         {
-            get { return (Brush)GetValue(ChartBrushProperty); }
-            set { SetValue(ChartBrushProperty, value); }
+            get
+            {
+                return (Brush)GetValue(ChartBrushProperty);
+            }
+            set
+            {
+                SetValue(ChartBrushProperty, value);
+            }
         }
 
         private List<Models.StatisticSample> samples = new List<Models.StatisticSample>();
@@ -51,14 +63,17 @@ namespace SrcGit.Views.Controls
         {
             this.samples = samples;
             this.hitboxes.Clear();
-
             maxV = 0;
+
             foreach (var s in samples)
             {
-                if (maxV < s.Count) maxV = s.Count;
+                if (maxV < s.Count)
+                {
+                    maxV = s.Count;
+                }
             }
-            maxV = (int)Math.Ceiling(maxV / 10.0) * 10;
 
+            maxV = (int)Math.Ceiling(maxV / 10.0) * 10;
             InvalidateVisual();
         }
 
@@ -71,17 +86,23 @@ namespace SrcGit.Views.Controls
         protected override void OnRender(DrawingContext dc)
         {
             base.OnRender(dc);
-
             var font = new FontFamily("Consolas");
             var pen = new Pen(LineBrush, 1);
             dc.DrawLine(pen, new Point(LABEL_UNIT, 0), new Point(LABEL_UNIT, ActualHeight - LABEL_UNIT));
             dc.DrawLine(pen, new Point(LABEL_UNIT, ActualHeight - LABEL_UNIT), new Point(ActualWidth, ActualHeight - LABEL_UNIT));
 
-            if (samples.Count == 0) return;
+            if (samples.Count == 0)
+            {
+                return;
+            }
 
             var stepV = (ActualHeight - LABEL_UNIT) / 5;
             var labelStepV = maxV / 5;
-            var gridPen = new Pen(LineBrush, 1) { DashStyle = DashStyles.Dash };
+            var gridPen = new Pen(LineBrush, 1)
+            {
+                DashStyle = DashStyles.Dash
+            };
+
             for (int i = 1; i < 5; i++)
             {
                 var vLabel = new FormattedText(
@@ -92,7 +113,6 @@ namespace SrcGit.Views.Controls
                     12.0,
                     LineBrush,
                     VisualTreeHelper.GetDpi(this).PixelsPerDip);
-
                 var dashHeight = i * stepV;
                 var vy = Math.Max(0, dashHeight - vLabel.Height * 0.5);
                 dc.PushOpacity(.1);
@@ -102,9 +122,11 @@ namespace SrcGit.Views.Controls
             }
 
             var stepX = (ActualWidth - LABEL_UNIT) / samples.Count;
+
             if (hitboxes.Count == 0)
             {
                 var shapeWidth = Math.Min(LABEL_UNIT, stepX - 4);
+
                 for (int i = 0; i < samples.Count; i++)
                 {
                     var h = samples[i].Count * (ActualHeight - LABEL_UNIT) / maxV;
@@ -115,6 +137,7 @@ namespace SrcGit.Views.Controls
             }
 
             var mouse = Mouse.GetPosition(this);
+
             for (int i = 0; i < samples.Count; i++)
             {
                 var hLabel = new FormattedText(
@@ -128,7 +151,6 @@ namespace SrcGit.Views.Controls
                 var rect = hitboxes[i];
                 var xLabel = rect.X - (hLabel.Width - rect.Width) * 0.5;
                 var yLabel = ActualHeight - LABEL_UNIT + 4;
-
                 dc.DrawRectangle(ChartBrush, null, rect);
 
                 if (stepX < LABEL_UNIT)
@@ -148,6 +170,7 @@ namespace SrcGit.Views.Controls
             for (int i = 0; i < samples.Count; i++)
             {
                 var rect = hitboxes[i];
+
                 if (rect.Contains(mouse))
                 {
                     var tooltip = new FormattedText(
@@ -158,7 +181,6 @@ namespace SrcGit.Views.Controls
                         12.0,
                         FindResource("Brush.FG1") as Brush,
                         VisualTreeHelper.GetDpi(this).PixelsPerDip);
-
                     var tx = rect.X - (tooltip.Width - rect.Width) * 0.5;
                     var ty = rect.Y - tooltip.Height - 4;
                     dc.DrawText(tooltip, new Point(tx, ty));

@@ -7,7 +7,11 @@ namespace SrcGit.Models
     /// </summary>
     public static class Exception
     {
-        public static Action<string> Handler { get; set; }
+        public static Action<string> Handler
+        {
+            get;
+            set;
+        }
 
         public static void Raise(string error)
         {

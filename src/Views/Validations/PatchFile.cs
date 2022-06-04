@@ -9,8 +9,8 @@ namespace SrcGit.Views.Validations
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             return File.Exists(value as string)
-                ? ValidationResult.ValidResult
-                : new ValidationResult(false, App.Text("BadPatchFile"));
+                   ? ValidationResult.ValidResult
+                   : new ValidationResult(false, App.Text("BadPatchFile"));
         }
     }
 }

@@ -47,7 +47,11 @@ namespace SrcGit.Commands
         {
             if (isSkipingGpgsig)
             {
-                if (line.StartsWith(GPGSIG_END, StringComparison.Ordinal)) isSkipingGpgsig = false;
+                if (line.StartsWith(GPGSIG_END, StringComparison.Ordinal))
+                {
+                    isSkipingGpgsig = false;
+                }
+
                 return;
             }
             else if (line.StartsWith(GPGSIG_START, StringComparison.Ordinal))
@@ -66,8 +70,8 @@ namespace SrcGit.Commands
 
                 current = new Models.Commit();
                 line = line.Substring(7);
-
                 var decoratorStart = line.IndexOf('(');
+
                 if (decoratorStart < 0)
                 {
                     current.SHA = line.Trim();
@@ -76,13 +80,20 @@ namespace SrcGit.Commands
                 {
                     current.SHA = line.Substring(0, decoratorStart).Trim();
                     current.IsMerged = ParseDecorators(current.Decorators, line.Substring(decoratorStart + 1));
-                    if (!isHeadFounded) isHeadFounded = current.IsMerged;
+
+                    if (!isHeadFounded)
+                    {
+                        isHeadFounded = current.IsMerged;
+                    }
                 }
 
                 return;
             }
 
-            if (current == null) return;
+            if (current == null)
+            {
+                return;
+            }
 
             if (line.StartsWith("tree ", StringComparison.Ordinal))
             {
@@ -113,11 +124,12 @@ namespace SrcGit.Commands
         private bool ParseDecorators(List<Models.Decorator> decorators, string data)
         {
             bool isHeadOfCurrent = false;
-
             var subs = data.Split(new char[] { ',', ')', '(' }, StringSplitOptions.RemoveEmptyEntries);
+
             foreach (var sub in subs)
             {
                 var d = sub.Trim();
+
                 if (d.StartsWith("tag: refs/tags/", StringComparison.Ordinal))
                 {
                     decorators.Add(new Models.Decorator()
@@ -168,20 +180,26 @@ namespace SrcGit.Commands
                     return l.Name.CompareTo(r.Name);
                 }
             });
-
             return isHeadOfCurrent;
         }
 
         private void MarkFirstMerged()
         {
             Args = $"log --since=\"{commits.Last().Committer.Time}\" --format=\"%H\"";
-
             var rs = ReadToEnd();
             var shas = rs.Output.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
-            if (shas.Length == 0) return;
+
+            if (shas.Length == 0)
+            {
+                return;
+            }
 
             var set = new HashSet<string>();
-            foreach (var sha in shas) set.Add(sha);
+
+            foreach (var sha in shas)
+            {
+                set.Add(sha);
+            }
 
             foreach (var c in commits)
             {

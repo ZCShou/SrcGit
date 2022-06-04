@@ -11,15 +11,21 @@ namespace SrcGit.Views.Controls
         private TextBlock label = null;
 
         public static readonly DependencyProperty LabelProperty = DependencyProperty.Register(
-            "Label",
-            typeof(string),
-            typeof(Border),
-            new PropertyMetadata("", OnLabelChanged));
+                    "Label",
+                    typeof(string),
+                    typeof(Border),
+                    new PropertyMetadata("", OnLabelChanged));
 
         public string Label
         {
-            get { return (string)GetValue(LabelProperty); }
-            set { SetValue(LabelProperty, value); }
+            get
+            {
+                return (string)GetValue(LabelProperty);
+            }
+            set
+            {
+                SetValue(LabelProperty, value);
+            }
         }
 
         public Badge()
@@ -29,9 +35,7 @@ namespace SrcGit.Views.Controls
             CornerRadius = new CornerRadius(9);
             VerticalAlignment = VerticalAlignment.Center;
             Visibility = Visibility.Collapsed;
-
             SetResourceReference(BackgroundProperty, "Brush.Badge");
-
             label = new TextBlock();
             label.FontSize = 10;
             label.HorizontalAlignment = HorizontalAlignment.Center;
@@ -42,9 +46,11 @@ namespace SrcGit.Views.Controls
         private static void OnLabelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Badge badge = d as Badge;
+
             if (badge != null)
             {
                 var text = e.NewValue as string;
+
                 if (string.IsNullOrEmpty(text) || text == "0")
                 {
                     badge.Visibility = Visibility.Collapsed;

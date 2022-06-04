@@ -13,8 +13,14 @@ namespace SrcGit.Views.Popups
 
         public string Source
         {
-            get { return subtree.Remote; }
-            set { subtree.Remote = value; }
+            get
+            {
+                return subtree.Remote;
+            }
+            set
+            {
+                subtree.Remote = value;
+            }
         }
 
         public EditSubTree(Models.Repository repo, string prefix)
@@ -33,7 +39,12 @@ namespace SrcGit.Views.Popups
         public override Task<bool> Start()
         {
             txtSource.GetBindingExpression(TextBox.TextProperty).UpdateSource();
-            if (Validation.GetHasError(txtSource)) return null;
+
+            if (Validation.GetHasError(txtSource))
+            {
+                return null;
+            }
+
             return Task.Run(() => true);
         }
     }

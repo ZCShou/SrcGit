@@ -17,8 +17,20 @@ namespace SrcGit.Models
     /// </summary>
     public class Object
     {
-        public string SHA { get; set; }
-        public ObjectType Type { get; set; }
-        public string Path { get; set; }
+        public string SHA
+        {
+            get;
+            set;
+        }
+        public ObjectType Type
+        {
+            get;
+            set;
+        }
+        public string Path
+        {
+            get;
+            set;
+        }
     }
 }

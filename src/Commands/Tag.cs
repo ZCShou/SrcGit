@@ -33,9 +33,14 @@ namespace SrcGit.Commands
         public bool Delete(string name, bool push)
         {
             Args = $"tag --delete {name}";
-            if (!Exec()) return false;
+
+            if (!Exec())
+            {
+                return false;
+            }
 
             var repo = Models.Preference.Instance.FindRepository(Cwd);
+
             if (repo != null && repo.Filters.Contains(name))
             {
                 repo.Filters.Remove(name);
@@ -44,6 +49,7 @@ namespace SrcGit.Commands
             if (push)
             {
                 var remotes = new Remotes(Cwd).Result();
+
                 foreach (var r in remotes)
                 {
                     new Push(Cwd, r.Name, name, true).Exec();

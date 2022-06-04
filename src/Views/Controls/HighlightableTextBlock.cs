@@ -17,46 +17,64 @@ namespace SrcGit.Views.Controls
         private static readonly Brush HL_DELETED = new SolidColorBrush(Color.FromArgb(128, 255, 0, 0));
 
         public static readonly DependencyProperty DataProperty = DependencyProperty.Register(
-            "Data",
-            typeof(Models.TextChanges.Line),
-            typeof(HighlightableTextBlock),
-            new PropertyMetadata(null, OnContentChanged));
+                    "Data",
+                    typeof(Models.TextChanges.Line),
+                    typeof(HighlightableTextBlock),
+                    new PropertyMetadata(null, OnContentChanged));
 
         public Models.TextChanges.Line Data
         {
-            get { return (Models.TextChanges.Line)GetValue(DataProperty); }
-            set { SetValue(DataProperty, value); }
+            get
+            {
+                return (Models.TextChanges.Line)GetValue(DataProperty);
+            }
+            set
+            {
+                SetValue(DataProperty, value);
+            }
         }
 
         private static void OnContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var txt = d as HighlightableTextBlock;
-            if (txt == null) return;
+
+            if (txt == null)
+            {
+                return;
+            }
 
             txt.Inlines.Clear();
             txt.Text = null;
             txt.Background = Brushes.Transparent;
             txt.FontStyle = FontStyles.Normal;
 
-            if (txt.Data == null) return;
+            if (txt.Data == null)
+            {
+                return;
+            }
 
             Brush highlightBrush = Brushes.Transparent;
+
             switch (txt.Data.Mode)
             {
                 case Models.TextChanges.LineMode.None:
                     txt.Background = BG_EMPTY;
                     break;
+
                 case Models.TextChanges.LineMode.Indicator:
                     txt.FontStyle = FontStyles.Italic;
                     break;
+
                 case Models.TextChanges.LineMode.Added:
                     txt.Background = BG_ADDED;
                     highlightBrush = HL_ADDED;
                     break;
+
                 case Models.TextChanges.LineMode.Deleted:
                     txt.Background = BG_DELETED;
                     highlightBrush = HL_DELETED;
                     break;
+
                 default:
                     break;
             }
@@ -70,6 +88,7 @@ namespace SrcGit.Views.Controls
             }
 
             var started = 0;
+
             foreach (var highlight in txt.Data.Highlights)
             {
                 if (started < highlight.Start)
@@ -82,7 +101,6 @@ namespace SrcGit.Views.Controls
                     Background = highlightBrush,
                     Text = txt.Data.Content.Substring(highlight.Start, highlight.Count),
                 });
-
                 started = highlight.Start + highlight.Count;
             }
 

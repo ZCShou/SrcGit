@@ -9,13 +9,25 @@ namespace SrcGit.Views.Validations
     {
         private static readonly Regex REG_FORMAT = new Regex(@"^[\w\-\.]+$");
 
-        public List<Models.Tag> Tags { get; set; }
+        public List<Models.Tag> Tags
+        {
+            get;
+            set;
+        }
 
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             var name = value as string;
-            if (string.IsNullOrEmpty(name)) return new ValidationResult(false, App.Text("EmptyTagName"));
-            if (!REG_FORMAT.IsMatch(name)) return new ValidationResult(false, App.Text("BadTagName"));
+
+            if (string.IsNullOrEmpty(name))
+            {
+                return new ValidationResult(false, App.Text("EmptyTagName"));
+            }
+
+            if (!REG_FORMAT.IsMatch(name))
+            {
+                return new ValidationResult(false, App.Text("BadTagName"));
+            }
 
             foreach (var t in Tags)
             {

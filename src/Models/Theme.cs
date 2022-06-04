@@ -29,6 +29,7 @@ namespace SrcGit.Models
         public static void Change()
         {
             var theme = Preference.Instance.General.UseDarkTheme ? "Dark" : "Light";
+
             foreach (var rs in App.Current.Resources.MergedDictionaries)
             {
                 if (rs.Source != null && rs.Source.OriginalString.StartsWith("pack://application:,,,/Resources/Themes/", StringComparison.Ordinal))

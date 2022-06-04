@@ -8,7 +8,11 @@ namespace SrcGit.Views.Popups
     /// </summary>
     public partial class Init : Controls.PopupWidget
     {
-        public string WorkDir { get; set; }
+        public string WorkDir
+        {
+            get;
+            set;
+        }
 
         public Init(string dir)
         {
@@ -26,7 +30,11 @@ namespace SrcGit.Views.Popups
             return Task.Run(() =>
             {
                 var succ = new Commands.Init(WorkDir).Exec();
-                if (!succ) return false;
+
+                if (!succ)
+                {
+                    return false;
+                }
 
                 var gitDir = Path.GetFullPath(Path.Combine(WorkDir, ".git"));
                 var repo = Models.Preference.Instance.AddRepository(WorkDir, gitDir, "");

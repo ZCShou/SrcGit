@@ -14,39 +14,57 @@ namespace SrcGit.Views.Controls
     public class Tree : TreeView
     {
         public static readonly DependencyProperty MultiSelectionProperty = DependencyProperty.Register(
-            "MultiSelection",
-            typeof(bool),
-            typeof(Tree),
-            new PropertyMetadata(false));
+                    "MultiSelection",
+                    typeof(bool),
+                    typeof(Tree),
+                    new PropertyMetadata(false));
 
         public bool MultiSelection
         {
-            get { return (bool)GetValue(MultiSelectionProperty); }
-            set { SetValue(MultiSelectionProperty, value); }
+            get
+            {
+                return (bool)GetValue(MultiSelectionProperty);
+            }
+            set
+            {
+                SetValue(MultiSelectionProperty, value);
+            }
         }
 
         public static readonly DependencyProperty IndentProperty = DependencyProperty.Register(
-            "Indent",
-            typeof(double),
-            typeof(TreeItem),
-            new PropertyMetadata(16.0));
+                    "Indent",
+                    typeof(double),
+                    typeof(TreeItem),
+                    new PropertyMetadata(16.0));
 
         public double Indent
         {
-            get { return (double)GetValue(IndentProperty); }
-            set { SetValue(IndentProperty, value); }
+            get
+            {
+                return (double)GetValue(IndentProperty);
+            }
+            set
+            {
+                SetValue(IndentProperty, value);
+            }
         }
 
         public static readonly RoutedEvent SelectionChangedEvent = EventManager.RegisterRoutedEvent(
-            "SelectionChanged",
-            RoutingStrategy.Bubble,
-            typeof(RoutedEventHandler),
-            typeof(Tree));
+                    "SelectionChanged",
+                    RoutingStrategy.Bubble,
+                    typeof(RoutedEventHandler),
+                    typeof(Tree));
 
         public event RoutedEventHandler SelectionChanged
         {
-            add { AddHandler(SelectionChangedEvent, value); }
-            remove { RemoveHandler(SelectionChangedEvent, value); }
+            add
+            {
+                AddHandler(SelectionChangedEvent, value);
+            }
+            remove
+            {
+                RemoveHandler(SelectionChangedEvent, value);
+            }
         }
 
         public List<object> Selected
@@ -57,9 +75,21 @@ namespace SrcGit.Views.Controls
 
         public TreeItem FindItem(DependencyObject elem)
         {
-            if (elem == null) return null;
-            if (elem is TreeItem) return elem as TreeItem;
-            if (elem is Tree) return null;
+            if (elem == null)
+            {
+                return null;
+            }
+
+            if (elem is TreeItem)
+            {
+                return elem as TreeItem;
+            }
+
+            if (elem is Tree)
+            {
+                return null;
+            }
+
             return FindItem(VisualTreeHelper.GetParent(elem));
         }
 
@@ -71,7 +101,10 @@ namespace SrcGit.Views.Controls
 
         public void UnselectAll()
         {
-            if (Selected.Count == 0) return;
+            if (Selected.Count == 0)
+            {
+                return;
+            }
 
             UnselectAllChildren(this);
             Selected.Clear();
@@ -80,9 +113,13 @@ namespace SrcGit.Views.Controls
 
         public void Select(object dataContext)
         {
-            if (Selected.Count == 1 && Selected[0] == dataContext) return;
+            if (Selected.Count == 1 && Selected[0] == dataContext)
+            {
+                return;
+            }
 
             var item = FindItemByDataContext(this, dataContext);
+
             if (item != null)
             {
                 AddSelected(item, true);
@@ -125,16 +162,27 @@ namespace SrcGit.Views.Controls
         protected override void OnPreviewMouseDown(MouseButtonEventArgs e)
         {
             base.OnPreviewMouseDown(e);
-
             var hit = VisualTreeHelper.HitTest(this, e.GetPosition(this));
-            if (hit == null || hit.VisualHit == null) return;
+
+            if (hit == null || hit.VisualHit == null)
+            {
+                return;
+            }
 
             var item = FindItem(hit.VisualHit);
-            if (item == null) return;
+
+            if (item == null)
+            {
+                return;
+            }
 
             if (!MultiSelection)
             {
-                if (item.IsChecked) return;
+                if (item.IsChecked)
+                {
+                    return;
+                }
+
                 AddSelected(item, true);
                 return;
             }
@@ -153,10 +201,15 @@ namespace SrcGit.Views.Controls
             else if ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) && Selected.Count > 0)
             {
                 var last = FindItemByDataContext(this, Selected.Last());
-                if (last == item) return;
+
+                if (last == item)
+                {
+                    return;
+                }
 
                 var lastPos = last.PointToScreen(new Point(0, 0));
                 var curPos = item.PointToScreen(new Point(0, 0));
+
                 if (lastPos.Y > curPos.Y)
                 {
                     SelectRange(this, item, last);
@@ -170,27 +223,46 @@ namespace SrcGit.Views.Controls
             }
             else if (e.RightButton == MouseButtonState.Pressed)
             {
-                if (item.IsChecked) return;
+                if (item.IsChecked)
+                {
+                    return;
+                }
+
                 AddSelected(item, true);
             }
             else
             {
-                if (item.IsChecked && Selected.Count == 1) return;
+                if (item.IsChecked && Selected.Count == 1)
+                {
+                    return;
+                }
+
                 AddSelected(item, true);
             }
         }
 
         private TreeItem FindItemByDataContext(ItemsControl control, object data)
         {
-            if (control == null) return null;
+            if (control == null)
+            {
+                return null;
+            }
 
             for (int i = 0; i < control.Items.Count; i++)
             {
                 var child = control.ItemContainerGenerator.ContainerFromIndex(i) as TreeItem;
-                if (control.Items[i] == data) return child;
+
+                if (control.Items[i] == data)
+                {
+                    return child;
+                }
 
                 var found = FindItemByDataContext(child, data);
-                if (found != null) return found;
+
+                if (found != null)
+                {
+                    return found;
+                }
             }
 
             return null;
@@ -198,7 +270,10 @@ namespace SrcGit.Views.Controls
 
         private void AddSelected(TreeItem item, bool removeOthers)
         {
-            if (!item.IsVisible) return;
+            if (!item.IsVisible)
+            {
+                return;
+            }
 
             if (removeOthers && Selected.Count > 0)
             {
@@ -223,7 +298,11 @@ namespace SrcGit.Views.Controls
             for (int i = 0; i < control.Items.Count; i++)
             {
                 var child = control.ItemContainerGenerator.ContainerFromIndex(i) as TreeItem;
-                if (child == null) continue;
+
+                if (child == null)
+                {
+                    continue;
+                }
 
                 child.IsChecked = true;
                 Selected.Add(control.Items[i]);
@@ -236,8 +315,17 @@ namespace SrcGit.Views.Controls
             for (int i = 0; i < control.Items.Count; i++)
             {
                 var child = control.ItemContainerGenerator.ContainerFromIndex(i) as TreeItem;
-                if (child == null) continue;
-                if (child.IsChecked) child.IsChecked = false;
+
+                if (child == null)
+                {
+                    continue;
+                }
+
+                if (child.IsChecked)
+                {
+                    child.IsChecked = false;
+                }
+
                 UnselectAllChildren(child);
             }
         }
@@ -247,24 +335,44 @@ namespace SrcGit.Views.Controls
             for (int i = 0; i < control.Items.Count; i++)
             {
                 var child = control.ItemContainerGenerator.ContainerFromIndex(i) as TreeItem;
-                if (child == null) continue;
+
+                if (child == null)
+                {
+                    continue;
+                }
 
                 if (matches == 1)
                 {
-                    if (child == to) return 2;
+                    if (child == to)
+                    {
+                        return 2;
+                    }
+
                     Selected.Add(control.Items[i]);
                     child.IsChecked = true;
-                    if (TryEndRangeSelection(child, to)) return 2;
+
+                    if (TryEndRangeSelection(child, to))
+                    {
+                        return 2;
+                    }
                 }
                 else if (child == from)
                 {
                     matches = 1;
-                    if (TryEndRangeSelection(child, to)) return 2;
+
+                    if (TryEndRangeSelection(child, to))
+                    {
+                        return 2;
+                    }
                 }
                 else
                 {
                     matches = SelectRange(child, from, to, matches);
-                    if (matches == 2) return 2;
+
+                    if (matches == 2)
+                    {
+                        return 2;
+                    }
                 }
             }
 
@@ -276,7 +384,11 @@ namespace SrcGit.Views.Controls
             for (int i = 0; i < control.Items.Count; i++)
             {
                 var child = control.ItemContainerGenerator.ContainerFromIndex(i) as TreeItem;
-                if (child == null) continue;
+
+                if (child == null)
+                {
+                    continue;
+                }
 
                 if (child == end)
                 {
@@ -286,9 +398,12 @@ namespace SrcGit.Views.Controls
                 {
                     Selected.Add(control.Items[i]);
                     child.IsChecked = true;
-
                     var ended = TryEndRangeSelection(child, end);
-                    if (ended) return true;
+
+                    if (ended)
+                    {
+                        return true;
+                    }
                 }
             }
 

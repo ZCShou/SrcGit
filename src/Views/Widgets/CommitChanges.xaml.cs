@@ -23,11 +23,27 @@ namespace SrcGit.Views.Widgets
 
         public class ChangeNode
         {
-            public string Path { get; set; } = "";
-            public Models.Change Change { get; set; } = null;
-            public bool IsExpanded { get; set; } = false;
+            public string Path
+            {
+                get;
+                set;
+            } = "";
+            public Models.Change Change
+            {
+                get;
+                set;
+            } = null;
+            public bool IsExpanded
+            {
+                get;
+                set;
+            } = false;
             public bool IsFolder => Change == null;
-            public List<ChangeNode> Children { get; set; } = new List<ChangeNode>();
+            public List<ChangeNode> Children
+            {
+                get;
+                set;
+            } = new List<ChangeNode>();
         }
 
         public CommitChanges()
@@ -50,7 +66,6 @@ namespace SrcGit.Views.Widgets
             this.range = range;
             this.cachedChanges = changes;
             this.isLFSEnabled = new Commands.LFS(repo).IsEnabled();
-
             UpdateVisible();
         }
 
@@ -64,10 +79,12 @@ namespace SrcGit.Views.Widgets
                     var node = FindNodeByChange(modeTree.ItemsSource as List<ChangeNode>, change);
                     modeTree.Select(node);
                     break;
+
                 case Models.Change.DisplayMode.List:
                     modeList.SelectedItem = change;
                     modeList.ScrollIntoView(change);
                     break;
+
                 case Models.Change.DisplayMode.Grid:
                     modeGrid.SelectedItem = change;
                     modeGrid.ScrollIntoView(change);
@@ -83,6 +100,7 @@ namespace SrcGit.Views.Widgets
             {
                 // 筛选出可见的列表
                 List<Models.Change> visible;
+
                 if (string.IsNullOrEmpty(filter))
                 {
                     visible = cachedChanges;
@@ -94,7 +112,6 @@ namespace SrcGit.Views.Widgets
 
                 // 排序
                 visible.Sort((l, r) => l.Path.CompareTo(r.Path));
-
                 // 生成树节点
                 var nodes = new List<ChangeNode>();
                 var folders = new Dictionary<string, ChangeNode>();
@@ -103,6 +120,7 @@ namespace SrcGit.Views.Widgets
                 foreach (var c in visible)
                 {
                     var sepIdx = c.Path.IndexOf('/');
+
                     if (sepIdx == -1)
                     {
                         nodes.Add(new ChangeNode()
@@ -120,6 +138,7 @@ namespace SrcGit.Views.Widgets
                         while (sepIdx != -1)
                         {
                             var folder = c.Path.Substring(0, sepIdx);
+
                             if (folders.ContainsKey(folder))
                             {
                                 lastFolder = folders[folder];
@@ -163,13 +182,11 @@ namespace SrcGit.Views.Widgets
 
                 folders.Clear();
                 SortFileNodes(nodes);
-
                 Dispatcher.Invoke(() =>
                 {
                     modeTree.ItemsSource = nodes;
                     modeList.ItemsSource = visible;
                     modeGrid.ItemsSource = visible;
-
                     UpdateMode();
                 });
             });
@@ -177,14 +194,21 @@ namespace SrcGit.Views.Widgets
 
         private ChangeNode FindNodeByChange(List<ChangeNode> nodes, Models.Change change)
         {
-            if (nodes == null || nodes.Count == 0) return null;
+            if (nodes == null || nodes.Count == 0)
+            {
+                return null;
+            }
 
             foreach (var node in nodes)
             {
                 if (node.IsFolder)
                 {
                     var found = FindNodeByChange(node.Children, change);
-                    if (found != null) return found;
+
+                    if (found != null)
+                    {
+                        return found;
+                    }
                 }
                 else if (node.Change == change)
                 {
@@ -211,7 +235,10 @@ namespace SrcGit.Views.Widgets
 
             foreach (var node in nodes)
             {
-                if (node.Children.Count > 1) SortFileNodes(node.Children);
+                if (node.Children.Count > 1)
+                {
+                    SortFileNodes(node.Children);
+                }
             }
         }
 
@@ -265,6 +292,7 @@ namespace SrcGit.Views.Widgets
         private void OpenChangeDiff(Models.Change change)
         {
             var revisions = new string[] { "", "" };
+
             if (range.Count == 2)
             {
                 revisions[0] = range[0].SHA;
@@ -274,7 +302,11 @@ namespace SrcGit.Views.Widgets
             {
                 revisions[0] = $"{range[0].SHA}^";
                 revisions[1] = range[0].SHA;
-                if (range[0].Parents.Count == 0) revisions[0] = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
+
+                if (range[0].Parents.Count == 0)
+                {
+                    revisions[0] = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
+                }
             }
 
             diffViewer.Diff(repo, new DiffViewer.Option()
@@ -301,7 +333,6 @@ namespace SrcGit.Views.Widgets
                     viewer.Show();
                     ev.Handled = true;
                 };
-
                 var blame = new MenuItem();
                 blame.Header = App.Text("Blame");
                 blame.Visibility = range.Count == 1 ? Visibility.Visible : Visibility.Collapsed;
@@ -311,7 +342,6 @@ namespace SrcGit.Views.Widgets
                     viewer.Show();
                     ev.Handled = true;
                 };
-
                 var explore = new MenuItem();
                 explore.Header = App.Text("RevealFile");
                 explore.Click += (o, ev) =>
@@ -320,7 +350,6 @@ namespace SrcGit.Views.Widgets
                     Process.Start("explorer", $"/select,{full}");
                     ev.Handled = true;
                 };
-
                 menu.Items.Add(history);
                 menu.Items.Add(blame);
                 menu.Items.Add(explore);
@@ -332,7 +361,6 @@ namespace SrcGit.Views.Widgets
             {
                 Clipboard.SetDataObject(path, true);
             };
-
             menu.Items.Add(copyPath);
             menu.IsOpen = true;
         }
@@ -351,42 +379,68 @@ namespace SrcGit.Views.Widgets
 
         private void OnRequestBringIntoView(object sender, RequestBringIntoViewEventArgs e)
         {
-            if (!isSelecting) e.Handled = true;
+            if (!isSelecting)
+            {
+                e.Handled = true;
+            }
         }
 
         private void OnTreeSelectionChanged(object sender, RoutedEventArgs e)
         {
-            if (modeSwitcher.Mode != Models.Change.DisplayMode.Tree) return;
+            if (modeSwitcher.Mode != Models.Change.DisplayMode.Tree)
+            {
+                return;
+            }
 
             diffViewer.Reset();
-            if (modeTree.Selected.Count == 0) return;
+
+            if (modeTree.Selected.Count == 0)
+            {
+                return;
+            }
 
             var change = (modeTree.Selected[0] as ChangeNode).Change;
-            if (change == null) return;
+
+            if (change == null)
+            {
+                return;
+            }
 
             OpenChangeDiff(change);
         }
 
         private void OnListSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (modeSwitcher.Mode != Models.Change.DisplayMode.List) return;
+            if (modeSwitcher.Mode != Models.Change.DisplayMode.List)
+            {
+                return;
+            }
 
             diffViewer.Reset();
-
             var change = (sender as DataGrid).SelectedItem as Models.Change;
-            if (change == null) return;
+
+            if (change == null)
+            {
+                return;
+            }
 
             OpenChangeDiff(change);
         }
 
         private void OnGridSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (modeSwitcher.Mode != Models.Change.DisplayMode.Grid) return;
+            if (modeSwitcher.Mode != Models.Change.DisplayMode.Grid)
+            {
+                return;
+            }
 
             diffViewer.Reset();
-
             var change = (sender as DataGrid).SelectedItem as Models.Change;
-            if (change == null) return;
+
+            if (change == null)
+            {
+                return;
+            }
 
             OpenChangeDiff(change);
         }
@@ -394,10 +448,18 @@ namespace SrcGit.Views.Widgets
         private void OnTreeContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
             var item = sender as Controls.TreeItem;
-            if (item == null) return;
+
+            if (item == null)
+            {
+                return;
+            }
 
             var node = item.DataContext as ChangeNode;
-            if (node == null || node.IsFolder) return;
+
+            if (node == null || node.IsFolder)
+            {
+                return;
+            }
 
             OpenChangeContextMenu(node.Change);
             e.Handled = true;
@@ -406,10 +468,18 @@ namespace SrcGit.Views.Widgets
         private void OnDataGridContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
             var row = sender as DataGridRow;
-            if (row == null) return;
+
+            if (row == null)
+            {
+                return;
+            }
 
             var change = row.Item as Models.Change;
-            if (change == null) return;
+
+            if (change == null)
+            {
+                return;
+            }
 
             OpenChangeContextMenu(change);
             e.Handled = true;
@@ -417,22 +487,38 @@ namespace SrcGit.Views.Widgets
 
         private void OnListSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (modeSwitcher.Mode != Models.Change.DisplayMode.List) return;
+            if (modeSwitcher.Mode != Models.Change.DisplayMode.List)
+            {
+                return;
+            }
 
             int last = modeList.Columns.Count - 1;
             double offset = 0;
-            for (int i = 0; i < last; i++) offset += modeList.Columns[i].ActualWidth;
+
+            for (int i = 0; i < last; i++)
+            {
+                offset += modeList.Columns[i].ActualWidth;
+            }
+
             modeList.Columns[last].MinWidth = Math.Max(layerChanges.ActualWidth - offset, 10);
             modeList.UpdateLayout();
         }
 
         private void OnGridSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (modeSwitcher.Mode != Models.Change.DisplayMode.Grid) return;
+            if (modeSwitcher.Mode != Models.Change.DisplayMode.Grid)
+            {
+                return;
+            }
 
             int last = modeGrid.Columns.Count - 1;
             double offset = 0;
-            for (int i = 0; i < last; i++) offset += modeGrid.Columns[i].ActualWidth;
+
+            for (int i = 0; i < last; i++)
+            {
+                offset += modeGrid.Columns[i].ActualWidth;
+            }
+
             modeGrid.Columns[last].MinWidth = Math.Max(layerChanges.ActualWidth - offset, 10);
             modeGrid.UpdateLayout();
         }

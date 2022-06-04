@@ -18,11 +18,16 @@ namespace SrcGit.Views.Popups
             this.repo = repo;
             this.branch = branch;
             this.remote = remote;
-
             InitializeComponent();
 
-            if (string.IsNullOrEmpty(remote)) txtTarget.Text = branch;
-            else txtTarget.Text = $"{remote}/{branch}";
+            if (string.IsNullOrEmpty(remote))
+            {
+                txtTarget.Text = branch;
+            }
+            else
+            {
+                txtTarget.Text = $"{remote}/{branch}";
+            }
         }
 
         public DeleteBranch Then(Action handler)
@@ -41,8 +46,8 @@ namespace SrcGit.Views.Popups
             return Task.Run(() =>
             {
                 Models.Watcher.SetEnabled(repo, false);
-
                 var full = branch;
+
                 if (string.IsNullOrEmpty(remote))
                 {
                     full = $"refs/heads/{branch}";
@@ -55,6 +60,7 @@ namespace SrcGit.Views.Popups
                 }
 
                 var exists = Models.Preference.Instance.FindRepository(repo);
+
                 if (exists != null && exists.Filters.Contains(full))
                 {
                     exists.Filters.Remove(full);

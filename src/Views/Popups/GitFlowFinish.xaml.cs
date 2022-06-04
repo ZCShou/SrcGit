@@ -15,20 +15,21 @@ namespace SrcGit.Views.Popups
         {
             this.repo = repo.Path;
             this.type = type;
-
             InitializeComponent();
-
             txtName.Text = branch;
+
             switch (type)
             {
                 case Models.GitFlowBranchType.Feature:
                     txtPrefix.Text = App.Text("GitFlow.Feature");
                     name = branch.Substring(repo.GitFlow.Feature.Length);
                     break;
+
                 case Models.GitFlowBranchType.Release:
                     txtPrefix.Text = App.Text("GitFlow.Release");
                     name = branch.Substring(repo.GitFlow.Release.Length);
                     break;
+
                 case Models.GitFlowBranchType.Hotfix:
                     txtPrefix.Text = App.Text("GitFlow.Hotfix");
                     name = branch.Substring(repo.GitFlow.Hotfix.Length);
@@ -42,10 +43,13 @@ namespace SrcGit.Views.Popups
             {
                 case Models.GitFlowBranchType.Feature:
                     return App.Text("GitFlow.FinishFeature");
+
                 case Models.GitFlowBranchType.Release:
                     return App.Text("GitFlow.FinishRelease");
+
                 case Models.GitFlowBranchType.Hotfix:
                     return App.Text("GitFlow.FinishHotfix");
+
                 default:
                     return "";
             }
@@ -54,7 +58,6 @@ namespace SrcGit.Views.Popups
         public override Task<bool> Start()
         {
             var keepBranch = chkKeep.IsChecked == true;
-
             return Task.Run(() =>
             {
                 Models.Watcher.SetEnabled(repo, false);

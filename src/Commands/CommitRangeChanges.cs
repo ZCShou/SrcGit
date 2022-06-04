@@ -26,18 +26,44 @@ namespace SrcGit.Commands
         public override void OnReadline(string line)
         {
             var match = REG_FORMAT.Match(line);
-            if (!match.Success) return;
 
-            var change = new Models.Change() { Path = match.Groups[2].Value };
+            if (!match.Success)
+            {
+                return;
+            }
+
+            var change = new Models.Change()
+            {
+                Path = match.Groups[2].Value
+            };
             var status = match.Groups[1].Value;
 
             switch (status[0])
             {
-                case 'M': change.Set(Models.Change.Status.Modified); changes.Add(change); break;
-                case 'A': change.Set(Models.Change.Status.Added); changes.Add(change); break;
-                case 'D': change.Set(Models.Change.Status.Deleted); changes.Add(change); break;
-                case 'R': change.Set(Models.Change.Status.Renamed); changes.Add(change); break;
-                case 'C': change.Set(Models.Change.Status.Copied); changes.Add(change); break;
+                case 'M':
+                    change.Set(Models.Change.Status.Modified);
+                    changes.Add(change);
+                    break;
+
+                case 'A':
+                    change.Set(Models.Change.Status.Added);
+                    changes.Add(change);
+                    break;
+
+                case 'D':
+                    change.Set(Models.Change.Status.Deleted);
+                    changes.Add(change);
+                    break;
+
+                case 'R':
+                    change.Set(Models.Change.Status.Renamed);
+                    changes.Add(change);
+                    break;
+
+                case 'C':
+                    change.Set(Models.Change.Status.Copied);
+                    changes.Add(change);
+                    break;
             }
         }
     }

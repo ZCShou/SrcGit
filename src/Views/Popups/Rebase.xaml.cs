@@ -15,9 +15,7 @@ namespace SrcGit.Views.Popups
         {
             this.repo = repo;
             this.on = branch.Head;
-
             InitializeComponent();
-
             txtCurrent.Text = current;
             txtOn.Text = !string.IsNullOrEmpty(branch.Remote) ? $"{branch.Remote}/{branch.Name}" : branch.Name;
             iconBased.Data = FindResource("Icon.Branch") as Geometry;
@@ -27,9 +25,7 @@ namespace SrcGit.Views.Popups
         {
             this.repo = repo;
             this.on = commit.SHA;
-
             InitializeComponent();
-
             txtCurrent.Text = current;
             txtSHA.Text = commit.ShortSHA;
             txtOn.Text = commit.Subject;

@@ -14,9 +14,7 @@ namespace SrcGit.Views.Popups
         {
             this.repo = repo;
             this.stash = stash;
-
             InitializeComponent();
-
             txtTarget.Text = stash + " - " + msg;
         }
 

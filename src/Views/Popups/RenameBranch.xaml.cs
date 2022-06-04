@@ -11,15 +11,17 @@ namespace SrcGit.Views.Popups
         private string repo = null;
         private string target = null;
 
-        public string NewName { get; set; }
+        public string NewName
+        {
+            get;
+            set;
+        }
 
         public RenameBranch(Models.Repository repo, string target)
         {
             this.repo = repo.Path;
             this.target = target;
-
             InitializeComponent();
-
             ruleBranch.Repo = repo;
             txtTarget.Text = target;
         }
@@ -32,7 +34,11 @@ namespace SrcGit.Views.Popups
         public override Task<bool> Start()
         {
             txtNewName.GetBindingExpression(TextBox.TextProperty).UpdateSource();
-            if (Validation.GetHasError(txtNewName)) return null;
+
+            if (Validation.GetHasError(txtNewName))
+            {
+                return null;
+            }
 
             return Task.Run(() =>
             {

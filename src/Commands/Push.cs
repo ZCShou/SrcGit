@@ -14,8 +14,8 @@ namespace SrcGit.Commands
             Cwd = repo;
             TraitErrorAsOutput = true;
             handler = onProgress;
-
             var sshKey = new Config(repo).Get($"remote.{remote}.sshkey");
+
             if (!string.IsNullOrEmpty(sshKey))
             {
                 Envs.Add("GIT_SSH_COMMAND", $"ssh -i '{sshKey}'");
@@ -28,9 +28,20 @@ namespace SrcGit.Commands
 
             Args += "push --progress --verbose ";
 
-            if (withTags) Args += "--tags ";
-            if (track) Args += "-u ";
-            if (force) Args += "--force-with-lease ";
+            if (withTags)
+            {
+                Args += "--tags ";
+            }
+
+            if (track)
+            {
+                Args += "-u ";
+            }
+
+            if (force)
+            {
+                Args += "--force-with-lease ";
+            }
 
             Args += $"{remote} {local}:{remoteBranch}";
         }
@@ -38,8 +49,8 @@ namespace SrcGit.Commands
         public Push(string repo, string remote, string branch)
         {
             Cwd = repo;
-
             var sshKey = new Config(repo).Get($"remote.{remote}.sshkey");
+
             if (!string.IsNullOrEmpty(sshKey))
             {
                 Envs.Add("GIT_SSH_COMMAND", $"ssh -i '{sshKey}'");
@@ -56,8 +67,8 @@ namespace SrcGit.Commands
         public Push(string repo, string remote, string tag, bool isDelete)
         {
             Cwd = repo;
-
             var sshKey = new Config(repo).Get($"remote.{remote}.sshkey");
+
             if (!string.IsNullOrEmpty(sshKey))
             {
                 Envs.Add("GIT_SSH_COMMAND", $"ssh -i '{sshKey}'");
@@ -69,7 +80,12 @@ namespace SrcGit.Commands
             }
 
             Args += "push ";
-            if (isDelete) Args += "--delete ";
+
+            if (isDelete)
+            {
+                Args += "--delete ";
+            }
+
             Args += $"{remote} refs/tags/{tag}";
         }
 

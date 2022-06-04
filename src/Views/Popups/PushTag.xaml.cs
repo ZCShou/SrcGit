@@ -14,9 +14,7 @@ namespace SrcGit.Views.Popups
         {
             this.repo = repo.Path;
             this.tag = tag;
-
             InitializeComponent();
-
             txtTag.Text = tag;
             cmbRemotes.ItemsSource = repo.Remotes;
             cmbRemotes.SelectedIndex = 0;
@@ -30,7 +28,11 @@ namespace SrcGit.Views.Popups
         public override Task<bool> Start()
         {
             var remote = cmbRemotes.SelectedItem as Models.Remote;
-            if (remote == null) return null;
+
+            if (remote == null)
+            {
+                return null;
+            }
 
             return Task.Run(() =>
             {

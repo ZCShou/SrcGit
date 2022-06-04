@@ -10,7 +10,11 @@ namespace SrcGit.Views.Popups
     public partial class Apply : Controls.PopupWidget
     {
         private string repo = null;
-        public string File { get; set; }
+        public string File
+        {
+            get;
+            set;
+        }
 
         public Apply(string repo)
         {
@@ -26,11 +30,14 @@ namespace SrcGit.Views.Popups
         public override Task<bool> Start()
         {
             txtPath.GetBindingExpression(TextBox.TextProperty).UpdateSource();
-            if (Validation.GetHasError(txtPath)) return null;
+
+            if (Validation.GetHasError(txtPath))
+            {
+                return null;
+            }
 
             var ignoreWS = chkIngoreWS.IsChecked == true;
             var wsMode = (cmbWSOption.SelectedItem as Models.WhitespaceOption).Arg;
-
             return Task.Run(() =>
             {
                 Models.Watcher.SetEnabled(repo, false);

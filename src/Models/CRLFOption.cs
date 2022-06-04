@@ -7,14 +7,27 @@ namespace SrcGit.Models
     /// </summary>
     public class CRLFOption
     {
-        public string Display { get; set; }
-        public string Value { get; set; }
-        public string Desc { get; set; }
+        public string Display
+        {
+            get;
+            set;
+        }
+        public string Value
+        {
+            get;
+            set;
+        }
+        public string Desc
+        {
+            get;
+            set;
+        }
 
-        public static List<CRLFOption> Supported = new List<CRLFOption>() {
+        public static List<CRLFOption> Supported = new List<CRLFOption>()
+        {
             new CRLFOption("TRUE", "true", "Commit as LF, checkout as CRLF"),
-            new CRLFOption("INPUT", "input", "Only convert for commit"),
-            new CRLFOption("FALSE", "false", "Do NOT convert"),
+                new CRLFOption("INPUT", "input", "Only convert for commit"),
+                new CRLFOption("FALSE", "false", "Do NOT convert"),
         };
 
         public CRLFOption(string display, string value, string desc)

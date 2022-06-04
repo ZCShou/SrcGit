@@ -32,8 +32,15 @@ namespace SrcGit.Commands
 
         public override void OnReadline(string line)
         {
-            if (data.IsBinary) return;
-            if (string.IsNullOrEmpty(line)) return;
+            if (data.IsBinary)
+            {
+                return;
+            }
+
+            if (string.IsNullOrEmpty(line))
+            {
+                return;
+            }
 
             if (line.IndexOf('\0') >= 0)
             {
@@ -43,14 +50,17 @@ namespace SrcGit.Commands
             }
 
             var match = REG_FORMAT.Match(line);
-            if (!match.Success) return;
+
+            if (!match.Success)
+            {
+                return;
+            }
 
             var commit = match.Groups[1].Value;
             var author = match.Groups[2].Value;
             var timestamp = int.Parse(match.Groups[3].Value);
             var content = match.Groups[4].Value;
             var when = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(timestamp).ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss");
-
             var blameLine = new Models.BlameLine()
             {
                 LineNumber = $"{data.Lines.Count + 1}",
@@ -59,7 +69,6 @@ namespace SrcGit.Commands
                 Time = when,
                 Content = content,
             };
-
             data.Lines.Add(blameLine);
         }
     }

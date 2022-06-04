@@ -9,8 +9,8 @@ namespace SrcGit.Views.Validations
         {
             var subject = value as string;
             return string.IsNullOrWhiteSpace(subject)
-                ? new ValidationResult(false, App.Text("EmptyCommitMessage"))
-                : ValidationResult.ValidResult;
+                   ? new ValidationResult(false, App.Text("EmptyCommitMessage"))
+                   : ValidationResult.ValidResult;
         }
     }
 }

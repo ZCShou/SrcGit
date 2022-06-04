@@ -12,7 +12,10 @@ namespace SrcGit.Views.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is string s)
+            {
                 return s.Split(',').ElementAt(0);
+            }
+
             return value;
         }
 

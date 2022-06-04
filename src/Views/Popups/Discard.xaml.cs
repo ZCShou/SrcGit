@@ -16,7 +16,6 @@ namespace SrcGit.Views.Popups
         {
             this.repo = repo;
             this.changes = changes;
-
             InitializeComponent();
 
             if (changes == null || changes.Count == 0)
@@ -45,6 +44,7 @@ namespace SrcGit.Views.Popups
             {
                 Models.Watcher.SetEnabled(repo, false);
                 var cmd = new Commands.Discard(repo);
+
                 if (changes == null || changes.Count == 0)
                 {
                     cmd.Whole();
@@ -53,6 +53,7 @@ namespace SrcGit.Views.Popups
                 {
                     cmd.Changes(changes);
                 }
+
                 Models.Watcher.SetEnabled(repo, true);
                 return true;
             });

@@ -5,8 +5,20 @@ namespace SrcGit.Models
     /// </summary>
     public class SubTree
     {
-        public string Prefix { get; set; }
-        public string Remote { get; set; }
-        public string Branch { get; set; } = "master";
+        public string Prefix
+        {
+            get;
+            set;
+        }
+        public string Remote
+        {
+            get;
+            set;
+        }
+        public string Branch
+        {
+            get;
+            set;
+        } = "master";
     }
 }

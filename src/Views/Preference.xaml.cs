@@ -11,11 +11,26 @@ namespace SrcGit.Views
     /// </summary>
     public partial class Preference : Controls.Window
     {
-
-        public string User { get; set; }
-        public string Email { get; set; }
-        public string CRLF { get; set; }
-        public string Version { get; set; }
+        public string User
+        {
+            get;
+            set;
+        }
+        public string Email
+        {
+            get;
+            set;
+        }
+        public string CRLF
+        {
+            get;
+            set;
+        }
+        public string Version
+        {
+            get;
+            set;
+        }
 
         public Preference()
         {
@@ -26,13 +41,18 @@ namespace SrcGit.Views
         private bool UpdateGitInfo(bool updateUi)
         {
             var isReady = Models.Preference.Instance.IsReady;
+
             if (isReady)
             {
                 User = new Commands.Config().Get("user.name");
                 Email = new Commands.Config().Get("user.email");
                 CRLF = new Commands.Config().Get("core.autocrlf");
                 Version = new Commands.Version().Query();
-                if (string.IsNullOrEmpty(CRLF)) CRLF = "false";
+
+                if (string.IsNullOrEmpty(CRLF))
+                {
+                    CRLF = "false";
+                }
             }
             else
             {
@@ -41,6 +61,7 @@ namespace SrcGit.Views
                 CRLF = "false";
                 Version = "Unknown";
             }
+
             if (updateUi)
             {
                 editGitUser?.GetBindingExpression(TextBox.TextProperty).UpdateTarget();
@@ -48,6 +69,7 @@ namespace SrcGit.Views
                 editGitCrlf?.GetBindingExpression(ComboBox.SelectedValueProperty).UpdateTarget();
                 textGitVersion?.GetBindingExpression(TextBlock.TextProperty).UpdateTarget();
             }
+
             return isReady;
         }
 
@@ -65,8 +87,15 @@ namespace SrcGit.Views
         private void SelectGitPath(object sender, RoutedEventArgs e)
         {
             var initDir = Models.ExecutableFinder.Find("git.exe");
-            if (initDir == null) initDir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
-            else initDir = Path.GetDirectoryName(initDir);
+
+            if (initDir == null)
+            {
+                initDir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+            }
+            else
+            {
+                initDir = Path.GetDirectoryName(initDir);
+            }
 
             var dialog = new OpenFileDialog
             {
@@ -88,6 +117,7 @@ namespace SrcGit.Views
         private void SelectGitCloneDir(object sender, RoutedEventArgs e)
         {
             var dialog = new Controls.FolderDialog();
+
             if (dialog.ShowDialog() == true)
             {
                 Models.Preference.Instance.Git.DefaultCloneDir = dialog.SelectedPath;
@@ -100,7 +130,10 @@ namespace SrcGit.Views
             var type = Models.Preference.Instance.MergeTool.Type;
             var tool = Models.MergeTool.Supported.Find(x => x.Type == type);
 
-            if (tool == null || tool.Type == 0) return;
+            if (tool == null || tool.Type == 0)
+            {
+                return;
+            }
 
             var dialog = new OpenFileDialog();
             dialog.Filter = $"{tool.Name} Executable|{tool.Exec}";
@@ -119,7 +152,11 @@ namespace SrcGit.Views
         {
             var type = (int)(sender as ComboBox).SelectedValue;
             var tool = Models.MergeTool.Supported.Find(x => x.Type == type);
-            if (tool == null) return;
+
+            if (tool == null)
+            {
+                return;
+            }
 
             if (IsLoaded)
             {
@@ -136,13 +173,25 @@ namespace SrcGit.Views
             {
                 var cmd = new Commands.Config();
                 var oldUser = cmd.Get("user.name");
-                if (oldUser != User) cmd.Set("user.name", User);
+
+                if (oldUser != User)
+                {
+                    cmd.Set("user.name", User);
+                }
 
                 var oldEmail = cmd.Get("user.email");
-                if (oldEmail != Email) cmd.Set("user.email", Email);
+
+                if (oldEmail != Email)
+                {
+                    cmd.Set("user.email", Email);
+                }
 
                 var oldCRLF = cmd.Get("core.autocrlf");
-                if (oldCRLF != CRLF) cmd.Set("core.autocrlf", CRLF);
+
+                if (oldCRLF != CRLF)
+                {
+                    cmd.Set("core.autocrlf", CRLF);
+                }
             }
 
             Models.Preference.Save();

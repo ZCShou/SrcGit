@@ -12,9 +12,19 @@ namespace SrcGit.Commands
         {
             Args = $"--version";
             var result = ReadToEnd();
-            if (!result.IsSuccess || string.IsNullOrEmpty(result.Output)) return null;
+
+            if (!result.IsSuccess || string.IsNullOrEmpty(result.Output))
+            {
+                return null;
+            }
+
             var version = result.Output.Trim();
-            if (!version.StartsWith(GitVersionPrefix, StringComparison.Ordinal)) return null;
+
+            if (!version.StartsWith(GitVersionPrefix, StringComparison.Ordinal))
+            {
+                return null;
+            }
+
             return version.Substring(GitVersionPrefix.Length);
         }
     }

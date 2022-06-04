@@ -26,7 +26,11 @@ namespace SrcGit.Commands
         public override void OnReadline(string line)
         {
             var match = REG_REMOTE.Match(line);
-            if (!match.Success) return;
+
+            if (!match.Success)
+            {
+                return;
+            }
 
             var remote = new Models.Remote()
             {
@@ -34,7 +38,11 @@ namespace SrcGit.Commands
                 URL = match.Groups[2].Value,
             };
 
-            if (loaded.Find(x => x.Name == remote.Name) != null) return;
+            if (loaded.Find(x => x.Name == remote.Name) != null)
+            {
+                return;
+            }
+
             loaded.Add(remote);
         }
     }

@@ -17,7 +17,15 @@ namespace SrcGit.Models
     /// </summary>
     public class Decorator
     {
-        public DecoratorType Type { get; set; } = DecoratorType.None;
-        public string Name { get; set; } = "";
+        public DecoratorType Type
+        {
+            get;
+            set;
+        } = DecoratorType.None;
+        public string Name
+        {
+            get;
+            set;
+        } = "";
     }
 }

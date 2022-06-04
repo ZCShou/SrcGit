@@ -10,14 +10,46 @@ namespace SrcGit.Models
     {
 
         #region PROPERTIES_SAVED
-        public string Name { get; set; } = "";
-        public string Path { get; set; } = "";
-        public string GitDir { get; set; } = "";
-        public string GroupId { get; set; } = "";
-        public int Bookmark { get; set; } = 0;
-        public List<SubTree> SubTrees { get; set; } = new List<SubTree>();
-        public List<string> Filters { get; set; } = new List<string>();
-        public List<string> CommitMessages { get; set; } = new List<string>();
+        public string Name
+        {
+            get;
+            set;
+        } = "";
+        public string Path
+        {
+            get;
+            set;
+        } = "";
+        public string GitDir
+        {
+            get;
+            set;
+        } = "";
+        public string GroupId
+        {
+            get;
+            set;
+        } = "";
+        public int Bookmark
+        {
+            get;
+            set;
+        } = 0;
+        public List<SubTree> SubTrees
+        {
+            get;
+            set;
+        } = new List<SubTree>();
+        public List<string> Filters
+        {
+            get;
+            set;
+        } = new List<string>();
+        public List<string> CommitMessages
+        {
+            get;
+            set;
+        } = new List<string>();
         #endregion
 
         #region PROPERTIES_RUNTIME
@@ -28,13 +60,21 @@ namespace SrcGit.Models
 
         public void PushCommitMessage(string message)
         {
-            if (string.IsNullOrEmpty(message)) return;
+            if (string.IsNullOrEmpty(message))
+            {
+                return;
+            }
 
             int exists = CommitMessages.Count;
+
             if (exists > 0)
             {
                 var last = CommitMessages[0];
-                if (last == message) return;
+
+                if (last == message)
+                {
+                    return;
+                }
             }
 
             if (exists >= 10)

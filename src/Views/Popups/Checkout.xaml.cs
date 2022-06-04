@@ -14,7 +14,6 @@ namespace SrcGit.Views.Popups
         {
             this.repo = repo;
             this.branch = branch;
-
             InitializeComponent();
         }
 
@@ -26,7 +25,6 @@ namespace SrcGit.Views.Popups
         public override Task<bool> Start()
         {
             UpdateProgress(GetTitle());
-
             return Task.Run(() =>
             {
                 Models.Watcher.SetEnabled(repo, false);

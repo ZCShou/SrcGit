@@ -11,7 +11,6 @@ namespace SrcGit.Commands
         {
             var tmp = Path.GetTempFileName();
             File.WriteAllText(tmp, msg);
-
             Cwd = repo;
             Args = $"commit --amend --allow-empty --file=\"{tmp}\"";
         }

@@ -12,7 +12,8 @@ namespace SrcGit.Views.Controls
     {
         private Path icon = null;
 
-        public static readonly Brush[] COLORS = new Brush[] {
+        public static readonly Brush[] COLORS = new Brush[]
+        {
             Brushes.Transparent,
             Brushes.Red,
             Brushes.Orange,
@@ -28,8 +29,14 @@ namespace SrcGit.Views.Controls
 
         public int Color
         {
-            get { return (int)GetValue(ColorProperty); }
-            set { SetValue(ColorProperty, value); }
+            get
+            {
+                return (int)GetValue(ColorProperty);
+            }
+            set
+            {
+                SetValue(ColorProperty, value);
+            }
         }
 
         public static readonly DependencyProperty IsNewPageProperty =
@@ -37,8 +44,14 @@ namespace SrcGit.Views.Controls
 
         public bool IsNewPage
         {
-            get { return (bool)GetValue(IsNewPageProperty); }
-            set { SetValue(IsNewPageProperty, value); }
+            get
+            {
+                return (bool)GetValue(IsNewPageProperty);
+            }
+            set
+            {
+                SetValue(IsNewPageProperty, value);
+            }
         }
 
         public Bookmark()
@@ -51,11 +64,16 @@ namespace SrcGit.Views.Controls
         private static void UpdateBookmark(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var mark = d as Bookmark;
-            if (mark == null) return;
+
+            if (mark == null)
+            {
+                return;
+            }
 
             if (!mark.IsNewPage)
             {
                 mark.icon.Data = mark.FindResource("Icon.Git") as Geometry;
+
                 if (mark.Color == 0)
                 {
                     mark.icon.SetResourceReference(Path.FillProperty, "Brush.FG1");

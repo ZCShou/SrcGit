@@ -16,15 +16,17 @@ namespace SrcGit.Views.Widgets
         private Models.Repository repo = null;
         private bool isLFSEnabled = false;
 
-        public string CommitMessage { get; set; }
+        public string CommitMessage
+        {
+            get;
+            set;
+        }
 
         public WorkingCopy(Models.Repository repo)
         {
             this.repo = repo;
             this.isLFSEnabled = new Commands.LFS(repo.Path).IsEnabled();
-
             InitializeComponent();
-
             unstagedContainer.SetRepository(repo.Path);
             stagedContainer.SetRepository(repo.Path);
         }
@@ -37,9 +39,9 @@ namespace SrcGit.Views.Widgets
             foreach (var c in changes)
             {
                 if (c.Index == Models.Change.Status.Modified
-                    || c.Index == Models.Change.Status.Added
-                    || c.Index == Models.Change.Status.Deleted
-                    || c.Index == Models.Change.Status.Renamed)
+                        || c.Index == Models.Change.Status.Added
+                        || c.Index == Models.Change.Status.Deleted
+                        || c.Index == Models.Change.Status.Renamed)
                 {
                     stagedChanges.Add(c);
                 }
@@ -52,8 +54,8 @@ namespace SrcGit.Views.Widgets
 
             unstagedContainer.SetData(unstagedChanges);
             stagedContainer.SetData(stagedChanges);
-
             var current = repo.Branches.Find(x => x.IsCurrent);
+
             if (current != null && !string.IsNullOrEmpty(current.Upstream) && chkAmend.IsChecked != true)
             {
                 btnCommitAndPush.Visibility = Visibility.Visible;
@@ -64,7 +66,12 @@ namespace SrcGit.Views.Widgets
             }
 
             var diffTarget = unstagedContainer.DiffTarget;
-            if (diffTarget == null) diffTarget = stagedContainer.DiffTarget;
+
+            if (diffTarget == null)
+            {
+                diffTarget = stagedContainer.DiffTarget;
+            }
+
             if (diffTarget == null)
             {
                 mergePanel.Visibility = Visibility.Collapsed;
@@ -87,7 +94,11 @@ namespace SrcGit.Views.Widgets
             if (string.IsNullOrEmpty(txtCommitMessage.Text))
             {
                 var mergeMsgFile = Path.Combine(repo.GitDir, "MERGE_MSG");
-                if (!File.Exists(mergeMsgFile)) return;
+
+                if (!File.Exists(mergeMsgFile))
+                {
+                    return;
+                }
 
                 var content = File.ReadAllText(mergeMsgFile);
                 txtCommitMessage.Text = content;
@@ -103,7 +114,11 @@ namespace SrcGit.Views.Widgets
         public void ToggleIncludeUntracked(object sender, RoutedEventArgs e)
         {
             var watcher = Models.Watcher.Get(repo.Path);
-            if (watcher != null) watcher.RefreshWC();
+
+            if (watcher != null)
+            {
+                watcher.RefreshWC();
+            }
         }
 
         #region STAGE_UNSTAGE
@@ -130,7 +145,11 @@ namespace SrcGit.Views.Widgets
         private void OnDiffTargetChanged(object sender, WorkingCopyChanges.DiffTargetChangedEventArgs e)
         {
             var container = sender as WorkingCopyChanges;
-            if (container == null) return;
+
+            if (container == null)
+            {
+                return;
+            }
 
             if (e.Target == null)
             {
@@ -162,6 +181,7 @@ namespace SrcGit.Views.Widgets
             }
 
             var change = e.Target;
+
             if (change.IsConflit)
             {
                 mergePanel.Visibility = Visibility.Visible;
@@ -170,6 +190,7 @@ namespace SrcGit.Views.Widgets
             }
 
             mergePanel.Visibility = Visibility.Collapsed;
+
             if (container.IsUnstaged)
             {
                 switch (change.WorkTree)
@@ -184,6 +205,7 @@ namespace SrcGit.Views.Widgets
                             UseLFS = isLFSEnabled
                         });
                         break;
+
                     default:
                         diffViewer.Diff(repo.Path, new DiffViewer.Option()
                         {
@@ -211,32 +233,48 @@ namespace SrcGit.Views.Widgets
         private async void UseTheirs(object sender, RoutedEventArgs e)
         {
             var change = unstagedContainer.DiffTarget;
-            if (change == null || !change.IsConflit) return;
+
+            if (change == null || !change.IsConflit)
+            {
+                return;
+            }
 
             Models.Watcher.SetEnabled(repo.Path, false);
             var succ = await Task.Run(() => new Commands.Checkout(repo.Path).File(change.Path, true));
+
             if (succ)
             {
-                await Task.Run(() => new Commands.Add(repo.Path, new List<string>() { change.Path }).Exec());
+                await Task.Run(() => new Commands.Add(repo.Path, new List<string>()
+                {
+                    change.Path
+                }).Exec());
             }
-            Models.Watcher.SetEnabled(repo.Path, true);
 
+            Models.Watcher.SetEnabled(repo.Path, true);
             e.Handled = true;
         }
 
         private async void UseMine(object sender, RoutedEventArgs e)
         {
             var change = unstagedContainer.DiffTarget;
-            if (change == null || !change.IsConflit) return;
+
+            if (change == null || !change.IsConflit)
+            {
+                return;
+            }
 
             Models.Watcher.SetEnabled(repo.Path, false);
             var succ = await Task.Run(() => new Commands.Checkout(repo.Path).File(change.Path, false));
+
             if (succ)
             {
-                await Task.Run(() => new Commands.Add(repo.Path, new List<string>() { change.Path }).Exec());
+                await Task.Run(() => new Commands.Add(repo.Path, new List<string>()
+                {
+                    change.Path
+                }).Exec());
             }
-            Models.Watcher.SetEnabled(repo.Path, true);
 
+            Models.Watcher.SetEnabled(repo.Path, true);
             e.Handled = true;
         }
 
@@ -244,8 +282,8 @@ namespace SrcGit.Views.Widgets
         {
             var mergeType = Models.Preference.Instance.MergeTool.Type;
             var mergeExe = Models.Preference.Instance.MergeTool.Path;
-
             var merger = Models.MergeTool.Supported.Find(x => x.Type == mergeType);
+
             if (merger == null || merger.Type == 0 || !File.Exists(mergeExe))
             {
                 Models.Exception.Raise("Invalid merge tool in preference setting!");
@@ -253,7 +291,11 @@ namespace SrcGit.Views.Widgets
             }
 
             var change = unstagedContainer.DiffTarget;
-            if (change == null || !change.IsConflit) return;
+
+            if (change == null || !change.IsConflit)
+            {
+                return;
+            }
 
             var cmd = new Commands.Command();
             cmd.Cwd = repo.Path;
@@ -261,7 +303,6 @@ namespace SrcGit.Views.Widgets
             cmd.Args = $"-c mergetool.SrcGit.cmd=\"\\\"{mergeExe}\\\" {merger.Cmd}\" ";
             cmd.Args += "-c mergetool.writeToTemp=true -c mergetool.keepBackup=false -c mergetool.trustExitCode=true ";
             cmd.Args += $"mergetool --tool=SrcGit {change.Path}";
-
             await Task.Run(() => cmd.Exec());
             e.Handled = true;
         }
@@ -305,7 +346,6 @@ namespace SrcGit.Views.Widgets
                 foreach (var one in repo.CommitMessages)
                 {
                     var dump = one;
-
                     var item = new MenuItem();
                     item.Header = dump;
                     item.Padding = new Thickness(0);
@@ -314,7 +354,6 @@ namespace SrcGit.Views.Widgets
                         txtCommitMessage.Text = dump;
                         ev.Handled = true;
                     };
-
                     anchor.ContextMenu.Items.Add(item);
                 }
             }
@@ -326,6 +365,7 @@ namespace SrcGit.Views.Widgets
         private void StartAmend(object sender, RoutedEventArgs e)
         {
             var commits = new Commands.Commits(repo.Path, "-n 1", false).Result();
+
             if (commits.Count == 0)
             {
                 Models.Exception.Raise("No commits to amend!");
@@ -340,9 +380,13 @@ namespace SrcGit.Views.Widgets
 
         private void EndAmend(object sender, RoutedEventArgs e)
         {
-            if (!IsLoaded) return;
+            if (!IsLoaded)
+            {
+                return;
+            }
 
             var current = repo.Branches.Find(x => x.IsCurrent);
+
             if (current != null && !string.IsNullOrEmpty(current.Upstream))
             {
                 btnCommitAndPush.Visibility = Visibility.Visible;
@@ -359,6 +403,7 @@ namespace SrcGit.Views.Widgets
         {
             var changes = await Task.Run(() => new Commands.LocalChanges(repo.Path).Result());
             var conflict = changes.Find(x => x.IsConflit);
+
             if (conflict != null)
             {
                 Models.Exception.Raise("You have unsolved conflicts in your working copy!");
@@ -372,25 +417,32 @@ namespace SrcGit.Views.Widgets
             }
 
             txtCommitMessage.GetBindingExpression(TextBox.TextProperty).UpdateSource();
-            if (Validation.GetHasError(txtCommitMessage)) return;
+
+            if (Validation.GetHasError(txtCommitMessage))
+            {
+                return;
+            }
 
             repo.PushCommitMessage(CommitMessage);
             iconCommitting.Visibility = Visibility.Visible;
             iconCommitting.IsAnimating = true;
-
             Models.Watcher.SetEnabled(repo.Path, false);
             var amend = chkAmend.IsChecked == true;
             var succ = await Task.Run(() => new Commands.Commit(repo.Path, CommitMessage, amend).Exec());
+
             if (succ)
             {
                 ClearMessage();
-                if (amend) chkAmend.IsChecked = false;
+
+                if (amend)
+                {
+                    chkAmend.IsChecked = false;
+                }
             }
 
             iconCommitting.IsAnimating = false;
             iconCommitting.Visibility = Visibility.Collapsed;
             Models.Watcher.SetEnabled(repo.Path, true);
-
             e.Handled = true;
         }
 
@@ -398,6 +450,7 @@ namespace SrcGit.Views.Widgets
         {
             var changes = await Task.Run(() => new Commands.LocalChanges(repo.Path).Result());
             var conflict = changes.Find(x => x.IsConflit);
+
             if (conflict != null)
             {
                 Models.Exception.Raise("You have unsolved conflicts in your working copy!");
@@ -411,23 +464,27 @@ namespace SrcGit.Views.Widgets
             }
 
             txtCommitMessage.GetBindingExpression(TextBox.TextProperty).UpdateSource();
-            if (Validation.GetHasError(txtCommitMessage)) return;
+
+            if (Validation.GetHasError(txtCommitMessage))
+            {
+                return;
+            }
 
             repo.PushCommitMessage(CommitMessage);
             iconCommitting.Visibility = Visibility.Visible;
             iconCommitting.IsAnimating = true;
-
             Models.Watcher.SetEnabled(repo.Path, false);
             var succ = await Task.Run(() => new Commands.Commit(repo.Path, CommitMessage, false).Exec());
+
             if (succ)
             {
                 new Popups.Push(repo, repo.Branches.Find(x => x.IsCurrent)).ShowAndStart();
                 ClearMessage();
             }
+
             iconCommitting.IsAnimating = false;
             iconCommitting.Visibility = Visibility.Collapsed;
             Models.Watcher.SetEnabled(repo.Path, true);
-
             e.Handled = true;
         }
 

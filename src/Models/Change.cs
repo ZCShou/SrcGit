@@ -30,18 +30,46 @@ namespace SrcGit.Models
             Untracked,
         }
 
-        public Status Index { get; set; }
-        public Status WorkTree { get; set; } = Status.None;
-        public string Path { get; set; } = "";
-        public string OriginalPath { get; set; } = "";
+        public Status Index
+        {
+            get;
+            set;
+        }
+        public Status WorkTree
+        {
+            get;
+            set;
+        } = Status.None;
+        public string Path
+        {
+            get;
+            set;
+        } = "";
+        public string OriginalPath
+        {
+            get;
+            set;
+        } = "";
 
         public bool IsConflit
         {
             get
             {
-                if (Index == Status.Unmerged || WorkTree == Status.Unmerged) return true;
-                if (Index == Status.Added && WorkTree == Status.Added) return true;
-                if (Index == Status.Deleted && WorkTree == Status.Deleted) return true;
+                if (Index == Status.Unmerged || WorkTree == Status.Unmerged)
+                {
+                    return true;
+                }
+
+                if (Index == Status.Added && WorkTree == Status.Added)
+                {
+                    return true;
+                }
+
+                if (Index == Status.Deleted && WorkTree == Status.Deleted)
+                {
+                    return true;
+                }
+
                 return false;
             }
         }
@@ -54,6 +82,7 @@ namespace SrcGit.Models
             if (index == Status.Renamed || workTree == Status.Renamed)
             {
                 var idx = Path.IndexOf('\t');
+
                 if (idx >= 0)
                 {
                     OriginalPath = Path.Substring(0, idx);
@@ -62,6 +91,7 @@ namespace SrcGit.Models
                 else
                 {
                     idx = Path.IndexOf(" -> ");
+
                     if (idx > 0)
                     {
                         OriginalPath = Path.Substring(0, idx);
@@ -70,8 +100,15 @@ namespace SrcGit.Models
                 }
             }
 
-            if (Path[0] == '"') Path = Path.Substring(1, Path.Length - 2);
-            if (!string.IsNullOrEmpty(OriginalPath) && OriginalPath[0] == '"') OriginalPath = OriginalPath.Substring(1, OriginalPath.Length - 2);
+            if (Path[0] == '"')
+            {
+                Path = Path.Substring(1, Path.Length - 2);
+            }
+
+            if (!string.IsNullOrEmpty(OriginalPath) && OriginalPath[0] == '"')
+            {
+                OriginalPath = OriginalPath.Substring(1, OriginalPath.Length - 2);
+            }
         }
     }
 }

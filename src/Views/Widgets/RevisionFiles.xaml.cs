@@ -28,12 +28,32 @@ namespace SrcGit.Views.Widgets
         /// </summary>
         public class FileNode
         {
-            public Models.ObjectType Type { get; set; } = Models.ObjectType.None;
-            public string Path { get; set; } = "";
-            public string SHA { get; set; } = null;
-            public bool IsExpanded { get; set; } = false;
+            public Models.ObjectType Type
+            {
+                get;
+                set;
+            } = Models.ObjectType.None;
+            public string Path
+            {
+                get;
+                set;
+            } = "";
+            public string SHA
+            {
+                get;
+                set;
+            } = null;
+            public bool IsExpanded
+            {
+                get;
+                set;
+            } = false;
             public bool IsFolder => Type == Models.ObjectType.None;
-            public List<FileNode> Children { get; set; } = new List<FileNode>();
+            public List<FileNode> Children
+            {
+                get;
+                set;
+            } = new List<FileNode>();
         }
 
         public RevisionFiles()
@@ -46,12 +66,18 @@ namespace SrcGit.Views.Widgets
             this.repo = repo;
             this.sha = sha;
             this.isLFSEnabled = new Commands.LFS(repo).IsEnabled();
-
-            var cmd = new Commands.RevisionObjects(repo, sha) { Ctx = cancelToken };
+            var cmd = new Commands.RevisionObjects(repo, sha)
+            {
+                Ctx = cancelToken
+            };
             Task.Run(() =>
             {
                 var objects = cmd.Result();
-                if (cmd.Ctx.IsCancelRequested) return;
+
+                if (cmd.Ctx.IsCancelRequested)
+                {
+                    return;
+                }
 
                 cached = objects;
                 ShowVisibles();
@@ -78,7 +104,10 @@ namespace SrcGit.Views.Widgets
             {
                 foreach (var obj in cached)
                 {
-                    if (obj.Path.ToUpper().Contains(filter)) visibles.Add(obj);
+                    if (obj.Path.ToUpper().Contains(filter))
+                    {
+                        visibles.Add(obj);
+                    }
                 }
             }
 
@@ -87,6 +116,7 @@ namespace SrcGit.Views.Widgets
             foreach (var obj in visibles)
             {
                 var sepIdx = obj.Path.IndexOf('/');
+
                 if (sepIdx == -1)
                 {
                     nodes.Add(new FileNode()
@@ -104,6 +134,7 @@ namespace SrcGit.Views.Widgets
                     while (sepIdx != -1)
                     {
                         var folder = obj.Path.Substring(0, sepIdx);
+
                         if (folders.ContainsKey(folder))
                         {
                             lastFolder = folders[folder];
@@ -149,9 +180,7 @@ namespace SrcGit.Views.Widgets
 
             folders.Clear();
             visibles.Clear();
-
             SortFileNodes(nodes);
-
             Dispatcher.Invoke(() =>
             {
                 treeFiles.ItemsSource = nodes;
@@ -175,19 +204,22 @@ namespace SrcGit.Views.Widgets
 
             foreach (var node in nodes)
             {
-                if (node.Children.Count > 1) SortFileNodes(node.Children);
+                if (node.Children.Count > 1)
+                {
+                    SortFileNodes(node.Children);
+                }
             }
         }
 
         private bool IsImageFile(string path)
         {
             return path.EndsWith(".png") ||
-                path.EndsWith(".jpg") ||
-                path.EndsWith(".jpeg") ||
-                path.EndsWith(".ico") ||
-                path.EndsWith(".bmp") ||
-                path.EndsWith(".tiff") ||
-                path.EndsWith(".gif");
+                   path.EndsWith(".jpg") ||
+                   path.EndsWith(".jpeg") ||
+                   path.EndsWith(".ico") ||
+                   path.EndsWith(".bmp") ||
+                   path.EndsWith(".tiff") ||
+                   path.EndsWith(".gif");
         }
 
         #region EVENTS
@@ -202,25 +234,34 @@ namespace SrcGit.Views.Widgets
                 12.0,
                 Brushes.Black,
                 VisualTreeHelper.GetDpi(this).PixelsPerDip);
-
             var offset = formatted.Width + 16;
-            if (lines.Count * 16 > layerTextPreview.ActualHeight) offset += 8;
+
+            if (lines.Count * 16 > layerTextPreview.ActualHeight)
+            {
+                offset += 8;
+            }
 
             txtPreviewData.ItemsSource = lines;
             txtPreviewData.Columns[0].Width = new DataGridLength(formatted.Width + 16, DataGridLengthUnitType.Pixel);
             txtPreviewData.Columns[1].Width = DataGridLength.Auto;
             txtPreviewData.Columns[1].Width = DataGridLength.SizeToCells;
             txtPreviewData.Columns[1].MinWidth = layerTextPreview.ActualWidth - offset;
-
             txtPreviewSplitter.Margin = new Thickness(formatted.Width + 15, 0, 0, 0);
         }
 
         private void OnTextPreviewSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (txtPreviewData == null) return;
+            if (txtPreviewData == null)
+            {
+                return;
+            }
 
             var offset = txtPreviewData.NonFrozenColumnsViewportHorizontalOffset;
-            if (txtPreviewData.Items.Count * 16 > layerTextPreview.ActualHeight) offset += 8;
+
+            if (txtPreviewData.Items.Count * 16 > layerTextPreview.ActualHeight)
+            {
+                offset += 8;
+            }
 
             txtPreviewData.Columns[1].Width = DataGridLength.Auto;
             txtPreviewData.Columns[1].Width = DataGridLength.SizeToCells;
@@ -231,27 +272,38 @@ namespace SrcGit.Views.Widgets
         private void OnTextPreviewContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
             var grid = sender as DataGrid;
-            if (grid == null) return;
+
+            if (grid == null)
+            {
+                return;
+            }
 
             var menu = new ContextMenu();
-
             var copyIcon = new System.Windows.Shapes.Path();
             copyIcon.Data = FindResource("Icon.Copy") as Geometry;
             copyIcon.Width = 10;
-
             var copy = new MenuItem();
             copy.Header = "Copy";
             copy.Icon = copyIcon;
             copy.Click += (o, ev) =>
             {
                 var items = grid.SelectedItems;
-                if (items.Count == 0) return;
+
+                if (items.Count == 0)
+                {
+                    return;
+                }
 
                 var builder = new StringBuilder();
+
                 foreach (var item in items)
                 {
                     var line = item as Models.TextLine;
-                    if (line == null) continue;
+
+                    if (line == null)
+                    {
+                        continue;
+                    }
 
                     builder.Append(line.Data);
                     builder.AppendLine();
@@ -272,9 +324,13 @@ namespace SrcGit.Views.Widgets
             layerBinaryPreview.Visibility = Visibility.Collapsed;
             txtPreviewData.ItemsSource = null;
 
-            if (treeFiles.Selected.Count == 0) return;
+            if (treeFiles.Selected.Count == 0)
+            {
+                return;
+            }
 
             var node = treeFiles.Selected[0] as FileNode;
+
             switch (node.Type)
             {
                 case Models.ObjectType.Blob:
@@ -282,7 +338,6 @@ namespace SrcGit.Views.Widgets
                     {
                         var tmp = Path.GetTempFileName();
                         new Commands.SaveRevisionFile(repo, node.Path, sha, tmp).Exec();
-
                         layerImagePreview.Visibility = Visibility.Visible;
                         imgPreviewData.Source = new BitmapImage(new Uri(tmp, UriKind.Absolute));
                     }
@@ -306,22 +361,27 @@ namespace SrcGit.Views.Widgets
                             Dispatcher.Invoke(() => LayoutTextPreview(lines));
                         });
                     }
+
                     break;
+
                 case Models.ObjectType.Tag:
                     layerRevisionPreview.Visibility = Visibility.Visible;
                     iconRevisionPreview.Data = FindResource("Icon.Tag") as Geometry;
                     txtRevisionPreview.Text = "TAG: " + node.SHA;
                     break;
+
                 case Models.ObjectType.Commit:
                     layerRevisionPreview.Visibility = Visibility.Visible;
                     iconRevisionPreview.Data = FindResource("Icon.Submodule") as Geometry;
                     txtRevisionPreview.Text = "SUBMODULE: " + node.SHA;
                     break;
+
                 case Models.ObjectType.Tree:
                     layerRevisionPreview.Visibility = Visibility.Visible;
                     iconRevisionPreview.Data = FindResource("Icon.Tree") as Geometry;
                     txtRevisionPreview.Text = "TREE: " + node.SHA;
                     break;
+
                 default:
                     return;
             }
@@ -330,10 +390,18 @@ namespace SrcGit.Views.Widgets
         private void OnFilesContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
             var item = sender as Controls.TreeItem;
-            if (item == null) return;
+
+            if (item == null)
+            {
+                return;
+            }
 
             var node = item.DataContext as FileNode;
-            if (node == null || node.IsFolder) return;
+
+            if (node == null || node.IsFolder)
+            {
+                return;
+            }
 
             var history = new MenuItem();
             history.Header = App.Text("FileHistory");
@@ -343,7 +411,6 @@ namespace SrcGit.Views.Widgets
                 viewer.Show();
                 ev.Handled = true;
             };
-
             var blame = new MenuItem();
             blame.Header = App.Text("Blame");
             blame.Click += (obj, ev) =>
@@ -352,7 +419,6 @@ namespace SrcGit.Views.Widgets
                 viewer.Show();
                 ev.Handled = true;
             };
-
             var explore = new MenuItem();
             explore.Header = App.Text("RevealFile");
             explore.Click += (o, ev) =>
@@ -361,21 +427,21 @@ namespace SrcGit.Views.Widgets
                 Process.Start("explorer", $"/select,{full}");
                 ev.Handled = true;
             };
-
             var saveAs = new MenuItem();
             saveAs.Header = App.Text("SaveAs");
             saveAs.IsEnabled = node.Type == Models.ObjectType.Blob;
             saveAs.Click += (obj, ev) =>
             {
                 var dialog = new Controls.FolderDialog();
+
                 if (dialog.ShowDialog() == true)
                 {
                     var full = Path.Combine(dialog.SelectedPath, Path.GetFileName(node.Path));
                     new Commands.SaveRevisionFile(repo, node.Path, sha, full).Exec();
                 }
+
                 ev.Handled = true;
             };
-
             var copyPath = new MenuItem();
             copyPath.Header = App.Text("CopyPath");
             copyPath.Click += (obj, ev) =>
@@ -383,14 +449,12 @@ namespace SrcGit.Views.Widgets
                 Clipboard.SetDataObject(node.Path, true);
                 ev.Handled = true;
             };
-
             var menu = new ContextMenu();
             menu.Items.Add(history);
             menu.Items.Add(blame);
             menu.Items.Add(explore);
             menu.Items.Add(saveAs);
             menu.Items.Add(copyPath);
-
             menu.IsOpen = true;
             e.Handled = true;
         }

@@ -11,27 +11,39 @@ namespace SrcGit.Views.Controls
     class ChangeStatusIcon : FrameworkElement
     {
         public static readonly DependencyProperty ChangeProperty = DependencyProperty.Register(
-            "Change",
-            typeof(Models.Change),
-            typeof(ChangeStatusIcon),
-            new PropertyMetadata(null, ForceDirty));
+                    "Change",
+                    typeof(Models.Change),
+                    typeof(ChangeStatusIcon),
+                    new PropertyMetadata(null, ForceDirty));
 
         public Models.Change Change
         {
-            get { return (Models.Change)GetValue(ChangeProperty); }
-            set { SetValue(ChangeProperty, value); }
+            get
+            {
+                return (Models.Change)GetValue(ChangeProperty);
+            }
+            set
+            {
+                SetValue(ChangeProperty, value);
+            }
         }
 
         public static readonly DependencyProperty IsLocalChangeProperty = DependencyProperty.Register(
-            "IsLocalChange",
-            typeof(bool),
-            typeof(ChangeStatusIcon),
-            new PropertyMetadata(false, ForceDirty));
+                    "IsLocalChange",
+                    typeof(bool),
+                    typeof(ChangeStatusIcon),
+                    new PropertyMetadata(false, ForceDirty));
 
         public bool IsLocalChange
         {
-            get { return (bool)GetValue(IsLocalChangeProperty); }
-            set { SetValue(IsLocalChangeProperty, value); }
+            get
+            {
+                return (bool)GetValue(IsLocalChangeProperty);
+            }
+            set
+            {
+                SetValue(IsLocalChangeProperty, value);
+            }
         }
 
         private Brush background;
@@ -45,7 +57,11 @@ namespace SrcGit.Views.Controls
 
         protected override void OnRender(DrawingContext dc)
         {
-            if (background == null || label == null) return;
+            if (background == null || label == null)
+            {
+                return;
+            }
+
             var corner = Math.Max(2, Width / 16);
             dc.DrawRoundedRectangle(background, null, new Rect(0, 0, Width, Height), corner, corner);
             dc.DrawText(label, new Point((Width - label.Width) * 0.5, 0));
@@ -54,7 +70,11 @@ namespace SrcGit.Views.Controls
         private static void ForceDirty(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var icon = d as ChangeStatusIcon;
-            if (icon == null) return;
+
+            if (icon == null)
+            {
+                return;
+            }
 
             if (icon.Change == null)
             {
@@ -64,6 +84,7 @@ namespace SrcGit.Views.Controls
             }
 
             string txt;
+
             if (icon.IsLocalChange)
             {
                 if (icon.Change.IsConflit)
@@ -91,7 +112,6 @@ namespace SrcGit.Views.Controls
                 icon.Width * 0.8,
                 new SolidColorBrush(Color.FromRgb(241, 241, 241)),
                 VisualTreeHelper.GetDpi(icon).PixelsPerDip);
-
             icon.InvalidateVisual();
         }
 
@@ -99,14 +119,29 @@ namespace SrcGit.Views.Controls
         {
             switch (status)
             {
-                case Models.Change.Status.Modified: return new LinearGradientBrush(Color.FromRgb(238, 160, 14), Color.FromRgb(228, 172, 67), 90);
-                case Models.Change.Status.Added: return new LinearGradientBrush(Color.FromRgb(47, 185, 47), Color.FromRgb(75, 189, 75), 90);
-                case Models.Change.Status.Deleted: return new LinearGradientBrush(Colors.Tomato, Color.FromRgb(252, 165, 150), 90);
-                case Models.Change.Status.Renamed: return new LinearGradientBrush(Colors.Orchid, Color.FromRgb(248, 161, 245), 90);
-                case Models.Change.Status.Copied: return new LinearGradientBrush(Color.FromRgb(238, 160, 14), Color.FromRgb(228, 172, 67), 90);
-                case Models.Change.Status.Unmerged: return new LinearGradientBrush(Color.FromRgb(238, 160, 14), Color.FromRgb(228, 172, 67), 90);
-                case Models.Change.Status.Untracked: return new LinearGradientBrush(Color.FromRgb(47, 185, 47), Color.FromRgb(75, 189, 75), 90);
-                default: return Brushes.Transparent;
+                case Models.Change.Status.Modified:
+                    return new LinearGradientBrush(Color.FromRgb(238, 160, 14), Color.FromRgb(228, 172, 67), 90);
+
+                case Models.Change.Status.Added:
+                    return new LinearGradientBrush(Color.FromRgb(47, 185, 47), Color.FromRgb(75, 189, 75), 90);
+
+                case Models.Change.Status.Deleted:
+                    return new LinearGradientBrush(Colors.Tomato, Color.FromRgb(252, 165, 150), 90);
+
+                case Models.Change.Status.Renamed:
+                    return new LinearGradientBrush(Colors.Orchid, Color.FromRgb(248, 161, 245), 90);
+
+                case Models.Change.Status.Copied:
+                    return new LinearGradientBrush(Color.FromRgb(238, 160, 14), Color.FromRgb(228, 172, 67), 90);
+
+                case Models.Change.Status.Unmerged:
+                    return new LinearGradientBrush(Color.FromRgb(238, 160, 14), Color.FromRgb(228, 172, 67), 90);
+
+                case Models.Change.Status.Untracked:
+                    return new LinearGradientBrush(Color.FromRgb(47, 185, 47), Color.FromRgb(75, 189, 75), 90);
+
+                default:
+                    return Brushes.Transparent;
             }
         }
 
@@ -114,14 +149,29 @@ namespace SrcGit.Views.Controls
         {
             switch (status)
             {
-                case Models.Change.Status.Modified: return "±";
-                case Models.Change.Status.Added: return "+";
-                case Models.Change.Status.Deleted: return "−";
-                case Models.Change.Status.Renamed: return "➜";
-                case Models.Change.Status.Copied: return "❏";
-                case Models.Change.Status.Unmerged: return "U";
-                case Models.Change.Status.Untracked: return "★";
-                default: return "?";
+                case Models.Change.Status.Modified:
+                    return "±";
+
+                case Models.Change.Status.Added:
+                    return "+";
+
+                case Models.Change.Status.Deleted:
+                    return "?";
+
+                case Models.Change.Status.Renamed:
+                    return "?";
+
+                case Models.Change.Status.Copied:
+                    return "?";
+
+                case Models.Change.Status.Unmerged:
+                    return "U";
+
+                case Models.Change.Status.Untracked:
+                    return "★";
+
+                default:
+                    return "?";
             }
         }
     }

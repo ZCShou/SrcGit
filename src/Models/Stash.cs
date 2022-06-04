@@ -5,9 +5,25 @@ namespace SrcGit.Models
     /// </summary>
     public class Stash
     {
-        public string Name { get; set; } = "";
-        public string SHA { get; set; } = "";
-        public User Author { get; set; } = new User();
-        public string Message { get; set; } = "";
+        public string Name
+        {
+            get;
+            set;
+        } = "";
+        public string SHA
+        {
+            get;
+            set;
+        } = "";
+        public User Author
+        {
+            get;
+            set;
+        } = new User();
+        public string Message
+        {
+            get;
+            set;
+        } = "";
     }
 }

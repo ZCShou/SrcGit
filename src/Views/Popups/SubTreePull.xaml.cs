@@ -13,8 +13,14 @@ namespace SrcGit.Views.Popups
 
         public string Branch
         {
-            get { return subtree.Branch; }
-            set { subtree.Branch = value; }
+            get
+            {
+                return subtree.Branch;
+            }
+            set
+            {
+                subtree.Branch = value;
+            }
         }
 
         public SubTreePull(string repo, Models.SubTree subtree)
@@ -34,10 +40,13 @@ namespace SrcGit.Views.Popups
         public override Task<bool> Start()
         {
             txtBranch.GetBindingExpression(TextBox.TextProperty).UpdateSource();
-            if (Validation.GetHasError(txtBranch)) return null;
+
+            if (Validation.GetHasError(txtBranch))
+            {
+                return null;
+            }
 
             var squash = chkSquash.IsChecked == true;
-
             return Task.Run(() =>
             {
                 Models.Watcher.SetEnabled(repo, false);

@@ -11,8 +11,17 @@ namespace SrcGit.Views.Validations
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             var name = value as string;
-            if (string.IsNullOrEmpty(name)) return ValidationResult.ValidResult;
-            if (!REG_FORMAT.IsMatch(name)) return new ValidationResult(false, App.Text("BadLocalName"));
+
+            if (string.IsNullOrEmpty(name))
+            {
+                return ValidationResult.ValidResult;
+            }
+
+            if (!REG_FORMAT.IsMatch(name))
+            {
+                return new ValidationResult(false, App.Text("BadLocalName"));
+            }
+
             return ValidationResult.ValidResult;
         }
     }

@@ -15,15 +15,21 @@ namespace SrcGit.Views.Controls
         private Path icon = null;
 
         public static readonly DependencyProperty IsAnimatingProperty = DependencyProperty.Register(
-            "IsAnimating",
-            typeof(bool),
-            typeof(Loading),
-            new PropertyMetadata(false, OnIsAnimatingChanged));
+                    "IsAnimating",
+                    typeof(bool),
+                    typeof(Loading),
+                    new PropertyMetadata(false, OnIsAnimatingChanged));
 
         public bool IsAnimating
         {
-            get { return (bool)GetValue(IsAnimatingProperty); }
-            set { SetValue(IsAnimatingProperty, value); }
+            get
+            {
+                return (bool)GetValue(IsAnimatingProperty);
+            }
+            set
+            {
+                SetValue(IsAnimatingProperty, value);
+            }
         }
 
         public Loading()
@@ -34,14 +40,17 @@ namespace SrcGit.Views.Controls
             icon.RenderTransform = new RotateTransform(0);
             icon.Width = double.NaN;
             icon.Height = double.NaN;
-
             AddChild(icon);
         }
 
         private static void OnIsAnimatingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var loading = d as Loading;
-            if (loading == null) return;
+
+            if (loading == null)
+            {
+                return;
+            }
 
             if (loading.IsAnimating)
             {

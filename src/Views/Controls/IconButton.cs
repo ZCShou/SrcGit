@@ -10,27 +10,39 @@ namespace SrcGit.Views.Controls
     public class IconButton : Button
     {
         public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
-            "Icon",
-            typeof(Geometry),
-            typeof(IconButton),
-            new PropertyMetadata(null));
+                    "Icon",
+                    typeof(Geometry),
+                    typeof(IconButton),
+                    new PropertyMetadata(null));
 
         public Geometry Icon
         {
-            get { return (Geometry)GetValue(IconProperty); }
-            set { SetValue(IconProperty, value); }
+            get
+            {
+                return (Geometry)GetValue(IconProperty);
+            }
+            set
+            {
+                SetValue(IconProperty, value);
+            }
         }
 
         public static readonly DependencyProperty HoverBackgroundProperty = DependencyProperty.Register(
-            "HoverBackground",
-            typeof(Brush),
-            typeof(IconButton),
-            new PropertyMetadata(Brushes.Transparent));
+                    "HoverBackground",
+                    typeof(Brush),
+                    typeof(IconButton),
+                    new PropertyMetadata(Brushes.Transparent));
 
         public Brush HoverBackground
         {
-            get { return (Brush)GetValue(HoverBackgroundProperty); }
-            set { SetValue(HoverBackgroundProperty, value); }
+            get
+            {
+                return (Brush)GetValue(HoverBackgroundProperty);
+            }
+            set
+            {
+                SetValue(HoverBackgroundProperty, value);
+            }
         }
     }
 }

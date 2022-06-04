@@ -5,7 +5,15 @@ namespace SrcGit.Models
     /// </summary>
     public class Remote
     {
-        public string Name { get; set; }
-        public string URL { get; set; }
+        public string Name
+        {
+            get;
+            set;
+        }
+        public string URL
+        {
+            get;
+            set;
+        }
     }
 }

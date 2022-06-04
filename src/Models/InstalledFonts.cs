@@ -9,15 +9,22 @@ namespace SrcGit.Models
 {
     public class InstalledFont
     {
-        public string Name { get; set; }
-        public int FamilyIndex { get; set; }
+        public string Name
+        {
+            get;
+            set;
+        }
+        public int FamilyIndex
+        {
+            get;
+            set;
+        }
 
         public static List<InstalledFont> GetFonts
         {
             get
             {
                 var fontList = new List<InstalledFont>();
-
                 var fontCollection = Fonts.SystemFontFamilies;
                 var familyCount = fontCollection.Count;
 
@@ -42,7 +49,6 @@ namespace SrcGit.Models
                 }
 
                 fontList.Sort((p, n) => string.Compare(p.Name, n.Name, StringComparison.Ordinal));
-
                 return fontList;
             }
         }

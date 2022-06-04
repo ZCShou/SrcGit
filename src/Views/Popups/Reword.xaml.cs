@@ -11,7 +11,11 @@ namespace SrcGit.Views.Popups
         private string repo = null;
         private string old = null;
 
-        public string Msg { get; set; }
+        public string Msg
+        {
+            get;
+            set;
+        }
 
         public Reword(string repo, Models.Commit commit)
         {
@@ -19,7 +23,6 @@ namespace SrcGit.Views.Popups
             this.old = $"{commit.Subject}\n{commit.Message}".Trim();
             this.Msg = old;
             InitializeComponent();
-
             txtSHA.Text = commit.ShortSHA;
             txtCurrent.Text = commit.Subject;
         }
@@ -32,11 +35,18 @@ namespace SrcGit.Views.Popups
         public override Task<bool> Start()
         {
             txtMsg.GetBindingExpression(TextBox.TextProperty).UpdateSource();
-            if (Validation.GetHasError(txtMsg)) return null;
+
+            if (Validation.GetHasError(txtMsg))
+            {
+                return null;
+            }
 
             return Task.Run(() =>
             {
-                if (old == Msg) return true;
+                if (old == Msg)
+                {
+                    return true;
+                }
 
                 Models.Watcher.SetEnabled(repo, false);
                 new Commands.Reword(repo, Msg).Exec();

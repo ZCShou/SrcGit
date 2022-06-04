@@ -7,15 +7,28 @@ namespace SrcGit.Models
     /// </summary>
     public class WhitespaceOption
     {
-        public string Name { get; set; }
-        public string Desc { get; set; }
-        public string Arg { get; set; }
+        public string Name
+        {
+            get;
+            set;
+        }
+        public string Desc
+        {
+            get;
+            set;
+        }
+        public string Arg
+        {
+            get;
+            set;
+        }
 
-        public static List<WhitespaceOption> Supported = new List<WhitespaceOption>() {
+        public static List<WhitespaceOption> Supported = new List<WhitespaceOption>()
+        {
             new WhitespaceOption("Apply.NoWarn", "Apply.NoWarn.Desc", "nowarn"),
-            new WhitespaceOption("Apply.Warn", "Apply.Warn.Desc", "warn"),
-            new WhitespaceOption("Apply.Error", "Apply.Error.Desc", "error"),
-            new WhitespaceOption("Apply.ErrorAll", "Apply.ErrorAll.Desc", "error-all")
+                new WhitespaceOption("Apply.Warn", "Apply.Warn.Desc", "warn"),
+                new WhitespaceOption("Apply.Error", "Apply.Error.Desc", "error"),
+                new WhitespaceOption("Apply.ErrorAll", "Apply.ErrorAll.Desc", "error-all")
         };
 
         public WhitespaceOption(string n, string d, string a)

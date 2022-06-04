@@ -14,9 +14,7 @@ namespace SrcGit.Views.Popups
         {
             this.repo = repo;
             this.commit = commit.SHA;
-
             InitializeComponent();
-
             txtSHA.Text = commit.ShortSHA;
             txtCommit.Text = commit.Subject;
         }
@@ -29,7 +27,6 @@ namespace SrcGit.Views.Popups
         public override Task<bool> Start()
         {
             var commitChanges = chkCommit.IsChecked == true;
-
             return Task.Run(() =>
             {
                 Models.Watcher.SetEnabled(repo, false);

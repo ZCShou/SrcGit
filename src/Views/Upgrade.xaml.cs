@@ -8,7 +8,11 @@ namespace SrcGit.Views
     /// </summary>
     public partial class Upgrade : Controls.Window
     {
-        public Models.Version Version { get; set; } = new Models.Version();
+        public Models.Version Version
+        {
+            get;
+            set;
+        } = new Models.Version();
 
         public Upgrade(Models.Version ver)
         {

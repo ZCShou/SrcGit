@@ -22,10 +22,16 @@ namespace SrcGit.Commands
         public override void OnReadline(string line)
         {
             var ch = line[0];
+
             if (ch == '-')
             {
-                if (change.Old == null) change.Old = new Models.LFSObject();
+                if (change.Old == null)
+                {
+                    change.Old = new Models.LFSObject();
+                }
+
                 line = line.Substring(1);
+
                 if (line.StartsWith("oid sha256:"))
                 {
                     change.Old.OID = line.Substring(11);
@@ -37,8 +43,13 @@ namespace SrcGit.Commands
             }
             else if (ch == '+')
             {
-                if (change.New == null) change.New = new Models.LFSObject();
+                if (change.New == null)
+                {
+                    change.New = new Models.LFSObject();
+                }
+
                 line = line.Substring(1);
+
                 if (line.StartsWith("oid sha256:"))
                 {
                     change.New.OID = line.Substring(11);

@@ -12,6 +12,7 @@ namespace SrcGit.Commands
         public SaveChangeToStream(string repo, Models.Change change, StreamWriter to)
         {
             Cwd = repo;
+
             if (change.WorkTree == Models.Change.Status.Added || change.WorkTree == Models.Change.Status.Untracked)
             {
                 Args = $"diff --no-index --no-ext-diff --find-renames -- /dev/null \"{change.Path}\"";
@@ -19,9 +20,15 @@ namespace SrcGit.Commands
             else
             {
                 var pathspec = $"\"{change.Path}\"";
-                if (!string.IsNullOrEmpty(change.OriginalPath)) pathspec = $"\"{change.OriginalPath}\" \"{change.Path}\"";
+
+                if (!string.IsNullOrEmpty(change.OriginalPath))
+                {
+                    pathspec = $"\"{change.OriginalPath}\" \"{change.Path}\"";
+                }
+
                 Args = $"diff --binary --no-ext-diff --find-renames --full-index -- {pathspec}";
             }
+
             writer = to;
         }
 

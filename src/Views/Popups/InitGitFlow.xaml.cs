@@ -28,12 +28,12 @@ namespace SrcGit.Views.Popups
             var release = txtRelease.Text;
             var hotfix = txtHotfix.Text;
             var version = txtTag.Text;
-
             return Task.Run(() =>
             {
                 Models.Watcher.SetEnabled(repo.Path, false);
                 var succ = new Commands.GitFlow(repo.Path).Init(master, dev, feature, release, hotfix, version);
                 var cmd = new Commands.Config(repo.Path);
+
                 if (succ)
                 {
                     repo.GitFlow.Feature = cmd.Get("gitflow.prefix.feature");
@@ -51,6 +51,7 @@ namespace SrcGit.Views.Popups
                     cmd.Set("gitflow.prefix.support", null);
                     cmd.Set("gitflow.prefix.versiontag", null);
                 }
+
                 Models.Watcher.SetEnabled(repo.Path, true);
                 return true;
             });

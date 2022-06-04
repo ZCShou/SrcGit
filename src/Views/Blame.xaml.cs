@@ -14,7 +14,8 @@ namespace SrcGit.Views
     /// </summary>
     public partial class Blame : Controls.Window
     {
-        private static readonly Brush[] BG = new Brush[] {
+        private static readonly Brush[] BG = new Brush[]
+        {
             Brushes.Transparent,
             new SolidColorBrush(Color.FromArgb(128, 0, 0, 0))
         };
@@ -29,11 +30,22 @@ namespace SrcGit.Views
 
             public event PropertyChangedEventHandler PropertyChanged;
 
-            public Models.BlameLine Line { get; set; }
-            public Brush OrgBG { get; set; }
+            public Models.BlameLine Line
+            {
+                get;
+                set;
+            }
+            public Brush OrgBG
+            {
+                get;
+                set;
+            }
             public Brush BG
             {
-                get { return bg; }
+                get
+                {
+                    return bg;
+                }
                 set
                 {
                     if (value != bg)
@@ -45,19 +57,22 @@ namespace SrcGit.Views
             }
         }
 
-        public ObservableCollection<Record> Records { get; set; }
+        public ObservableCollection<Record> Records
+        {
+            get;
+            set;
+        }
 
         public Blame(string repo, string file, string revision)
         {
             InitializeComponent();
-
             this.repo = repo;
             Records = new ObservableCollection<Record>();
             txtFile.Text = $"{file}@{revision.Substring(0, 8)}";
-
             Task.Run(() =>
             {
                 var lfs = new Commands.LFS(repo).IsFiltered(file);
+
                 if (lfs)
                 {
                     Dispatcher.Invoke(() =>
@@ -70,6 +85,7 @@ namespace SrcGit.Views
                 }
 
                 var rs = new Commands.Blame(repo, file, revision).Result();
+
                 if (rs.IsBinary)
                 {
                     Dispatcher.Invoke(() =>
@@ -94,7 +110,6 @@ namespace SrcGit.Views
                     {
                         loading.IsAnimating = false;
                         loading.Visibility = Visibility.Collapsed;
-
                         var formatted = new FormattedText(
                             $"{Records.Count}",
                             CultureInfo.CurrentCulture,
@@ -103,10 +118,14 @@ namespace SrcGit.Views
                             12.0,
                             Brushes.Black,
                             VisualTreeHelper.GetDpi(this).PixelsPerDip);
-
                         var lineNumberWidth = formatted.Width + 16;
                         var minWidth = blame.ActualWidth - lineNumberWidth;
-                        if (Records.Count * 16 > blame.ActualHeight) minWidth -= 8;
+
+                        if (Records.Count * 16 > blame.ActualHeight)
+                        {
+                            minWidth -= 8;
+                        }
+
                         blame.Columns[0].Width = lineNumberWidth;
                         blame.Columns[1].MinWidth = minWidth;
                         blame.ItemsSource = Records;
@@ -143,8 +162,8 @@ namespace SrcGit.Views
         private T GetVisualChild<T>(DependencyObject parent) where T : Visual
         {
             T child = null;
-
             int count = VisualTreeHelper.GetChildrenCount(parent);
+
             for (int i = 0; i < count; i++)
             {
                 Visual v = (Visual)VisualTreeHelper.GetChild(parent, i);
@@ -169,9 +188,12 @@ namespace SrcGit.Views
             var total = blame.ActualWidth;
             var offset = blame.NonFrozenColumnsViewportHorizontalOffset;
             var minWidth = total - offset;
-
             var scroller = GetVisualChild<ScrollViewer>(blame);
-            if (scroller != null && scroller.ComputedVerticalScrollBarVisibility == Visibility.Visible) minWidth -= 8;
+
+            if (scroller != null && scroller.ComputedVerticalScrollBarVisibility == Visibility.Visible)
+            {
+                minWidth -= 8;
+            }
 
             blame.Columns[1].MinWidth = minWidth;
             blame.Columns[1].Width = DataGridLength.SizeToCells;
@@ -186,7 +208,11 @@ namespace SrcGit.Views
         private void OnViewerContextMenuOpening(object sender, ContextMenuEventArgs ev)
         {
             var record = (sender as DataGridRow).DataContext as Record;
-            if (record == null) return;
+
+            if (record == null)
+            {
+                return;
+            }
 
             foreach (var r in Records)
             {
@@ -207,7 +233,6 @@ namespace SrcGit.Views
                 Models.Watcher.Get(repo).NavigateTo(record.Line.CommitSHA);
                 e.Handled = true;
             };
-
             commitID.Content = link;
             authorName.Text = record.Line.Author;
             authorTime.Text = record.Line.Time;

@@ -28,6 +28,7 @@ namespace SrcGit.Commands
         public void SetUpstream(string upstream)
         {
             Args = $"branch {target} ";
+
             if (string.IsNullOrEmpty(upstream))
             {
                 Args += "--unset-upstream";
@@ -36,6 +37,7 @@ namespace SrcGit.Commands
             {
                 Args += $"-u {upstream}";
             }
+
             Exec();
         }
 

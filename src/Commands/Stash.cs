@@ -18,8 +18,8 @@ namespace SrcGit.Commands
             var temp = Path.GetTempFileName();
             var stream = new FileStream(temp, FileMode.Create);
             var writer = new StreamWriter(stream);
-
             var needAdd = new List<string>();
+
             foreach (var c in changes)
             {
                 writer.WriteLine(c.Path);
@@ -27,6 +27,7 @@ namespace SrcGit.Commands
                 if (c.WorkTree == Models.Change.Status.Added || c.WorkTree == Models.Change.Status.Untracked)
                 {
                     needAdd.Add(c.Path);
+
                     if (needAdd.Count > 10)
                     {
                         new Add(Cwd, needAdd).Exec();
@@ -34,6 +35,7 @@ namespace SrcGit.Commands
                     }
                 }
             }
+
             if (needAdd.Count > 0)
             {
                 new Add(Cwd, needAdd).Exec();
@@ -44,7 +46,6 @@ namespace SrcGit.Commands
             stream.Flush();
             writer.Close();
             stream.Close();
-
             Args = $"stash push -m \"{message}\" --pathspec-from-file=\"{temp}\"";
             var succ = Exec();
             File.Delete(temp);

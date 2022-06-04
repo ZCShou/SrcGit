@@ -9,7 +9,12 @@ namespace SrcGit.Views.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var b = value as Models.Branch;
-            if (b == null) return "";
+
+            if (b == null)
+            {
+                return "";
+            }
+
             return string.IsNullOrEmpty(b.Remote) ? b.Name : $"{b.Remote}/{b.Name}";
         }
 

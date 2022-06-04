@@ -36,7 +36,11 @@ namespace SrcGit.Commands
         public bool IsEnabled()
         {
             var path = Path.Combine(repo, ".git", "hooks", "pre-push");
-            if (!File.Exists(path)) return false;
+
+            if (!File.Exists(path))
+            {
+                return false;
+            }
 
             var content = File.ReadAllText(path);
             return content.Contains("git lfs pre-push");
@@ -47,7 +51,6 @@ namespace SrcGit.Commands
             var cmd = new Command();
             cmd.Cwd = repo;
             cmd.Args = $"check-attr -a -z \"{path}\"";
-
             var rs = cmd.ReadToEnd();
             return rs.Output.Contains("filter\0lfs");
         }

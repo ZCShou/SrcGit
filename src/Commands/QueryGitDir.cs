@@ -16,10 +16,19 @@ namespace SrcGit.Commands
         public string Result()
         {
             var rs = ReadToEnd().Output;
-            if (string.IsNullOrEmpty(rs)) return null;
+
+            if (string.IsNullOrEmpty(rs))
+            {
+                return null;
+            }
 
             rs = rs.Trim();
-            if (Path.IsPathRooted(rs)) return rs;
+
+            if (Path.IsPathRooted(rs))
+            {
+                return rs;
+            }
+
             return Path.GetFullPath(Path.Combine(Cwd, rs));
         }
     }

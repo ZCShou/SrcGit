@@ -14,6 +14,7 @@ namespace SrcGit.Views.Popups
             this.repo = repo.Path;
             InitializeComponent();
             remotes.ItemsSource = repo.Remotes;
+
             if (preferRemote != null)
             {
                 remotes.SelectedIndex = repo.Remotes.FindIndex(x => x.Name == preferRemote);
@@ -36,7 +37,6 @@ namespace SrcGit.Views.Popups
             var prune = chkPrune.IsChecked == true;
             var remote = (remotes.SelectedItem as Models.Remote).Name;
             var all = chkFetchAll.IsChecked == true;
-
             return Task.Run(() =>
             {
                 Models.Watcher.SetEnabled(repo, false);

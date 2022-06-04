@@ -50,12 +50,14 @@ namespace SrcGit.Commands
         {
             StringBuilder builder = new StringBuilder();
             builder.Append("checkout -f -q --");
+
             foreach (var f in files)
             {
                 builder.Append(" \"");
                 builder.Append(f);
                 builder.Append("\"");
             }
+
             Args = builder.ToString();
             return Exec();
         }

@@ -9,7 +9,12 @@ namespace SrcGit.Commands
         {
             Cwd = repo;
             Args = "rebase ";
-            if (autoStash) Args += "--autostash ";
+
+            if (autoStash)
+            {
+                Args += "--autostash ";
+            }
+
             Args += basedOn;
         }
     }

@@ -14,9 +14,7 @@ namespace SrcGit.Views.Popups
         {
             this.repo = repo;
             this.revision = to.SHA;
-
             InitializeComponent();
-
             txtCurrent.Text = current;
             txtSHA.Text = to.ShortSHA;
             txtMoveTo.Text = to.Subject;

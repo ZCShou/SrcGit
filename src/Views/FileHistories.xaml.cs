@@ -19,9 +19,7 @@ namespace SrcGit.Views
             this.repo = repo;
             this.file = file;
             this.isLFSEnabled = new Commands.LFS(repo).IsFiltered(file);
-
             InitializeComponent();
-
             Task.Run(() =>
             {
                 var commits = new Commands.Commits(repo, $"-n 10000 -- \"{file}\"").Result();
@@ -51,10 +49,18 @@ namespace SrcGit.Views
         private void OnCommitSelectedChanged(object sender, SelectedCellsChangedEventArgs e)
         {
             var commit = (sender as DataGrid).SelectedItem as Models.Commit;
-            if (commit == null) return;
+
+            if (commit == null)
+            {
+                return;
+            }
 
             var start = $"{commit.SHA}^";
-            if (commit.Parents.Count == 0) start = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
+
+            if (commit.Parents.Count == 0)
+            {
+                start = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
+            }
 
             diffViewer.Diff(repo, new Widgets.DiffViewer.Option()
             {

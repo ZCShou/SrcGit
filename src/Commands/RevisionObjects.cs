@@ -26,7 +26,11 @@ namespace SrcGit.Commands
         public override void OnReadline(string line)
         {
             var match = REG_FORMAT.Match(line);
-            if (!match.Success) return;
+
+            if (!match.Success)
+            {
+                return;
+            }
 
             var obj = new Models.Object();
             obj.SHA = match.Groups[2].Value;
@@ -35,10 +39,21 @@ namespace SrcGit.Commands
 
             switch (match.Groups[1].Value)
             {
-                case "blob": obj.Type = Models.ObjectType.Blob; break;
-                case "tree": obj.Type = Models.ObjectType.Tree; break;
-                case "tag": obj.Type = Models.ObjectType.Tag; break;
-                case "commit": obj.Type = Models.ObjectType.Commit; break;
+                case "blob":
+                    obj.Type = Models.ObjectType.Blob;
+                    break;
+
+                case "tree":
+                    obj.Type = Models.ObjectType.Tree;
+                    break;
+
+                case "tag":
+                    obj.Type = Models.ObjectType.Tag;
+                    break;
+
+                case "commit":
+                    obj.Type = Models.ObjectType.Commit;
+                    break;
             }
 
             objects.Add(obj);

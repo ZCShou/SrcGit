@@ -17,8 +17,16 @@ namespace SrcGit.Views.Controls
             public int X;
             public int Y;
 
-            public PInPoint(int x, int y) { X = x; Y = y; }
-            public PInPoint(double x, double y) { X = (int)x; Y = (int)y; }
+            public PInPoint(int x, int y)
+            {
+                X = x;
+                Y = y;
+            }
+            public PInPoint(double x, double y)
+            {
+                X = (int)x;
+                Y = (int)y;
+            }
         }
 
         [DllImport("user32.dll")]
@@ -39,13 +47,10 @@ namespace SrcGit.Views.Controls
         protected override void OnRender(DrawingContext dc)
         {
             base.OnRender(dc);
-
             PInPoint p = new PInPoint();
             GetCursorPos(ref p);
-
             Point pos = PointFromScreen(new Point(p.X, p.Y));
             Rect rect = new Rect(pos.X, pos.Y, renderElem.RenderSize.Width, renderElem.RenderSize.Height);
-
             dc.PushOpacity(1);
             dc.DrawRectangle(FindResource("Brush.Window") as Brush, null, rect);
             dc.DrawRectangle(new VisualBrush(renderElem), null, rect);
