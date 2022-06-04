@@ -44,45 +44,73 @@ namespace SrcGit
             Models.Locale.Change();
 
             // 如果启动命令中指定了路径，打开指定目录的仓库
-            var launcher = new Views.Launcher();
+            MainWindow = new Views.Launcher();
+
             if (Models.Preference.Instance.IsReady)
             {
                 if (e.Args.Length > 0)
                 {
-                    var repo = Models.Preference.Instance.FindRepository(e.Args[0]);
-                    if (repo == null)
+                    /// 如果是带参（可能多个）启动，先检测参数是否是之前打开过的仓库，否则尝试作为新仓库去打开
+                    foreach (var path in e.Args)
                     {
-                        var path = new Commands.GetRepositoryRootPath(e.Args[0]).Result();
-                        if (path != null)
+                        var repo = Models.Preference.Instance.FindRepository(path);
+
+                        if (repo == null)
                         {
-                            var gitDir = new Commands.QueryGitDir(path).Result();
-                            repo = Models.Preference.Instance.AddRepository(path, gitDir, "");
+                            var dir = new Commands.GetRepositoryRootPath(path).Result();
+
+                            if (dir != null)
+                            {
+                                var gitDir = new Commands.QueryGitDir(dir).Result();
+                                repo = Models.Preference.Instance.AddRepository(dir, gitDir, "");
+                            }
+                        }
+
+                        if (repo != null)
+                        {
+                            Models.Watcher.Open(repo);
                         }
                     }
-
-                    if (repo != null) Models.Watcher.Open(repo);
                 }
-                else if (Models.Preference.Instance.Restore.IsEnabled)
+                else
                 {
-                    var restore = Models.Preference.Instance.Restore;
-                    var actived = null as Models.Repository;
-                    if (restore.Opened.Count > 0)
+                    if (Models.Preference.Instance.Restore.IsEnabled)
                     {
-                        foreach (var path in restore.Opened)
-                        {
-                            if (!Directory.Exists(path)) continue;
-                            var repo = Models.Preference.Instance.FindRepository(path);
-                            if (repo != null) Models.Watcher.Open(repo);
-                            if (path == restore.Actived) actived = repo;
-                        }
+                        var restore = Models.Preference.Instance.Restore;
+                        var actived = null as Models.Repository;
 
-                        if (actived != null) Models.Watcher.Open(actived);
+                        if (restore.Opened.Count > 0)
+                        {
+                            foreach (var path in restore.Opened)
+                            {
+                                if (!Directory.Exists(path))
+                                {
+                                    continue;
+                                }
+
+                                var repo = Models.Preference.Instance.FindRepository(path);
+
+                                if (repo != null)
+                                {
+                                    Models.Watcher.Open(repo);
+                                }
+
+                                if (path == restore.Actived)
+                                {
+                                    actived = repo;
+                                }
+                            }
+
+                            if (actived != null)
+                            {
+                                Models.Watcher.Open(actived);
+                            }
+                        }
                     }
                 }
             }
 
             // 主界面显示
-            MainWindow = launcher;
             MainWindow.Show();
 
             // 检测版本更新
