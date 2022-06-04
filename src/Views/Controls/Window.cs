@@ -10,7 +10,6 @@ namespace SrcGit.Views.Controls
     /// </summary>
     public class Window : System.Windows.Window
     {
-
         public static readonly DependencyProperty IsMaximizedProperty = DependencyProperty.Register(
             "IsMaximized",
             typeof(bool),

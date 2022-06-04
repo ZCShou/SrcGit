@@ -1,12 +1,10 @@
 namespace SrcGit.Models
 {
-
     /// <summary>
     ///     Git变更
     /// </summary>
     public class Change
     {
-
         /// <summary>
         ///     显示模式
         /// </summary>

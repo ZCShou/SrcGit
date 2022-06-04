@@ -7,7 +7,6 @@ using System.Windows.Media;
 
 namespace SrcGit.Views.Popups
 {
-
     /// <summary>
     ///     存档操作面板
     /// </summary>

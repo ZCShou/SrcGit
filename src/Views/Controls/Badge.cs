@@ -3,7 +3,6 @@ using System.Windows.Controls;
 
 namespace SrcGit.Views.Controls
 {
-
     /// <summary>
     ///     徽章
     /// </summary>

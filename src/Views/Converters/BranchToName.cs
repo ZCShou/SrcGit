@@ -4,10 +4,8 @@ using System.Windows.Data;
 
 namespace SrcGit.Views.Converters
 {
-
     public class BranchToName : IValueConverter
     {
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var b = value as Models.Branch;

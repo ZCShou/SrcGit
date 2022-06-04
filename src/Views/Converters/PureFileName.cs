@@ -5,13 +5,11 @@ using System.Windows.Data;
 
 namespace SrcGit.Views.Converters
 {
-
     /// <summary>
     ///     将路径转换为纯文件名
     /// </summary>
     public class PureFileName : IValueConverter
     {
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return Path.GetFileName(value as string);

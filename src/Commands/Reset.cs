@@ -8,7 +8,6 @@ namespace SrcGit.Commands
     /// </summary>
     public class Reset : Command
     {
-
         public Reset(string repo)
         {
             Cwd = repo;

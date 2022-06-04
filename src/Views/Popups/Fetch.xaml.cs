@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 
 namespace SrcGit.Views.Popups
 {
-
     /// <summary>
     ///     拉取更新
     /// </summary>

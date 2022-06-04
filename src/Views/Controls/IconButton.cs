@@ -4,13 +4,11 @@ using System.Windows.Media;
 
 namespace SrcGit.Views.Controls
 {
-
     /// <summary>
     ///     简化只有一个Icon的Button
     /// </summary>
     public class IconButton : Button
     {
-
         public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
             "Icon",
             typeof(Geometry),

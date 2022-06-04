@@ -5,7 +5,6 @@ using System.Windows.Navigation;
 
 namespace SrcGit.Views
 {
-
     /// <summary>
     ///     文件历史
     /// </summary>

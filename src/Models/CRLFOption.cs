@@ -2,7 +2,6 @@ using System.Collections.Generic;
 
 namespace SrcGit.Models
 {
-
     /// <summary>
     ///     自动换行处理方式
     /// </summary>

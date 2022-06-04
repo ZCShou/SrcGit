@@ -18,7 +18,6 @@ namespace SrcGit.Views.Widgets
     /// </summary>
     public partial class DiffViewer : UserControl
     {
-
         public class Option
         {
             public string[] RevisionRange = new string[] { };

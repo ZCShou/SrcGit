@@ -8,13 +8,11 @@ using System.Windows.Media;
 
 namespace SrcGit.Views.Widgets
 {
-
     /// <summary>
     ///     主窗体标题栏的标签页容器控件
     /// </summary>
     public partial class PageTabBar : UserControl
     {
-
         /// <summary>
         ///     标签数据
         /// </summary>

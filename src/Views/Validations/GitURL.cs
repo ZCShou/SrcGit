@@ -4,7 +4,6 @@ using System.Windows.Controls;
 
 namespace SrcGit.Views.Validations
 {
-
     public class GitURL : ValidationRule
     {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)

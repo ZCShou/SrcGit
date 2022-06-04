@@ -8,7 +8,6 @@ namespace SrcGit.Commands
     /// </summary>
     public class Clean : Command
     {
-
         public Clean(string repo)
         {
             Cwd = repo;

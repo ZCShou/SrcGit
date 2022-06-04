@@ -12,7 +12,6 @@ using System.Windows.Media;
 
 namespace SrcGit.Views.Widgets
 {
-
     /// <summary>
     ///     仓库操作主界面
     /// </summary>

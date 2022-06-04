@@ -2,7 +2,6 @@ using System.Collections.Generic;
 
 namespace SrcGit.Models
 {
-
     /// <summary>
     ///     字串差异对比，改写自DiffPlex
     /// </summary>

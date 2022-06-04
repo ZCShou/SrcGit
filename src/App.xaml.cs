@@ -4,13 +4,11 @@ using System.Windows;
 
 namespace SrcGit
 {
-
     /// <summary>
     ///     程序入口.
     /// </summary>
     public partial class App : Application
     {
-
         /// <summary>
         ///     读取本地化字串
         /// </summary>

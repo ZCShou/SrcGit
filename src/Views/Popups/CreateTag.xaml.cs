@@ -4,7 +4,6 @@ using System.Windows.Media;
 
 namespace SrcGit.Views.Popups
 {
-
     /// <summary>
     ///     创建分支面板
     /// </summary>

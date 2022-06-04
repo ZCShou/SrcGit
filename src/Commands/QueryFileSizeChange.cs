@@ -7,7 +7,6 @@ namespace SrcGit.Commands
     /// </summary>
     public class QueryFileSizeChange
     {
-
         class QuerySizeCmd : Command
         {
             public QuerySizeCmd(string repo, string path, string revision)

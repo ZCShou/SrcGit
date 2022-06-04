@@ -5,7 +5,6 @@ using System.Windows.Media;
 
 namespace SrcGit.Views.Controls
 {
-
     /// <summary>
     ///     提交线路图
     /// </summary>

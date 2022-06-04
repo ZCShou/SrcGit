@@ -3,7 +3,6 @@ using System.Runtime.CompilerServices;
 
 namespace SrcGit.Views.Controls
 {
-
     /// <summary>
     ///     Implementation of <see cref="INotifyPropertyChanged" /> to simplify models.
     /// </summary>

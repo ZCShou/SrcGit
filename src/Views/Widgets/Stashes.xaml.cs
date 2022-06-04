@@ -6,7 +6,6 @@ using System.Windows.Controls;
 
 namespace SrcGit.Views.Widgets
 {
-
     /// <summary>
     ///     贮藏管理
     /// </summary>

@@ -3,13 +3,11 @@ using System.Windows.Controls;
 
 namespace SrcGit.Views.Controls
 {
-
     /// <summary>
     ///     树节点
     /// </summary>
     public class TreeItem : TreeViewItem
     {
-
         public static readonly DependencyProperty IsCheckedProperty = DependencyProperty.Register(
             "IsChecked",
             typeof(bool),

@@ -6,7 +6,6 @@ using System.Windows.Media;
 
 namespace SrcGit.Views.Controls
 {
-
     /// <summary>
     ///     扩展默认TextBox
     /// </summary>

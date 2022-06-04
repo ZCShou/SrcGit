@@ -5,7 +5,6 @@ namespace SrcGit.Commands
     /// </summary>
     public class Rebase : Command
     {
-
         public Rebase(string repo, string basedOn, bool autoStash)
         {
             Cwd = repo;

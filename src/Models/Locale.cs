@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace SrcGit.Models
 {
-
     /// <summary>
     ///     支持的语言
     /// </summary>

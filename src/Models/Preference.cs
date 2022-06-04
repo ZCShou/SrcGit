@@ -8,7 +8,6 @@ using System.Windows;
 
 namespace SrcGit.Models
 {
-
     /// <summary>
     ///     程序配置
     /// </summary>

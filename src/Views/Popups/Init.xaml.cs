@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 
 namespace SrcGit.Views.Popups
 {
-
     /// <summary>
     ///     初始化Git仓库确认框
     /// </summary>

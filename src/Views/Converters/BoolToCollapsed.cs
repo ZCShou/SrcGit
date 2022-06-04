@@ -5,10 +5,8 @@ using System.Windows.Data;
 
 namespace SrcGit.Views.Converters
 {
-
     public class BoolToCollapsed : IValueConverter
     {
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return (bool)value ? Visibility.Visible : Visibility.Collapsed;

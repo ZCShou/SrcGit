@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 
 namespace SrcGit.Views.Popups
 {
-
     /// <summary>
     ///     切换分支
     /// </summary>

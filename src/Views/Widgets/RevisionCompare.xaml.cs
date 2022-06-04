@@ -9,7 +9,6 @@ namespace SrcGit.Views.Widgets
     /// </summary>
     public partial class RevisionCompare : UserControl
     {
-
         public RevisionCompare()
         {
             InitializeComponent();

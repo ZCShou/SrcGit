@@ -10,7 +10,6 @@ using System.Windows.Navigation;
 
 namespace SrcGit.Views.Widgets
 {
-
     /// <summary>
     ///     提交详情
     /// </summary>

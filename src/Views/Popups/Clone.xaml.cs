@@ -7,13 +7,11 @@ using System.Windows.Controls;
 
 namespace SrcGit.Views.Popups
 {
-
     /// <summary>
     ///     克隆
     /// </summary>
     public partial class Clone : Controls.PopupWidget
     {
-
         public string Uri { get; set; }
         public string Folder { get; set; }
         public string LocalName { get; set; }

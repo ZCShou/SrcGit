@@ -3,7 +3,6 @@ using System.Text.RegularExpressions;
 
 namespace SrcGit.Commands
 {
-
     /// <summary>
     ///     对比两个提交间的变更
     /// </summary>

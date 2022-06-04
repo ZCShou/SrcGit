@@ -8,7 +8,6 @@ namespace SrcGit.Models
     /// </summary>
     public class ExecutableFinder
     {
-
         // https://docs.microsoft.com/en-us/windows/desktop/api/shlwapi/nf-shlwapi-pathfindonpathw
         // https://www.pinvoke.net/default.aspx/shlwapi.PathFindOnPath
         [DllImport("shlwapi.dll", CharSet = CharSet.Unicode, SetLastError = false)]

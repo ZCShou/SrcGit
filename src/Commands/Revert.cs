@@ -5,7 +5,6 @@ namespace SrcGit.Commands
     /// </summary>
     public class Revert : Command
     {
-
         public Revert(string repo, string commit, bool autoCommit)
         {
             Cwd = repo;

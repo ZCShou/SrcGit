@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 
 namespace SrcGit.Views.Popups
 {
-
     /// <summary>
     ///     贮藏
     /// </summary>

@@ -3,7 +3,6 @@ using System.Windows.Controls;
 
 namespace SrcGit.Views.Popups
 {
-
     /// <summary>
     ///     添加子树面板
     /// </summary>

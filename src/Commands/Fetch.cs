@@ -4,7 +4,6 @@ using System.Threading;
 
 namespace SrcGit.Commands
 {
-
     /// <summary>
     ///     拉取
     /// </summary>

@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 
 namespace SrcGit.Views.Popups
 {
-
     /// <summary>
     ///     删除远程确认
     /// </summary>

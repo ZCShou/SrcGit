@@ -4,7 +4,6 @@ using System.Security;
 
 namespace SrcGit.Views.Controls
 {
-
     [SuppressUnmanagedCodeSecurity]
     internal delegate Int32 BrowseCallbackProc(IntPtr hwnd, Int32 msg, IntPtr lParam, IntPtr lpData);
 

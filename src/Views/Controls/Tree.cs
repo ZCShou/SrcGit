@@ -8,7 +8,6 @@ using System.Windows.Media;
 
 namespace SrcGit.Views.Controls
 {
-
     /// <summary>
     ///     树
     /// </summary>

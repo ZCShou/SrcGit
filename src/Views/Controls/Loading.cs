@@ -7,7 +7,6 @@ using System.Windows.Shapes;
 
 namespace SrcGit.Views.Controls
 {
-
     /// <summary>
     ///     加载中图标
     /// </summary>

@@ -2,7 +2,6 @@ using System;
 
 namespace SrcGit.Commands
 {
-
     /// <summary>
     ///     克隆
     /// </summary>

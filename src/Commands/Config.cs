@@ -5,7 +5,6 @@ namespace SrcGit.Commands
     /// </summary>
     public class Config : Command
     {
-
         public Config() { }
 
         public Config(string repo)

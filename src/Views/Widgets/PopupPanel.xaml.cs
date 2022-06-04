@@ -5,7 +5,6 @@ using System.Windows.Media.Animation;
 
 namespace SrcGit.Views.Widgets
 {
-
     /// <summary>
     ///     统一的下拉弹出窗体面板
     /// </summary>

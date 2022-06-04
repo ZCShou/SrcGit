@@ -4,7 +4,6 @@ using System.Linq;
 
 namespace SrcGit.Commands
 {
-
     /// <summary>
     ///     取得提交列表
     /// </summary>

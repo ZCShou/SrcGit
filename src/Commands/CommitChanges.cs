@@ -3,7 +3,6 @@ using System.Text.RegularExpressions;
 
 namespace SrcGit.Commands
 {
-
     /// <summary>
     ///     取得一个提交的变更列表
     /// </summary>

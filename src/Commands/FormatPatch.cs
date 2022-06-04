@@ -5,7 +5,6 @@ namespace SrcGit.Commands
     /// </summary>
     public class FormatPatch : Command
     {
-
         public FormatPatch(string repo, string commit, string path)
         {
             Cwd = repo;

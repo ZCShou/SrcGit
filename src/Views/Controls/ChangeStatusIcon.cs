@@ -10,7 +10,6 @@ namespace SrcGit.Views.Controls
     /// </summary>
     class ChangeStatusIcon : FrameworkElement
     {
-
         public static readonly DependencyProperty ChangeProperty = DependencyProperty.Register(
             "Change",
             typeof(Models.Change),

@@ -10,13 +10,11 @@ using System.Windows.Media;
 
 namespace SrcGit.Views.Widgets
 {
-
     /// <summary>
     ///     新标签页
     /// </summary>
     public partial class Welcome : UserControl, Controls.IPopupContainer
     {
-
         /// <summary>
         ///     树节点数据
         /// </summary>

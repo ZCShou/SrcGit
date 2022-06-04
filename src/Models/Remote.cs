@@ -1,6 +1,5 @@
 namespace SrcGit.Models
 {
-
     /// <summary>
     ///     远程
     /// </summary>

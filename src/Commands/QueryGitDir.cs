@@ -2,7 +2,6 @@ using System.IO;
 
 namespace SrcGit.Commands
 {
-
     /// <summary>
     ///     取得GitDir
     /// </summary>

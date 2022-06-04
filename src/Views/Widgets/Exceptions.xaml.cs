@@ -4,7 +4,6 @@ using System.Windows.Controls;
 
 namespace SrcGit.Views.Widgets
 {
-
     /// <summary>
     ///     错误提示面板
     /// </summary>

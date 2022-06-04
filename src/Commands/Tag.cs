@@ -2,13 +2,11 @@ using System.IO;
 
 namespace SrcGit.Commands
 {
-
     /// <summary>
     ///     标签相关指令
     /// </summary>
     public class Tag : Command
     {
-
         public Tag(string repo)
         {
             Cwd = repo;

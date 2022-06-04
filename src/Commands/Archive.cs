@@ -2,7 +2,6 @@ using System;
 
 namespace SrcGit.Commands
 {
-
     /// <summary>
     ///     存档命令
     /// </summary>

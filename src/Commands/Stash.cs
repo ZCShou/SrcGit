@@ -8,7 +8,6 @@ namespace SrcGit.Commands
     /// </summary>
     public class Stash : Command
     {
-
         public Stash(string repo)
         {
             Cwd = repo;

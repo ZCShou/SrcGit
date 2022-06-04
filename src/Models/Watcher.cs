@@ -5,7 +5,6 @@ using System.Threading;
 
 namespace SrcGit.Models
 {
-
     /// <summary>
     ///     文件系统更新监视
     /// </summary>

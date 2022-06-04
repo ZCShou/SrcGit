@@ -1,6 +1,5 @@
 namespace SrcGit.Models
 {
-
     /// <summary>
     ///     修饰类型
     /// </summary>

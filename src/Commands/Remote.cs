@@ -5,7 +5,6 @@ namespace SrcGit.Commands
     /// </summary>
     public class Remote : Command
     {
-
         public Remote(string repo)
         {
             Cwd = repo;

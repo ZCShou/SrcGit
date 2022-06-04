@@ -5,7 +5,6 @@ namespace SrcGit.Commands
     /// </summary>
     public class GitFlow : Command
     {
-
         public GitFlow(string repo)
         {
             Cwd = repo;

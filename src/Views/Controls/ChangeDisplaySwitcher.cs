@@ -11,7 +11,6 @@ namespace SrcGit.Views.Controls
     /// </summary>
     public class ChangeDisplaySwitcher : Button
     {
-
         public static readonly DependencyProperty ModeProperty = DependencyProperty.Register(
             "Mode",
             typeof(Models.Change.DisplayMode),

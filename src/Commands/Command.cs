@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 
 namespace SrcGit.Commands
 {
-
     /// <summary>
     ///     用于取消命令执行的上下文对象
     /// </summary>

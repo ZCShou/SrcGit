@@ -5,7 +5,6 @@ using System.IO;
 
 namespace SrcGit.Models
 {
-
     /// <summary>
     ///     外部合并工具
     /// </summary>

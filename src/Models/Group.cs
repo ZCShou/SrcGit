@@ -1,6 +1,5 @@
 namespace SrcGit.Models
 {
-
     /// <summary>
     ///     仓库列表分组
     /// </summary>

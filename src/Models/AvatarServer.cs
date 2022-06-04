@@ -2,7 +2,6 @@ using System.Collections.Generic;
 
 namespace SrcGit.Models
 {
-
     /// <summary>
     ///     支持的头像服务器
     /// </summary>

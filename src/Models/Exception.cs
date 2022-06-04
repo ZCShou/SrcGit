@@ -2,7 +2,6 @@ using System;
 
 namespace SrcGit.Models
 {
-
     /// <summary>
     ///     错误通知
     /// </summary>

@@ -8,7 +8,6 @@ namespace SrcGit.Views.Widgets
     /// </summary>
     public partial class StatisticsPage : UserControl
     {
-
         public StatisticsPage()
         {
             InitializeComponent();

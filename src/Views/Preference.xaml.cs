@@ -6,7 +6,6 @@ using System.Windows.Controls;
 
 namespace SrcGit.Views
 {
-
     /// <summary>
     ///     设置面板
     /// </summary>

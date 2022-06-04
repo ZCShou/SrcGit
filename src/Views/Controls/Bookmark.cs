@@ -5,7 +5,6 @@ using System.Windows.Shapes;
 
 namespace SrcGit.Views.Controls
 {
-
     /// <summary>
     ///     标签页图标
     /// </summary>

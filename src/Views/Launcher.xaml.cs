@@ -6,7 +6,6 @@ using System.Windows.Input;
 
 namespace SrcGit.Views
 {
-
     /// <summary>
     ///     主窗体
     /// </summary>

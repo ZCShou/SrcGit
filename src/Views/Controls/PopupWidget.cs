@@ -5,7 +5,6 @@ using System.Windows.Controls;
 
 namespace SrcGit.Views.Controls
 {
-
     /// <summary>
     ///     可显示弹出面板的容器接口
     /// </summary>

@@ -6,7 +6,6 @@ using System.Windows;
 
 namespace SrcGit.Views
 {
-
     /// <summary>
     ///     关于对话框
     /// </summary>

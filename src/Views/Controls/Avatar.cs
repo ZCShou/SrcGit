@@ -14,13 +14,11 @@ using System.Net.Http;
 
 namespace SrcGit.Views.Controls
 {
-
     /// <summary>
     ///     头像控件
     /// </summary>
     public class Avatar : Image
     {
-
         /// <summary>
         ///     显示FallbackLabel时的背景色
         /// </summary>

@@ -5,7 +5,6 @@ namespace SrcGit.Commands
     /// </summary>
     public class CherryPick : Command
     {
-
         public CherryPick(string repo, string commit, bool noCommit)
         {
             var mode = noCommit ? "-n" : "--ff";

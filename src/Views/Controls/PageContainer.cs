@@ -4,7 +4,6 @@ using System.Windows.Controls;
 
 namespace SrcGit.Views.Controls
 {
-
     /// <summary>
     ///     用于方便切换子页面的组件
     /// </summary>
