@@ -126,7 +126,6 @@ namespace SrcGit.Views.Controls
 
         public CommitGraph()
         {
-            Models.Theme.AddListener(this, InvalidateVisual);
             IsHitTestVisible = false;
             ClipToBounds = true;
         }

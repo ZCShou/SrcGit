@@ -24,7 +24,6 @@ namespace SrcGit.Models
         /// </summary>
         public class GeneralInfo
         {
-
             /// <summary>
             ///     显示语言
             /// </summary>
@@ -33,6 +32,15 @@ namespace SrcGit.Models
                 get;
                 set;
             } = "en_US";
+
+            /// <summary>
+            /// 主题
+            /// </summary>
+            public string Theme
+            {
+                get;
+                set;
+            } = "Light";
 
             /// <summary>
             ///     系统字体
@@ -74,15 +82,6 @@ namespace SrcGit.Models
                 get;
                 set;
             } = "https://www.gravatar.com/avatar/";
-
-            /// <summary>
-            ///     是否启用深色主题
-            /// </summary>
-            public bool UseDarkTheme
-            {
-                get;
-                set;
-            } = true;
 
             /// <summary>
             ///     启用更新检测

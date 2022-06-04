@@ -89,14 +89,29 @@
                         SelectedValue="{Binding Source={x:Static models:Preference.Instance}, Path=General.Locale, Mode=TwoWay}"
                         SelectionChanged="LocaleChanged"/>
 
-                    <!-- System Font -->
+                    <!-- Theme -->
                     <TextBlock
                         Grid.Row="1" Grid.Column="0"
-                        Text="{DynamicResource Text.Preference.FontFamilyWindow}"
+                        Text="{DynamicResource Text.Preference.Theme}"
                         HorizontalAlignment="Right"
                         Margin="0,0,8,0"/>
                     <ComboBox
                         Grid.Row="1" Grid.Column="1"
+                        Height="24"
+                        ItemsSource="{Binding Source={x:Static models:Theme.Supported}}"
+                        DisplayMemberPath="Name"
+                        SelectedValuePath="Resource"
+                        SelectedValue="{Binding Source={x:Static models:Preference.Instance}, Path=General.Theme, Mode=TwoWay}"
+                        SelectionChanged="ThemeChanged"/>
+
+                    <!-- System Font -->
+                    <TextBlock
+                        Grid.Row="2" Grid.Column="0"
+                        Text="{DynamicResource Text.Preference.FontFamilyWindow}"
+                        HorizontalAlignment="Right"
+                        Margin="0,0,8,0"/>
+                    <ComboBox
+                        Grid.Row="2" Grid.Column="1"
                         Height="24"
                         ItemsSource="{Binding Source={x:Static models:InstalledFont.GetFonts}}"
                         SelectedValue="{Binding Source={x:Static models:Preference.Instance}, Path=General.FontFamilyWindow, Mode=TwoWay, Converter={StaticResource FontFamiliesToName}}"
@@ -113,12 +128,12 @@
 
                     <!-- Content Font -->
                     <TextBlock
-                        Grid.Row="2" Grid.Column="0"
+                        Grid.Row="3" Grid.Column="0"
                         Text="{DynamicResource Text.Preference.FontFamilyContent}"
                         HorizontalAlignment="Right"
                         Margin="0,0,8,0"/>
                     <ComboBox
-                        Grid.Row="2" Grid.Column="1"
+                        Grid.Row="3" Grid.Column="1"
                         Height="24"
                         ItemsSource="{Binding Source={x:Static models:InstalledFont.GetFonts}}"
                         SelectedValue="{Binding Source={x:Static models:Preference.Instance}, Path=General.FontFamilyContent, Mode=TwoWay, Converter={StaticResource FontFamiliesToName}}"
@@ -135,12 +150,12 @@
 
                     <!-- Avatar -->
                     <TextBlock
-                        Grid.Row="3" Grid.Column="0"
+                        Grid.Row="4" Grid.Column="0"
                         Text="{DynamicResource Text.Preference.AvatarServer}"
                         HorizontalAlignment="Right"
                         Margin="0,0,8,0"/>
                     <ComboBox
-                        Grid.Row="3" Grid.Column="1"
+                        Grid.Row="4" Grid.Column="1"
                         Height="24"
                         ItemsSource="{Binding Source={x:Static models:AvatarServer.Supported}}"
                         DisplayMemberPath="Name"
@@ -149,16 +164,9 @@
 
                     <!-- Enable Check For Update -->
                     <CheckBox
-                        Grid.Row="4" Grid.Column="1"
+                        Grid.Row="5" Grid.Column="1"
                         Content="{DynamicResource Text.Preference.CheckUpdate}"
                         IsChecked="{Binding Source={x:Static models:Preference.Instance}, Path=General.CheckForUpdate, Mode=TwoWay}"/>
-
-                    <!-- Enable Dark Theme -->
-                    <CheckBox
-                        Grid.Row="5" Grid.Column="1"
-                        Content="{DynamicResource Text.Preference.UseDarkTheme}"
-                        IsChecked="{Binding Source={x:Static models:Preference.Instance}, Path=General.UseDarkTheme, Mode=TwoWay}"
-                        Checked="ChangeTheme" Unchecked="ChangeTheme"/>
 
                     <!-- Restore Windows -->
                     <CheckBox

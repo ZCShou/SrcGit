@@ -79,7 +79,7 @@ namespace SrcGit.Views
             Models.Locale.Change();
         }
 
-        private void ChangeTheme(object sender, RoutedEventArgs e)
+        private void ThemeChanged(object sender, SelectionChangedEventArgs e)
         {
             Models.Theme.Change();
         }

@@ -1,34 +1,46 @@
 ﻿using System;
-using System.Windows;
+using System.Collections.Generic;
+using Microsoft.Win32;
 
 namespace SrcGit.Models
 {
     /// <summary>
-    ///     主题
+    ///  主题
     /// </summary>
-    public static class Theme
+    public class Theme
     {
-        /// <summary>
-        ///     主题切换事件
-        /// </summary>
-        public static event Action Changed;
-
-        /// <summary>
-        ///     启用主题变化监听
-        /// </summary>
-        /// <param name="elem"></param>
-        public static void AddListener(FrameworkElement elem, Action callback)
+        public string Name
         {
-            elem.Loaded += (_, __) => Changed += callback;
-            elem.Unloaded += (_, __) => Changed -= callback;
+            get;
+            set;
+        }
+        public string Resource
+        {
+            get;
+            set;
         }
 
-        /// <summary>
-        ///     切换主题
-        /// </summary>
+        public Theme(string name, string res)
+        {
+            Name = name;
+            Resource = res;
+        }
+
+        public static List<Theme> Supported = new List<Theme>()
+        {
+            new Theme("System", "System"),
+            new Theme("Light", "Light"),
+            new Theme("Dark", "Dark"),
+        };
+
         public static void Change()
         {
-            var theme = Preference.Instance.General.UseDarkTheme ? "Dark" : "Light";
+            var theme = Preference.Instance.General.Theme;
+
+            if (theme == "System")
+            {
+                theme = GetSystemTheme();
+            }
 
             foreach (var rs in App.Current.Resources.MergedDictionaries)
             {
@@ -38,8 +50,38 @@ namespace SrcGit.Models
                     break;
                 }
             }
+        }
 
-            Changed?.Invoke();
+        private static string GetSystemTheme()
+        {
+            var reg = RegistryKey.OpenBaseKey(
+              RegistryHive.CurrentUser,
+              Environment.Is64BitOperatingSystem ? RegistryView.Registry64 : RegistryView.Registry32);
+            var git = reg.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize");
+
+            if (git != null)
+            {
+                var str = git.GetValue("SystemUsesLightTheme");
+
+                if (str == null)
+                {
+                    str = git.GetValue("AppsUseLightTheme");
+                }
+
+                if (str != null)
+                {
+                    if (str.ToString().Equals("1"))
+                    {
+                        return "Light";
+                    }
+                    else
+                    {
+                        return "Dark";
+                    }
+                }
+            }
+
+            return "Light";
         }
     }
 }
