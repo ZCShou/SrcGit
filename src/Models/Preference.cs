@@ -16,7 +16,7 @@ namespace SrcGit.Models
         private static readonly string SAVE_PATH = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "SrcGit",
-                    "preference_v4.json");
+                    "preference.json");
         private static Preference instance = null;
 
         /// <summary>
@@ -107,7 +107,6 @@ namespace SrcGit.Models
         /// </summary>
         public class GitInfo
         {
-
             /// <summary>
             ///     git.exe所在路径
             /// </summary>
@@ -174,7 +173,6 @@ namespace SrcGit.Models
         /// </summary>
         public class WindowInfo
         {
-
             /// <summary>
             ///     最近一次设置的宽度
             /// </summary>
@@ -271,7 +269,6 @@ namespace SrcGit.Models
         /// </summary>
         public class RestoreTabs
         {
-
             /// <summary>
             ///     是否开启该功能
             /// </summary>
@@ -332,36 +329,49 @@ namespace SrcGit.Models
             get;
             set;
         } = new GeneralInfo();
+
         public GitInfo Git
         {
             get;
             set;
         } = new GitInfo();
+
         public MergeToolInfo MergeTool
         {
             get;
             set;
         } = new MergeToolInfo();
+
         public WindowInfo Window
         {
             get;
             set;
         } = new WindowInfo();
+
         public List<Group> Groups
         {
             get;
             set;
         } = new List<Group>();
+
         public List<Repository> Repositories
         {
             get;
             set;
         } = new List<Repository>();
+
+        public List<Repository> Favorites
+        {
+            get;
+            set;
+        } = new List<Repository>();
+
         public List<string> Recents
         {
             get;
             set;
         } = new List<string>();
+
         public RestoreTabs Restore
         {
             get;
@@ -588,6 +598,79 @@ namespace SrcGit.Models
             }
         }
         #endregion
+
+        #region METHOD_ON_FAVORITES
+        public Repository AddFavorites(string path, string gitDir, string groupId)
+        {
+            var repo = FindFavorites(path);
+
+            if (repo != null)
+            {
+                return repo;
+            }
+
+            var dir = new DirectoryInfo(path);
+            repo = new Repository()
+            {
+                Path = dir.FullName,
+                GitDir = gitDir,
+                Name = dir.Name,
+                GroupId = groupId,
+            };
+            Favorites.Add(repo);
+            Favorites.Sort((l, r) => l.Name.CompareTo(r.Name));
+            return repo;
+        }
+
+        public Repository FindFavorites(string path)
+        {
+            var dir = new DirectoryInfo(path);
+
+            foreach (var repo in Favorites)
+            {
+                if (repo.Path == dir.FullName)
+                {
+                    return repo;
+                }
+            }
+
+            return null;
+        }
+
+        public void RenameFavorites(string path, string newName)
+        {
+            var repo = FindFavorites(path);
+
+            if (repo == null)
+            {
+                return;
+            }
+
+            repo.Name = newName;
+            Favorites.Sort((l, r) => l.Name.CompareTo(r.Name));
+        }
+
+        public void RemoveFavorites(string path)
+        {
+            var dir = new DirectoryInfo(path);
+            var removedIdx = -1;
+
+            for (int i = 0; i < Favorites.Count; i++)
+            {
+                if (Favorites[i].Path == dir.FullName)
+                {
+                    removedIdx = i;
+                    break;
+                }
+            }
+
+            if (removedIdx >= 0)
+            {
+                Favorites.RemoveAt(removedIdx);
+            }
+        }
+        #endregion
+
 
         #region RECENTS
         public void AddRecent(string path)

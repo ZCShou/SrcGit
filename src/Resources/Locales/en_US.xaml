@@ -305,7 +305,7 @@
     <sys:String x:Key="Text.Welcome.DragDrop">DROP FOLDER HERE</sys:String>
     <sys:String x:Key="Text.Welcome.Start">START</sys:String>
     <sys:String x:Key="Text.Welcome.Recent">RECENT OPENED</sys:String>
-    <sys:String x:Key="Text.Welcome.Repositories">REPOSITORIES</sys:String>
+    <sys:String x:Key="Text.Welcome.Favorites">FACORITES</sys:String>
     <sys:String x:Key="Text.Welcome.NewFolder">Add Folder</sys:String>
     <sys:String x:Key="Text.Welcome.NewSubFolder">Add Sub-Folder</sys:String>
     <sys:String x:Key="Text.Welcome.Rename">Rename</sys:String>

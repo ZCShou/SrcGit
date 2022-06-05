@@ -8,7 +8,7 @@
              xmlns:models="clr-namespace:SrcGit.Models"
              mc:Ignorable="d"
              d:DesignHeight="800" d:DesignWidth="800">
-    <Grid Background="Transparent" AllowDrop="True" DragEnter="OnPageDragEnter" DragLeave="OnPageDragLeave" Drop="OnPageDrop">
+    <Grid Background="Transparent" AllowDrop="True" Drop="OnPageDrop">
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
             <RowDefinition Height="Auto"/>
@@ -46,7 +46,7 @@
         <Grid x:Name="body" Grid.Row="3" Grid.Column="1" Margin="0,40,0,80" FocusManager.IsFocusScope="True">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="120"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             
@@ -64,6 +64,7 @@
                     Grid.Row="0"
                     Text="{DynamicResource Text.Welcome.Start}"
                     FontSize="13pt"/>
+                
                 <StackPanel Grid.Row="1" Margin="4,12,0,0" Orientation="Vertical">
                     <Button Click="OnOpenClicked" Height="28" Style="{DynamicResource Style.Button.Link}">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
@@ -149,7 +150,7 @@
                 <!-- Repositories Label -->
                 <TextBlock
                     Grid.Row="0"
-                    Text="{DynamicResource Text.Welcome.Repositories}"
+                    Text="{DynamicResource Text.Welcome.Favorites}"
                     FontSize="13pt"
                     HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 
@@ -180,6 +181,8 @@
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                     ContextMenuOpening="OnTreeContextMenuOpening"
                     MouseMove="OnTreeMouseMove"
+                    DragEnter="OnTreeDragEnter"
+                    DragLeave="OnTreeDragLeave"
                     DragOver="OnTreeDragOver"
                     Drop="OnTreeDrop"
                     LostFocus="OnTreeLostFocus">

@@ -301,10 +301,10 @@
     <sys:String x:Key="Text.Welcome.OpenOrInit">打开本地仓库</sys:String>
     <sys:String x:Key="Text.Welcome.OpenTerminal">打开GIT终端</sys:String>
     <sys:String x:Key="Text.Welcome.Clone">克隆远程仓库</sys:String>
-    <sys:String x:Key="Text.Welcome.DragDrop">支持拖放操作</sys:String>
+    <sys:String x:Key="Text.Welcome.DragDrop">拖放到此处以收藏仓库</sys:String>
     <sys:String x:Key="Text.Welcome.Start">开始使用</sys:String>
     <sys:String x:Key="Text.Welcome.Recent">最近使用</sys:String>
-    <sys:String x:Key="Text.Welcome.Repositories">收藏/书签</sys:String>
+    <sys:String x:Key="Text.Welcome.Favorites">收藏</sys:String>
     <sys:String x:Key="Text.Welcome.NewFolder">新建分组</sys:String>
     <sys:String x:Key="Text.Welcome.NewSubFolder">新建子分组</sys:String>
     <sys:String x:Key="Text.Welcome.Rename">重命名</sys:String>

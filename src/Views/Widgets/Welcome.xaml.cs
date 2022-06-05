@@ -79,6 +79,7 @@ namespace SrcGit.Views.Widgets
         public Welcome()
         {
             InitializeComponent();
+
             UpdateTree();
             UpdateRecents();
         }
@@ -146,9 +147,7 @@ namespace SrcGit.Views.Widgets
 
             if (repo != null)
             {
-
-                var remove
-                        = new MenuItem();
+                var remove = new MenuItem();
 
                 remove.Header = App.Text("Welcome.Delete");
                 remove.Click += (o, ev) =>
@@ -346,22 +345,14 @@ namespace SrcGit.Views.Widgets
         #endregion
 
         #region DRAP_DROP_EVENTS
-        private void OnPageDragEnter(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop) || e.Data.GetDataPresent(typeof(Node)))
-            {
-                dropArea.Visibility = Visibility.Visible;
-            }
-        }
-
-        private void OnPageDragLeave(object sender, DragEventArgs e)
-        {
-            dropArea.Visibility = Visibility.Hidden;
-        }
-
         private void OnPageDrop(object sender, DragEventArgs e)
         {
-            dropArea.Visibility = Visibility.Hidden;
+            var paths = e.Data.GetData(DataFormats.FileDrop) as string[];
+
+            foreach (var path in paths)
+            {
+                CheckAndOpen(path);
+            }
         }
 
         private void OnTreeMouseMove(object sender, MouseEventArgs e)
@@ -382,6 +373,19 @@ namespace SrcGit.Views.Widgets
             var adorner = new Controls.DragDropAdorner(item);
             DragDrop.DoDragDrop(item, item.DataContext, DragDropEffects.Move);
             adorner.Remove();
+        }
+
+        private void OnTreeDragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop) || e.Data.GetDataPresent(typeof(Node)))
+            {
+                dropArea.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void OnTreeDragLeave(object sender, DragEventArgs e)
+        {
+            dropArea.Visibility = Visibility.Hidden;
         }
 
         private void OnTreeDragOver(object sender, DragEventArgs e)
@@ -411,9 +415,10 @@ namespace SrcGit.Views.Widgets
         private void OnTreeDrop(object sender, DragEventArgs e)
         {
             bool rebuild = false;
-            dropArea.Visibility = Visibility.Hidden;
             var parent = "";
             var to = tree.FindItem(e.OriginalSource as DependencyObject);
+
+            dropArea.Visibility = Visibility.Hidden;
 
             if (to != null)
             {
@@ -578,21 +583,6 @@ namespace SrcGit.Views.Widgets
             }
         }
 
-        private void DeleteNode(Node node)
-        {
-            if (node.IsGroup)
-            {
-                Models.Preference.Instance.RemoveGroup(node.Id);
-            }
-            else
-            {
-                Models.Preference.Instance.RemoveRepository(node.Id);
-            }
-
-            UpdateTree();
-            UpdateRecents();
-        }
-
         private bool MakeSureReady()
         {
             if (!Models.Preference.Instance.IsReady)
@@ -626,8 +616,11 @@ namespace SrcGit.Views.Widgets
             }
 
             var gitDir = new Commands.QueryGitDir(root).Result();
+
             var repo = Models.Preference.Instance.AddRepository(root, gitDir, "");
+
             Models.Watcher.Open(repo);
+
             Models.Preference.Instance.AddRecent(repo.Path);
         }
 
@@ -653,6 +646,20 @@ namespace SrcGit.Views.Widgets
                     UpdateNodes(id, bookmark, node.Children);
                 }
             }
+        }
+
+        private void DeleteNode(Node node)
+        {
+            if (node.IsGroup)
+            {
+                Models.Preference.Instance.RemoveGroup(node.Id);
+            }
+            else
+            {
+                Models.Preference.Instance.RemoveRepository(node.Id);
+            }
+
+            UpdateTree();
         }
         #endregion
 
