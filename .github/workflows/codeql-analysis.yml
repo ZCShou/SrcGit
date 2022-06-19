@@ -12,13 +12,18 @@
 name: "CodeQL"
 
 on:
+  # 手动使用 Github WebUI 触发
+  workflow_dispatch:
+  # 仓库收到 Push 时触发
   push:
-    branches: [ "main" ]
+    tags:
+      - 'Release*'
+  # 仓库收到 pull_request 时触发
   pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ "main" ]
+    branches:
+      - main
   schedule:
-    - cron: '43 6 * * 1'
+    - cron: '36 23 * * 1'
 
 jobs:
   analyze:
