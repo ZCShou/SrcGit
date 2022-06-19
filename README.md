@@ -1,6 +1,12 @@
+**1. I created this vserion because some features I need can not be included the original version.**
+
+**2. If you like SrcGit, maybe you like SourceGit better.**
+
 # SrcGit
 
 Opensouce Git GUI client for Windows.
+
+**I created this vserion because some features I need can not be included the original version.**
 
 ## High-lights
 
@@ -40,11 +46,11 @@ Pre-build Binaries：[Releases](https://github.com/SrcGit-scm/SrcGit/releases)
 
 * Drak Theme
 
-![Theme Dark](./screenshots/theme_dark.png)
+![Theme Dark](./docs/images/theme_dark.png)
 
 * Light Theme
 
-![Theme Light](./screenshots/theme_light.png)
+![Theme Light](./docs/images/theme_light.png)
 
 ## Thanks
 
