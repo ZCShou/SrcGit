@@ -1,8 +1,18 @@
 name: Issue Close
 
 on:
+  # 手动使用 Github WebUI 触发
+  workflow_dispatch:
+  # 仓库收到 Push 时触发
+  push:
+    tags:
+      - 'Release*'
+  # 仓库收到 pull_request 时触发
+  pull_request:
+    branches:
+      - main
   schedule:
-    - cron: "0 0 * * *"
+    - cron: '36 23 * * 1'
 
 permissions:
   contents: read

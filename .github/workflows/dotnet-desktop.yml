@@ -38,11 +38,18 @@
 
 name: .NET Core Desktop
 
+# 在 on 字段下列举触发条件（事件），可以有多种
 on:
+  # 手动使用 Github WebUI 触发
+  workflow_dispatch:
+  # 仓库收到 Push 时触发
   push:
-    branches: [ "main" ]
+    tags:
+      - 'Release*'
+  # 仓库收到 pull_request 时触发
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
 
