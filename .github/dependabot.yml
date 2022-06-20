@@ -14,7 +14,7 @@ updates:
       - "ZCShou"
     ignore:
       - dependency-name: "*github-script*"
-  # Updates for Gradle dependencies used in the app
+  # Updates for nuget dependencies used in the app
   - package-ecosystem: nuget
     directory: "/"
     schedule:

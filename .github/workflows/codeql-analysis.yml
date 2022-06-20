@@ -12,8 +12,6 @@
 name: "CodeQL"
 
 on:
-  # 手动使用 Github WebUI 触发
-  workflow_dispatch:
   # 仓库收到 Push 时触发
   push:
     tags:
