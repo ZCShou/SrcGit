@@ -84,7 +84,7 @@ jobs:
 
       - name: build sig
         run: |
-          dotnet publish SrcGit.csproj --nologo -c Release -r win-x64 -f net6.0-windows -p:PublishSingleFile=true --no-self-contained
+          dotnet publish src/SrcGit.csproj --nologo -c Release -r win-x64 -f net6.0-windows -p:PublishSingleFile=true --no-self-contained
 
       # - name: build ban
       #   run: |
