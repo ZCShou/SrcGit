@@ -12,6 +12,8 @@
 name: "CodeQL"
 
 on:
+  # 手动使用 Github WebUI 触发
+  workflow_dispatch:
   # 仓库收到 Push 时触发
   push:
     tags:
@@ -74,7 +76,7 @@ jobs:
 
       - name: Build
         run: |
-          ./build.bat
+          dotnet publish src/SrcGit.csproj --nologo -c Release -r win-x64 -f net6.0-windows -p:PublishSingleFile=true --no-self-contained
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2

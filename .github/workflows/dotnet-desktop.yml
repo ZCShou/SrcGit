@@ -84,7 +84,7 @@ jobs:
 
       - name: build sig
         run: |
-          dotnet publish src/SrcGit.csproj --nologo -c Release -r win-x64 -f net6.0-windows -p:PublishSingleFile=true --no-self-contained
+          dotnet publish src/SrcGit.csproj --nologo -c Release -r win-x64 -f net6.0-windows -p:PublishSingleFile=true --no-self-contained  -o publish
 
       # - name: build ban
       #   run: |
@@ -128,5 +128,5 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: SrcGit
+          name: publish
           path: SrcGit
