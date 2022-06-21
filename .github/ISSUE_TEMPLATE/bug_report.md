@@ -20,8 +20,8 @@ assignees: ''
 
 ### 版本信息 Version Info
 
-- 影梭版本 GoGoGo Version : 
-- 系统版本 OS Version : 
+- SrcGit 版本 / SrcGit Version : 
+- 系统版本 / OS Version : 
 
 <!-- 请在上方描述出问题的影梭版本及使用的系统版本。 -->
 <!-- Please describe version of GoGoGo and used OS above. -->
