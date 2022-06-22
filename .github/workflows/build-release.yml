@@ -35,9 +35,9 @@ jobs:
 
       - name: Build self-contained
         run: |
-          dotnet publish SrcGit.csproj --nologo -c Release -r win-x64 -f net6.0-windows -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:PublishReadyToRun=true --self-contained -o publish\tmp
-          move publish\tmp\SrcGit.exe publish\SrcGit.bundle.exe
-          rmdir /s /q publish\tmp
+          dotnet publish src/SrcGit.csproj --nologo -c Release -r win-x64 -f net6.0-windows -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:PublishReadyToRun=true --self-contained -o publish/tmp
+          move publish/tmp/SrcGit.exe publish/SrcGit.bundle.exe
+          rmdir /s /q publish/tmp
 
       # https://github.com/marketplace/actions/upload-a-build-artifact
       - name: Upload build artifacts
