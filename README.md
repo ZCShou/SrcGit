@@ -1,12 +1,30 @@
-**1. I created this vserion because some features I need can not be included the original version.**
+<p align="center">
+<img src="./docs/images/LOGO.png" height="80"/>
+</p>
 
-**2. If you like SrcGit, maybe you like SourceGit better.**
+<div align="center">
 
-# SrcGit
+[![GitHub stars](https://img.shields.io/github/stars/ZCShou/SrcGit?logo=github)](https://github.com/ZCShou/SrcGit/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/ZCShou/SrcGit?logo=github)](https://github.com/ZCShou/SrcGit/network)
+[![license](https://img.shields.io/github/license/ZCShou/SrcGit)](https://github.com/ZCShou/SrcGit/blob/master/LICENSE)
+[![GitHub Release](https://img.shields.io/github/v/release/ZCShou/SrcGit?label=Release)](https://github.com/ZCShou/SrcGit/releases)
+[![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
+</div>
+<div align="center">
 
-Opensouce Git GUI client for Windows.
+[![Build Check](https://github.com/ZCShou/SrcGit/actions/workflows/build-check.yml/badge.svg)](https://github.com/ZCShou/SrcGit/actions/workflows/build-check.yml)
+[![CodeQL](https://github.com/ZCShou/SrcGit/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/ZCShou/SrcGit/actions/workflows/codeql-analysis.yml)
+</div>
 
-**I created this vserion because some features I need can not be included the original version.**
+<div align="center">
+SrcGit - 一个 Windows 平台上的 GIT GUI 客户端
+</div>
+
+##
+&emsp;&emsp;SrcGit 是一个 Windows 平台上的 GIT GUI 客户端。SrcGit 实际上是个 shell，本身并不包含 GIT。因此，要使用 SrcGit 必须自行安装 GIT，下载地址：https://git-scm.com/。
+
+> 1. SrcGit 是 SourceGit 复刻修改版。由于某些特性没有包含在 SourceGit 中，且我又需要这些特性，因此，复刻修改为 SrcGit。
+> 2. SourceGit 原始仓库：https://github.com/sourcegit-scm/sourcegit
 
 ## High-lights
 
