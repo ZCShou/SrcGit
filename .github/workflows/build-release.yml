@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   Build:
-    name: Release APK
+    name: Release SrcGit
     # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
     runs-on: windows-latest
     steps:
@@ -40,7 +40,7 @@ jobs:
         run: |
           dotnet publish src/SrcGit.csproj --nologo -c Release -r win-x64 -f net6.0-windows -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:PublishReadyToRun=true --self-contained -o publish/tmp
           move publish/tmp/SrcGit.exe publish/SrcGit.bundle.exe
-          Remove-Item -path publish\tmp
+          Remove-Item publish\\tmp -recurse
 
       # https://github.com/marketplace/actions/upload-a-build-artifact
       - name: Upload build artifacts
