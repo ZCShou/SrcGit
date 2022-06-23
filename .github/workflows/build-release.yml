@@ -10,14 +10,17 @@ permissions:
   contents: write
 
 jobs:
-
-  build:
+  Build:
+    name: Release APK
     # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
     runs-on: windows-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Get Tag
+        id: var
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
 
       # Install the .NET Core workload
       - name: Install .NET Core
@@ -37,7 +40,7 @@ jobs:
         run: |
           dotnet publish src/SrcGit.csproj --nologo -c Release -r win-x64 -f net6.0-windows -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:PublishReadyToRun=true --self-contained -o publish/tmp
           move publish/tmp/SrcGit.exe publish/SrcGit.bundle.exe
-          rd /s /q publish\\tmp
+          Remove-Item -path publish\tmp
 
       # https://github.com/marketplace/actions/upload-a-build-artifact
       - name: Upload build artifacts
